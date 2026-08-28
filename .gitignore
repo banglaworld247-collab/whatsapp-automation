@@ -1,0 +1,5 @@
+node_modules/
+whatsapp-server/node_modules/
+whatsapp-server/auth_info_baileys/
+.DS_Store
+.env

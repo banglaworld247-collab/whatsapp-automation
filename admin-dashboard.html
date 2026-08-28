@@ -1,0 +1,2539 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন ড্যাশবোর্ড | টিউশন ম্যানেজমেন্ট</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Flatpickr Date Picker CDN (CSS & Dark Theme) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <style>
+        :root {
+            --bg-dark: #0A1A2F;
+            --panel-bg: #13233D;
+            --accent: #3B82F6;
+            --accent-hover: #2563EB;
+            --text-light: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --border-color: #1E3A5F;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 0 0 30px 0;
+        }
+
+        /* ===== TSBD NAVBAR ===== */
+        .tsbd-navbar{position:sticky;top:0;z-index:900;width:100%;margin:0 auto 28px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border-color,#E5E7EB);box-shadow:0 4px 18px rgba(15,23,42,.06);backdrop-filter:blur(12px)}
+        .tsbd-nav-inner{max-width:1200px;margin:0 auto;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .tsbd-logo{text-decoration:none;display:inline-flex;align-items:center;gap:10px;color:#1F2937;font-weight:800;font-size:22px;letter-spacing:-.5px}
+        .tsbd-logo-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#6366F1,#3B82F6);font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(99,102,241,.25)}
+        .tsbd-nav-links{display:flex;align-items:center;gap:8px}
+        .tsbd-nav-link{border:0;background:transparent;text-decoration:none;color:#4B5563;font-size:14px;font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s ease}
+        .tsbd-nav-link:hover{background:#F3F4F6;color:#4F46E5}
+        .tsbd-nav-link.active{background:rgba(99,102,241,.12);color:#4F46E5;font-weight:700}
+        
+        /* User Avatar & Dropdown */
+        .tsbd-user{position:relative;display:none;align-items:center;margin-left:4px}
+        .tsbd-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #6366F1;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;user-select:none}
+        .tsbd-avatar:hover{transform:scale(1.06);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+        .tsbd-avatar:active{transform:scale(0.96)}
+        
+        .tsbd-avatar-dropdown{position:absolute;top:calc(100% + 10px);right:0;min-width:140px;background:#ffffff;border:1px solid #E5E7EB;border-radius:10px;padding:6px;box-shadow:0 10px 25px -5px rgba(0,0,0,.12),0 8px 10px -6px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1),visibility .22s ease;z-index:1000;pointer-events:none}
+        .tsbd-avatar-dropdown.show{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+        .tsbd-avatar-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease;white-space:nowrap}
+        .tsbd-avatar-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
+        
+        .tsbd-menu-btn{display:none;width:42px;height:42px;border:1px solid #E5E7EB;background:#fff;border-radius:10px;cursor:pointer;font-size:19px;color:#1F2937;align-items:center;justify-content:center}
+        .tsbd-drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:1090;opacity:0;visibility:hidden;transition:.25s ease}
+        .tsbd-drawer{position:fixed;top:0;right:0;width:min(82vw,320px);height:100vh;background:#fff;z-index:1100;padding:22px;box-shadow:-10px 0 30px rgba(15,23,42,.15);transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column}
+        .tsbd-drawer.open{transform:translateX(0)}.tsbd-drawer-overlay.open{opacity:1;visibility:visible}
+        .tsbd-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #E5E7EB}
+        .tsbd-close{border:0;background:#F3F4F6;width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center}
+        .tsbd-drawer .tsbd-nav-link{width:100%;justify-content:flex-start;padding:12px 14px;margin-bottom:6px;font-size:15px}
+        
+        /* Mobile Drawer User Dropdown */
+        .tsbd-mobile-user-wrap{margin-top:10px;border-top:1px solid #E5E7EB;padding-top:8px}
+        .tsbd-mobile-user-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:8px;transition:background .2s ease}
+        .tsbd-mobile-user-row:hover{background:#F3F4F6}
+        .tsbd-mobile-caret{margin-left:auto;font-size:12px;color:#9CA3AF;transition:transform .25s ease}
+        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret{transform:rotate(180deg)}
+        .tsbd-mobile-dropdown{opacity:0;max-height:0;overflow:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .25s ease,max-height .25s ease;padding:0 10px}
+        .tsbd-mobile-dropdown.show{opacity:1;max-height:80px;transform:translateY(0);padding:6px 10px}
+        .tsbd-mobile-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease}
+        .tsbd-mobile-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
+        
+        @media(max-width:768px){body{padding:12px}.tsbd-navbar{margin:-12px -12px 24px;width:calc(100% + 24px);}.tsbd-nav-links{display:none}.tsbd-menu-btn{display:flex}.tsbd-user{display:none!important}}
+
+        /* Login Container */
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 140px);
+            padding: 20px;
+        }
+
+        .login-box {
+            background-color: var(--panel-bg);
+            padding: 40px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .login-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--accent);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .password-input-wrapper input {
+            padding-right: 42px !important;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent !important;
+            border: none !important;
+            color: var(--text-muted, #94A3B8);
+            width: 36px;
+            height: 36px;
+            padding: 0 !important;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--accent, #38BDF8);
+            background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .password-toggle-btn:focus {
+            outline: none;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Dashboard Layout */
+        #dashboard-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .top-bar button {
+            width: auto;
+            background-color: var(--danger);
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: auto;
+            border-radius: 8px;
+            padding: 10px 18px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Profit & Financial Summary Grid */
+        .profit-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .profit-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .profit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+        }
+
+        .profit-card.earned { border-left: 4px solid var(--success); }
+        .profit-card.earned .profit-card-value { color: #34D399; }
+
+        .profit-card.pending { border-left: 4px solid var(--warning); }
+        .profit-card.pending .profit-card-value { color: #FBBF24; }
+
+        .profit-card.volume { border-left: 4px solid var(--accent); }
+        .profit-card.volume .profit-card-value { color: #38BDF8; }
+
+        .profit-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profit-card-value {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-dark);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: auto;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-light);
+        }
+
+        .filter-btn.active {
+            background: #0284C7;
+            color: #FFFFFF;
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .badge-count {
+            background: rgba(255, 255, 255, 0.18);
+            color: inherit;
+            padding: 1px 7px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Grid for Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* Tuition List Cards */
+        .tuition-cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .tuition-card {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--accent);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tuition-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+        }
+
+        .tuition-card.status-open { border-left-color: var(--accent); }
+        .tuition-card.status-assigned { border-left-color: var(--success); }
+        .tuition-card.status-closed { border-left-color: var(--text-muted); }
+
+        .tuition-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 10px;
+        }
+
+        .tuition-job-id {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .tuition-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin: 0 0 4px 0;
+        }
+
+        .tuition-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .status-open { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-assigned { background-color: rgba(56, 189, 248, 0.2); color: var(--accent); }
+        .status-closed { background-color: rgba(156, 163, 175, 0.2); color: var(--text-muted); }
+
+        /* Commission & CRM Highlights inside Card */
+        .card-highlights-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+
+        .highlight-box.commission-box {
+            border-left: 3px solid #10B981;
+        }
+
+        .highlight-box.crm-box {
+            border-left: 3px solid #F59E0B;
+        }
+
+        .highlight-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .payment-pill.paid-full { background: rgba(34, 197, 94, 0.2); color: #4ADE80; border: 1px solid rgba(34, 197, 94, 0.4); }
+        .payment-pill.paid-partial { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .payment-pill.paid-none { background: rgba(148, 163, 184, 0.15); color: #94A3B8; border: 1px dashed rgba(148, 163, 184, 0.3); }
+
+        .plan-alert-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .plan-alert-tag.today { background: rgba(239, 68, 68, 0.25); color: #FCA5A5; }
+        .plan-alert-tag.tomorrow { background: rgba(245, 158, 11, 0.2); color: #FCD34D; }
+
+        /* Card Action Bar */
+        .card-action-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-card-action {
+            width: auto;
+            font-size: 13px;
+            padding: 7px 14px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .btn-whatsapp-settings {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        .btn-whatsapp-settings:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-whatsapp-card {
+            background: #059669;
+            color: white;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .btn-whatsapp-card:hover {
+            background: #047857;
+        }
+
+        .wa-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .wa-status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .wa-status-inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .wa-guide-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #93C5FD;
+            line-height: 1.5;
+        }
+        .wa-guide-box ol {
+            margin-left: 18px;
+            margin-top: 6px;
+        }
+        .wa-guide-box li {
+            margin-bottom: 4px;
+        }
+        .wa-test-result {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+        }
+        .wa-test-result.success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10B981;
+            color: #34D399;
+        }
+        .wa-test-result.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #EF4444;
+            color: #F87171;
+        }
+
+        .btn-edit-card { background: #D97706; color: white; }
+        .btn-edit-card:hover { background: #B45309; }
+
+        .btn-view-apps { background: #2563EB; color: white; }
+        .btn-view-apps:hover { background: #1D4ED8; }
+
+        .btn-delete-card { background: #DC2626; color: white; }
+        .btn-delete-card:hover { background: #B91C1C; }
+
+        /* Expanded Details */
+        .tuition-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 14px;
+        }
+
+        .assigned-tutor-box {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 18px;
+            font-size: 13px;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .data-table th {
+            width: 180px;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: rgba(255,255,255,0.02);
+        }
+        .applicant-detail {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            margin: 10px 0;
+        }
+        .applicant-detail h5 {
+            color: var(--accent);
+            margin: 0 0 8px 0;
+            font-size: 15px;
+        }
+        .file-link {
+            color: var(--accent);
+            text-decoration: underline;
+            margin-right: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-warning { background-color: var(--warning); }
+        .btn-danger { background-color: var(--danger); }
+        
+        .loading { text-align: center; color: var(--text-muted); padding: 20px; }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: var(--panel-bg);
+            color: var(--text-light);
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .modal-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0;
+            width: auto;
+            line-height: 1;
+        }
+        .close-btn:hover { color: #FFF; background: none; }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .modal-sec-title {
+            color: var(--accent);
+            margin: 16px 0 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 5px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .modal-actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .btn-save {
+            background: #16A34A;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 2;
+        }
+        .btn-save:hover { background: #15803D; }
+
+        .btn-modal-delete {
+            background: #DC2626;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+        }
+        .btn-modal-delete:hover { background: #B91C1C; }
+
+        /* ===== PROFESSIONAL DATE PICKER STYLES ===== */
+        .flatpickr-input-custom {
+            background-color: var(--bg-dark) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-light) !important;
+            border-radius: 8px !important;
+            padding: 10px 14px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            width: 100% !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 12px center !important;
+            padding-right: 38px !important;
+            transition: all 0.2s ease !important;
+            letter-spacing: 0.3px;
+        }
+        .flatpickr-input-custom:hover {
+            border-color: var(--accent) !important;
+            background-color: rgba(10, 26, 47, 0.9) !important;
+        }
+        .flatpickr-input-custom:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+            outline: none !important;
+        }
+        .flatpickr-calendar {
+            background: #13233D !important;
+            border: 1px solid #1E3A5F !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7) !important;
+            border-radius: 12px !important;
+            font-family: 'Noto Sans Bengali', sans-serif !important;
+            padding: 6px !important;
+        }
+        .flatpickr-calendar.arrowTop:before, .flatpickr-calendar.arrowTop:after {
+            border-bottom-color: #13233D !important;
+        }
+        .flatpickr-months .flatpickr-month {
+            color: #F8FAFC !important;
+            fill: #F8FAFC !important;
+        }
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700 !important;
+        }
+        .flatpickr-weekdays {
+            border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+            margin-bottom: 6px !important;
+        }
+        span.flatpickr-weekday {
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+        }
+        .flatpickr-day {
+            color: #E2E8F0 !important;
+            border-radius: 8px !important;
+            font-weight: 500 !important;
+            transition: all 0.15s ease !important;
+        }
+        .flatpickr-day:hover {
+            background: rgba(59, 130, 246, 0.25) !important;
+            border-color: transparent !important;
+            color: #FFF !important;
+        }
+        .flatpickr-day.today {
+            border-color: #38BDF8 !important;
+            color: #38BDF8 !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
+            border-color: transparent !important;
+            color: #FFF !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TSBD NAVBAR -->
+    <nav class="tsbd-navbar">
+        <div class="tsbd-nav-inner">
+            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
+            <div class="tsbd-nav-links">
+                <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+                <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+                <a class="tsbd-nav-link active" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <div class="tsbd-user" id="tsbdDesktopUser">
+                    <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Google profile" title="প্রোফাইল মেনু">
+                    <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                    </div>
+                </div>
+            </div>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+    <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
+    <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
+        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+        <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+        <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+        <a class="tsbd-nav-link active" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
+            <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
+                <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Google profile">
+                <span style="font-size:14px;font-weight:600;color:#374151" id="tsbdMobileName">Signed in</span>
+                <i class="fa-solid fa-chevron-down tsbd-mobile-caret"></i>
+            </div>
+            <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
+                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Login Section -->
+    <div id="login-container">
+        <div class="login-box">
+            <h2>অ্যাডমিন লগইন</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>ইমেইল</label>
+                    <input type="email" id="login-email" required placeholder="banglaworld247@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">পাসওয়ার্ড</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                        <button type="button" id="togglePasswordBtn" class="password-toggle-btn" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                <p id="login-error" style="color: var(--danger); font-size: 14px; margin-bottom: 10px; display: none;"></p>
+                <button type="submit" id="login-btn">লগইন করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-container">
+        <div class="top-bar">
+            <h2><i class="fa-solid fa-gauge-high"></i> অ্যাডমিন ড্যাশবোর্ড</h2>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button type="button" id="whatsapp-settings-btn" class="btn-whatsapp-settings" onclick="openWhatsAppModal()">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 16px;"></i> হোয়াটসঅ্যাপ অটোমেশন
+                </button>
+                <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
+            <button class="tab-btn active" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
+        </div>
+
+        <!-- Section 1: Post Tuition -->
+        <div id="section-post" class="section">
+            <h3 style="margin-bottom: 20px; color: var(--accent);"><i class="fa-solid fa-file-circle-plus"></i> নতুন টিউশনের তথ্য দিন</h3>
+            <form id="post-tuition-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tuition Type</label>
+                        <input type="text" id="t-tuitiontype" value="Home Tuition" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="t-category" value="Bangla Medium" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Class/শ্রেণী</label>
+                        <input type="text" id="t-class" required placeholder="যেমন: Class 9">
+                    </div>
+                    <div class="form-group">
+                        <label>বিষয় (Subjects)</label>
+                        <input type="text" id="t-subject" required placeholder="যেমন: Physics, Chemistry">
+                    </div>
+                    <div class="form-group">
+                        <label>Student Gender (ছাত্র/ছাত্রী)</label>
+                        <select id="t-gender" required>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="Any">Any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Tutor</label>
+                        <select id="t-preferred-tutor" required>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="Any">Any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>দিন/সপ্তাহ (Days)</label>
+                        <input type="text" id="t-days" required placeholder="যেমন: 3 Days / Week">
+                    </div>
+                    <div class="form-group">
+                        <label>সময় (Time)</label>
+                        <input type="text" id="t-time" required placeholder="যেমন: বিকাল(৫ টার পর)">
+                    </div>
+                    <div class="form-group">
+                        <label>বেতন (Salary)</label>
+                        <input type="text" id="t-salary" required placeholder="যেমন: 4000 BDT">
+                    </div>
+                    <div class="form-group">
+                        <label>মিডিয়া কমিশন (%):</label>
+                        <select id="t-commission">
+                            <option value="50%">50% (Standard)</option>
+                            <option value="40%">40%</option>
+                            <option value="30%">30%</option>
+                            <option value="60%">60%</option>
+                            <option value="0%">0% (No commission)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>এলাকা (Location)</label>
+                        <input type="text" id="t-location" required placeholder="যেমন: মাইক পট্রী, jashore">
+                    </div>
+                    <div class="form-group">
+                        <label>No. of Students</label>
+                        <input type="number" id="t-nostudents" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>অভিভাবকের ফোন নম্বর (Guardian Phone)</label>
+                        <input type="text" id="t-phone" required placeholder="01XXX-XXXXXX">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>বিশেষ নোট / শর্ত (Special Notes)</label>
+                        <textarea id="t-notes" rows="3" placeholder="টিউটরের জন্য কোনো বিশেষ শর্ত..."></textarea>
+                    </div>
+                    <div class="form-group full-width" style="margin-bottom: 5px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 12px 16px; border-radius: 8px; flex-wrap: wrap; gap: 10px;">
+                            <label for="post-wa-autopost" style="cursor: pointer; font-size: 14px; font-weight: 700; color: #34D399; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i>
+                                পোস্ট করার সাথে সাথে হোয়াটসঅ্যাপ গ্রুপে অটো-পোস্ট করুন
+                            </label>
+                            <input type="checkbox" id="post-wa-autopost" style="width: 20px; height: 20px; cursor: pointer; accent-color: #10B981;" checked>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" id="submit-tuition-btn"><i class="fa-solid fa-paper-plane"></i> টিউশন পোস্ট করুন</button>
+                    </div>
+                </div>
+            </form>
+            <p id="post-success-msg" style="color: var(--success); display: none; margin-top: 15px; text-align: center; font-weight: 700;">✅ সফলভাবে পোস্ট হয়েছে!</p>
+        </div>
+
+        <!-- Section 2: Tuition List with Profit Analytics & Smart Filters -->
+        <div id="section-list" class="section active">
+            <!-- Profit & Financial Analytics Overview Section -->
+            <div class="profit-summary-grid">
+                <div class="profit-card earned">
+                    <span class="profit-card-title"><i class="fa-solid fa-sack-dollar"></i> মোট অর্জিত প্রফিট (সফল)</span>
+                    <span class="profit-card-value" id="earnedProfitVal">৳ 0</span>
+                </div>
+                <div class="profit-card pending">
+                    <span class="profit-card-title"><i class="fa-solid fa-hourglass-half"></i> সম্ভাব্য প্রফিট (Pending)</span>
+                    <span class="profit-card-value" id="pendingProfitVal">৳ 0</span>
+                </div>
+                <div class="profit-card volume">
+                    <span class="profit-card-title"><i class="fa-solid fa-chart-line"></i> মোট টিউশন ভ্যালু</span>
+                    <span class="profit-card-value" id="totalSalaryVal">৳ 0</span>
+                </div>
+            </div>
+
+            <!-- Smart Filter Buttons -->
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="setTuitionFilter('pending', this)">
+                    <i class="fa-solid fa-hourglass-half"></i> Pending <span class="badge-count" id="count-pending">0</span>
+                </button>
+                <button class="filter-btn" onclick="setTuitionFilter('all', this)">
+                    <i class="fa-solid fa-list-check"></i> সব অফার <span class="badge-count" id="count-all">0</span>
+                </button>
+                <button class="filter-btn" onclick="setTuitionFilter('today', this)">
+                    <i class="fa-solid fa-calendar-day"></i> আজকের প্ল্যান <span class="badge-count" id="count-today">0</span>
+                </button>
+                <button class="filter-btn" onclick="setTuitionFilter('tomorrow', this)">
+                    <i class="fa-solid fa-calendar-week"></i> আগামীকালের প্ল্যান <span class="badge-count" id="count-tomorrow">0</span>
+                </button>
+                <button class="filter-btn" onclick="setTuitionFilter('assigned', this)">
+                    <i class="fa-solid fa-circle-check"></i> সফল / Assigned <span class="badge-count" id="count-assigned">0</span>
+                </button>
+            </div>
+
+            <div id="tuition-cards-container" class="tuition-cards-grid">
+                <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ডাটা লোড হচ্ছে...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Edit & CRM Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-pen-to-square"></i> টিউশন অফার ও সিআরএম ট্র্যাকিং এডিট করুন</h2>
+                <button class="close-btn" type="button" onclick="closeEditModal()" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="editForm" onsubmit="handleModalUpdate(event)">
+                <input type="hidden" id="editDocId">
+
+                <h4 class="modal-sec-title">১. টিউশন অফার তথ্য</h4>
+                <div class="modal-grid">
+                    <div class="form-group">
+                        <label>শ্রেণী (Class):</label>
+                        <input type="text" id="editClass" required>
+                    </div>
+                    <div class="form-group">
+                        <label>লোকেশন (Location):</label>
+                        <input type="text" id="editLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>বিষয় (Subjects):</label>
+                        <input type="text" id="editSubjects" required>
+                    </div>
+                    <div class="form-group">
+                        <label>সময় (Time):</label>
+                        <input type="text" id="editTime" placeholder="যেমন: বিকাল(৫ টার পর)">
+                    </div>
+                    <div class="form-group">
+                        <label>দিন/সপ্তাহ (Days):</label>
+                        <input type="text" id="editDays" placeholder="যেমন: 3 Days / Week">
+                    </div>
+                    <div class="form-group">
+                        <label>শিক্ষার্থী (Gender):</label>
+                        <select id="editGender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="Any">Any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>বেতন (Salary):</label>
+                        <input type="text" id="editSalary" required placeholder="যেমন: 4000 BDT">
+                    </div>
+                    <div class="form-group">
+                        <label>মিডিয়া কমিশন (%):</label>
+                        <select id="editCommission">
+                            <option value="50%">50%</option>
+                            <option value="40%">40%</option>
+                            <option value="30%">30%</option>
+                            <option value="60%">60%</option>
+                            <option value="0%">0%</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>অভিভাবকের ফোন:</label>
+                        <input type="text" id="editPhone" required placeholder="01XXX-XXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>স্ট্যাটাস (Status):</label>
+                        <select id="editStatus">
+                            <option value="open">Open</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>বিশেষ নোট / শর্ত (Special Notes):</label>
+                        <textarea id="editNotes" rows="2" placeholder="টিউটরের জন্য কোনো বিশেষ শর্ত..."></textarea>
+                    </div>
+                </div>
+
+                <h4 class="modal-sec-title">২. প্রোগ্রেস ও Next Day Plan</h4>
+                <div class="modal-grid">
+                    <div class="form-group">
+                        <label>অ্যাকশন / Queue Status:</label>
+                        <select id="editQueueAction">
+                            <option value="">-- নির্বাচন করুন --</option>
+                            <option value="নাম্বার প্রদান করা হয়েছে">নাম্বার প্রদান করা হয়েছে</option>
+                            <option value="কথা বলেছে">কথা বলেছে</option>
+                            <option value="একদিন পড়াতে গেছে">একদিন পড়াতে গেছে</option>
+                            <option value="দুই দিন পড়াতে গেছে">দুই দিন পড়াতে গেছে</option>
+                            <option value="তিন দিন পড়াতে গেছে">তিন দিন পড়াতে গেছে</option>
+                            <option value="কমিশনের টাকা চাইতে হবে">কমিশনের টাকা চাইতে হবে</option>
+                            <option value="সফল হয়েছে">সফল হয়েছে</option>
+                            <option value="বাতিল হয়ে গেছে">বাতিল হয়ে গেছে</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>অ্যাকশন তারিখ (Action Date):</label>
+                        <input type="date" id="editActionDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Next Day Plan Action:</label>
+                        <select id="editNextPlanAction">
+                            <option value="">-- নির্বাচন করুন --</option>
+                            <option value="কল দিয়ে আপডেট নিতে হবে">কল দিয়ে আপডেট নিতে হবে</option>
+                            <option value="ডেমো ক্লাসের খোঁজ নিতে হবে">ডেমো ক্লাসের খোঁজ নিতে হবে</option>
+                            <option value="কমিশনের টাকা সংগ্রহ করতে হবে">কমিশনের টাকা সংগ্রহ করতে হবে</option>
+                            <option value="নতুন টিউটর খুঁজতে হবে">নতুন টিউটর খুঁজতে হবে</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Next Day Plan Date:</label>
+                        <input type="date" id="editNextPlanDate">
+                    </div>
+                </div>
+
+                <h4 class="modal-sec-title">৩. কমিশন পেমেন্ট ট্র্যাকিং</h4>
+                <div class="modal-grid">
+                    <div class="form-group">
+                        <label>এখন পর্যন্ত পরিশোধিত কমিশন (৳):</label>
+                        <input type="number" id="editPaidAmount" min="0" placeholder="যেমনঃ ৫০০">
+                    </div>
+                </div>
+
+                <div class="modal-actions-bar">
+                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> আপডেট সেভ করুন</button>
+                    <button type="button" class="btn-modal-delete" onclick="handleDeleteFromModal()"><i class="fa-solid fa-trash"></i> মুছে ফেলুন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- WhatsApp Automation Settings Modal -->
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content" style="max-width: 620px;">
+            <div class="modal-header">
+                <h2><i class="fa-brands fa-whatsapp" style="color:#22C55E;"></i> হোয়াটসঅ্যাপ গ্রুপ অটোমেশন সেটিংস</h2>
+                <button class="close-btn" type="button" onclick="closeWhatsAppModal()" aria-label="Close modal">&times;</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                <span style="font-size: 14px; color: var(--text-muted);">বর্তমান স্ট্যাটাস:</span>
+                <span id="waStatusBadge" class="wa-status-pill wa-status-inactive"><i class="fa-solid fa-circle-xmark"></i> কনফিগার করা হয়নি</span>
+            </div>
+
+            <form id="waConfigForm" onsubmit="handleSaveWaConfig(event)">
+                <div class="form-group">
+                    <label>WhatsApp Gateway Provider:</label>
+                    <select id="waProvider" onchange="toggleWaProviderFields()" style="background:var(--bg-dark);color:var(--text-light);border:1px solid var(--border-color);padding:10px;border-radius:6px;width:100%;font-size:14px;">
+                        <option value="green-api">Green-API (রেকমেন্ডেড - ফ্রি ডেভেলপার মোড)</option>
+                        <option value="ultramsg">UltraMsg API</option>
+                        <option value="custom">Custom Webhook / Baileys Node API</option>
+                    </select>
+                </div>
+
+                <!-- Green-API / UltraMsg Fields -->
+                <div id="waStandardFields">
+                    <div class="modal-grid">
+                        <div class="form-group">
+                            <label id="lblInstanceId">Instance ID:</label>
+                            <input type="text" id="waInstanceId" placeholder="যেমন: 1101823456">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblApiToken">API Token / Token:</label>
+                            <input type="password" id="waApiToken" placeholder="যেমন: d5c8b3a74...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>হোয়াটসঅ্যাপ গ্রুপ চ্যাট আইডি (Group Chat ID):</label>
+                        <input type="text" id="waGroupId" placeholder="যেমন: 120363045678912345@g.us">
+                        <small style="color:var(--text-muted);font-size:11px;display:block;margin-top:3px;">
+                            * Green-API তে গ্রুপ ID সাধারণত <code>120363xxxxxxxxx@g.us</code> ফরম্যাটে থাকে।
+                        </small>
+                    </div>
+                    <div class="form-group" id="waHostField">
+                        <label>Green-API Host URL (ঐচ্ছিক):</label>
+                        <input type="text" id="waApiHost" placeholder="https://api.green-api.com (অথবা https://7103.api.greenapi.com)">
+                    </div>
+                </div>
+
+                <!-- Custom Webhook Fields -->
+                <div id="waCustomFields" style="display:none;">
+                    <div class="form-group">
+                        <label>Webhook URL (POST):</label>
+                        <input type="url" id="waWebhookUrl" placeholder="https://your-bot-server.com/api/send-group-message">
+                    </div>
+                    <div class="form-group">
+                        <label>Group ID (ঐচ্ছিক):</label>
+                        <input type="text" id="waCustomGroupId" placeholder="120363xxxxxxxxx@g.us">
+                    </div>
+                </div>
+
+                <!-- Step by Step Setup Help -->
+                <div class="wa-guide-box">
+                    <strong><i class="fa-solid fa-circle-info"></i> Green-API সেটআপ করার ৩টি সহজ ধাপ:</strong>
+                    <ol>
+                        <li><a href="https://green-api.com" target="_blank" style="color:#60A5FA;text-decoration:underline;">green-api.com</a>-এ ফ্রি একাউন্ট খুলে QR Code স্ক্যান করে WhatsApp কানেক্ট করুন।</li>
+                        <li>ড্যাশবোর্ড থেকে <strong>Instance ID</strong> এবং <strong>API Token</strong> কপি করে এখানে বসান।</li>
+                        <li>আপনার যে গ্রুপে পোস্ট পাঠাতে চান, সেটির <strong>Chat ID</strong> দিন (গ্রুপ চ্যাট আইডি পেতে গ্রিন-এপিআই ড্যাশবোর্ডে চ্যাট লিস্টে ক্লিক করলেই পাওয়া যায়)।</li>
+                    </ol>
+                </div>
+
+                <!-- Test Message Feedback Box -->
+                <div id="waTestStatus" class="wa-test-result"></div>
+
+                <div class="modal-actions-bar" style="margin-top: 18px;">
+                    <button type="button" class="btn-card-action" style="background:#2563EB;color:#fff;padding:11px 16px;flex:1;justify-content:center;" onclick="handleTestWaMessage()">
+                        <i class="fa-solid fa-paper-plane"></i> টেস্ট মেসেজ পাঠান
+                    </button>
+                    <button type="submit" class="btn-save" style="flex:1;">
+                        <i class="fa-solid fa-floppy-disk"></i> সেটিংস সংরক্ষণ করুন
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Flatpickr JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Firebase SDK (Modular v9+) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, getDoc, getDocs, where, arrayUnion, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // === আপনার ফায়ারবেস কনফিগ এখানে বসান ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
+            authDomain: "cms-of-jts.firebaseapp.com",
+            projectId: "cms-of-jts",
+            storageBucket: "cms-of-jts.firebasestorage.app",
+            messagingSenderId: "300970842151",
+            appId: "1:300970842151:web:9885ce2a591cf5f4eed602",
+            measurementId: "G-TRJNGCB98F"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ==========================================
+        // WhatsApp Automation & Gateway Integration
+        // ==========================================
+        let waConfig = {
+            enabled: true,
+            provider: 'green-api',
+            instanceId: '',
+            apiToken: '',
+            groupId: '',
+            apiHost: 'https://api.green-api.com',
+            webhookUrl: '',
+            customGroupId: ''
+        };
+
+        function initWhatsAppConfig() {
+            try {
+                const localSaved = localStorage.getItem('tsbd_wa_config');
+                if (localSaved) {
+                    waConfig = { ...waConfig, ...JSON.parse(localSaved) };
+                }
+            } catch (e) {
+                console.error("Local WA config parse error:", e);
+            }
+
+            // Sync from Firestore settings collection if available
+            getDoc(doc(db, "settings", "whatsapp")).then(snap => {
+                if (snap.exists()) {
+                    const remoteData = snap.data();
+                    waConfig = { ...waConfig, ...remoteData };
+                    localStorage.setItem('tsbd_wa_config', JSON.stringify(waConfig));
+                    updateWaUIFromConfig();
+                }
+            }).catch(err => {
+                console.log("Remote WA config fetch notice:", err.message);
+            });
+
+            updateWaUIFromConfig();
+        }
+
+        function updateWaUIFromConfig() {
+            const isConfigured = (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                                 (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                                 (waConfig.provider === 'custom' && waConfig.webhookUrl);
+
+            const badge = document.getElementById('waStatusBadge');
+            if (badge) {
+                if (isConfigured) {
+                    badge.className = 'wa-status-pill wa-status-active';
+                    badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> কানেক্টেড (${(waConfig.provider || 'WA').toUpperCase()})`;
+                } else {
+                    badge.className = 'wa-status-pill wa-status-inactive';
+                    badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> কনফিগার করা হয়নি`;
+                }
+            }
+
+            if (document.getElementById('waProvider')) document.getElementById('waProvider').value = waConfig.provider || 'green-api';
+            if (document.getElementById('waInstanceId')) document.getElementById('waInstanceId').value = waConfig.instanceId || '';
+            if (document.getElementById('waApiToken')) document.getElementById('waApiToken').value = waConfig.apiToken || '';
+            if (document.getElementById('waGroupId')) document.getElementById('waGroupId').value = waConfig.groupId || '';
+            if (document.getElementById('waApiHost')) document.getElementById('waApiHost').value = waConfig.apiHost || 'https://api.green-api.com';
+            if (document.getElementById('waWebhookUrl')) document.getElementById('waWebhookUrl').value = waConfig.webhookUrl || '';
+            if (document.getElementById('waCustomGroupId')) document.getElementById('waCustomGroupId').value = waConfig.customGroupId || '';
+
+            toggleWaProviderFields();
+        }
+
+        window.toggleWaProviderFields = function() {
+            const provider = document.getElementById('waProvider')?.value || 'green-api';
+            const standardFields = document.getElementById('waStandardFields');
+            const customFields = document.getElementById('waCustomFields');
+            const lblInstance = document.getElementById('lblInstanceId');
+            const lblToken = document.getElementById('lblApiToken');
+            const hostField = document.getElementById('waHostField');
+
+            if (provider === 'custom') {
+                if (standardFields) standardFields.style.display = 'none';
+                if (customFields) customFields.style.display = 'block';
+            } else {
+                if (standardFields) standardFields.style.display = 'block';
+                if (customFields) customFields.style.display = 'none';
+
+                if (provider === 'green-api') {
+                    if (lblInstance) lblInstance.innerText = 'Green-API Instance ID (idInstance):';
+                    if (lblToken) lblToken.innerText = 'Green-API Token (apiTokenInstance):';
+                    if (hostField) hostField.style.display = 'block';
+                } else {
+                    if (lblInstance) lblInstance.innerText = 'UltraMsg Instance ID:';
+                    if (lblToken) lblToken.innerText = 'UltraMsg Token:';
+                    if (hostField) hostField.style.display = 'none';
+                }
+            }
+        };
+
+        window.openWhatsAppModal = function() {
+            updateWaUIFromConfig();
+            const modal = document.getElementById('whatsappModal');
+            if (modal) modal.style.display = 'flex';
+        };
+
+        window.closeWhatsAppModal = function() {
+            const modal = document.getElementById('whatsappModal');
+            if (modal) modal.style.display = 'none';
+            const statusDiv = document.getElementById('waTestStatus');
+            if (statusDiv) statusDiv.style.display = 'none';
+        };
+
+        window.handleSaveWaConfig = async function(e) {
+            e.preventDefault();
+            const provider = document.getElementById('waProvider').value;
+            const updated = {
+                enabled: true,
+                provider: provider,
+                instanceId: document.getElementById('waInstanceId').value.trim(),
+                apiToken: document.getElementById('waApiToken').value.trim(),
+                groupId: document.getElementById('waGroupId').value.trim(),
+                apiHost: document.getElementById('waApiHost').value.trim() || 'https://api.green-api.com',
+                webhookUrl: document.getElementById('waWebhookUrl').value.trim(),
+                customGroupId: document.getElementById('waCustomGroupId').value.trim()
+            };
+
+            waConfig = updated;
+            localStorage.setItem('tsbd_wa_config', JSON.stringify(waConfig));
+
+            try {
+                await setDoc(doc(db, "settings", "whatsapp"), waConfig);
+            } catch (err) {
+                console.warn("Could not save WA settings to Firestore (offline or rule limitation):", err);
+            }
+
+            updateWaUIFromConfig();
+            alert("✅ হোয়াটসঅ্যাপ অটোমেশন সেটিংস সফলভাবে সংরক্ষিত হয়েছে!");
+            closeWhatsAppModal();
+        };
+
+        function formatWhatsAppMessage(tuition, docId) {
+            const origin = window.location.origin;
+            const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            const detailsUrl = `${origin}${path}/tuition-details.html?id=${docId}`;
+
+            const jobId = tuition.jobId || 'N/A';
+            const cls = tuition.className || tuition.class || 'N/A';
+            const cat = tuition.category || 'Bangla Medium';
+            const sub = tuition.subject || tuition.subjects || 'N/A';
+            const loc = tuition.location || 'N/A';
+            const sal = tuition.salary || 'আলোচনা সাপেক্ষে';
+            const days = tuition.days || '৩ দিন / সপ্তাহ';
+            const time = tuition.time || 'সন্ধ্যা';
+            const pref = tuition.preferredTutor || 'Any';
+            const gender = tuition.studentGender ? ` (${tuition.studentGender} Student)` : '';
+            const notes = tuition.specialNotes ? `\n📝 *শর্ত / নোট:* ${tuition.specialNotes}` : '';
+
+            return `📢 *নতুন টিউশন অফার! (Job ID: #${jobId})*
+━━━━━━━━━━━━━━━━━━━━
+🎓 *শ্রেণী:* ${cls} (${cat})
+📚 *বিষয়:* ${sub}
+📍 *লোকেশন:* ${loc}
+📅 *দিন:* ${days}
+⏰ *সময়:* ${time}
+💰 *বেতন:* ${sal}
+👥 *পছন্দের টিউটর:* ${pref}${gender}${notes}
+━━━━━━━━━━━━━━━━━━━━
+👉 *বিস্তারিত দেখতে ও আবেদন করতে ক্লিক করুন:*
+${detailsUrl}`;
+        }
+
+        async function sendWhatsAppGroupMessage(messageText) {
+            if (!waConfig) {
+                return { success: false, error: 'হোয়াটসঅ্যাপ কনফিগারেশন পাওয়া যায়নি।' };
+            }
+
+            try {
+                if (waConfig.provider === 'green-api') {
+                    if (!waConfig.instanceId || !waConfig.apiToken || !waConfig.groupId) {
+                        return { success: false, error: 'Green-API এর Instance ID, Token এবং Group ID দিন।' };
+                    }
+                    let host = waConfig.apiHost || 'https://api.green-api.com';
+                    host = host.replace(/\/+$/, '');
+                    const url = `${host}/waInstance${waConfig.instanceId}/sendMessage/${waConfig.apiToken}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chatId: waConfig.groupId,
+                            message: messageText
+                        })
+                    });
+
+                    const resData = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        throw new Error(resData.message || `Green-API ত্রুটি (${response.status})`);
+                    }
+                    return { success: true, data: resData };
+
+                } else if (waConfig.provider === 'ultramsg') {
+                    if (!waConfig.instanceId || !waConfig.apiToken || !waConfig.groupId) {
+                        return { success: false, error: 'UltraMsg এর Instance ID, Token এবং Group ID দিন।' };
+                    }
+                    const url = `https://api.ultramsg.com/${waConfig.instanceId}/messages/chat`;
+                    const params = new URLSearchParams();
+                    params.append('token', waConfig.apiToken);
+                    params.append('to', waConfig.groupId);
+                    params.append('body', messageText);
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: params
+                    });
+                    const resData = await response.json().catch(() => ({}));
+                    if (!response.ok || resData.error) {
+                        throw new Error(resData.error || `UltraMsg ত্রুটি (${response.status})`);
+                    }
+                    return { success: true, data: resData };
+
+                } else if (waConfig.provider === 'custom') {
+                    if (!waConfig.webhookUrl) {
+                        return { success: false, error: 'Custom Webhook URL প্রদান করুন।' };
+                    }
+                    const response = await fetch(waConfig.webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            to: waConfig.customGroupId || waConfig.groupId,
+                            message: messageText
+                        })
+                    });
+                    if (!response.ok) {
+                        throw new Error(`Webhook ত্রুটি (${response.status})`);
+                    }
+                    return { success: true };
+                }
+
+                return { success: false, error: 'অজানা প্রোভাইডার সিলেক্ট করা হয়েছে।' };
+            } catch (err) {
+                console.error("WhatsApp API Send Error:", err);
+                return { success: false, error: err.message };
+            }
+        }
+
+        window.handleTestWaMessage = async function() {
+            const statusDiv = document.getElementById('waTestStatus');
+            if (!statusDiv) return;
+
+            statusDiv.className = 'wa-test-result';
+            statusDiv.style.display = 'block';
+            statusDiv.style.color = '#93C5FD';
+            statusDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> টেস্ট মেসেজ পাঠানো হচ্ছে...';
+
+            const provider = document.getElementById('waProvider').value;
+            const tempConfig = {
+                enabled: true,
+                provider: provider,
+                instanceId: document.getElementById('waInstanceId').value.trim(),
+                apiToken: document.getElementById('waApiToken').value.trim(),
+                groupId: document.getElementById('waGroupId').value.trim(),
+                apiHost: document.getElementById('waApiHost').value.trim() || 'https://api.green-api.com',
+                webhookUrl: document.getElementById('waWebhookUrl').value.trim(),
+                customGroupId: document.getElementById('waCustomGroupId').value.trim()
+            };
+
+            const origConfig = waConfig;
+            waConfig = tempConfig;
+
+            const testMsg = `🔔 *টেস্ট নোটিফিকেশন - JTS Tuition Portal*\n━━━━━━━━━━━━━━━━━━━━\n✅ এটি একটি সফল অটোমেশন টেস্ট মেসেজ!\n⏰ সময়: ${new Date().toLocaleTimeString('bn-BD')}`;
+            const result = await sendWhatsAppGroupMessage(testMsg);
+            waConfig = origConfig;
+
+            if (result.success) {
+                statusDiv.className = 'wa-test-result success';
+                statusDiv.innerHTML = '<strong>✅ সফল!</strong> আপনার হোয়াটসঅ্যাপ গ্রুপে টেস্ট মেসেজ পৌঁছে গেছে।';
+            } else {
+                statusDiv.className = 'wa-test-result error';
+                statusDiv.innerHTML = `<strong>❌ এরর:</strong> ${safe(result.error)}<br><small style="color:var(--text-light);margin-top:4px;display:block;">অনুগ্রহ করে Instance ID, Token এবং Group ID পুনরায় চেক করুন।</small>`;
+            }
+        };
+
+        window.shareToWhatsApp = async function(tuitionId) {
+            const tuition = allTuitions.find(t => t.id === tuitionId);
+            if (!tuition) {
+                alert("টিউশন তথ্য পাওয়া যায়নি!");
+                return;
+            }
+
+            const formattedMsg = formatWhatsAppMessage(tuition, tuitionId);
+
+            const isConfigured = (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                                 (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                                 (waConfig.provider === 'custom' && waConfig.webhookUrl);
+
+            if (isConfigured) {
+                if (confirm("আপনি কি কনফিগার করা হোয়াটসঅ্যাপ গ্রুপে এই টিউশনটি অটো-পোস্ট করতে চান?")) {
+                    const res = await sendWhatsAppGroupMessage(formattedMsg);
+                    if (res.success) {
+                        alert("✅ হোয়াটসঅ্যাপ গ্রুপে সফলভাবে মেসেজ পাঠানো হয়েছে!");
+                        return;
+                    } else {
+                        alert("অটোমেটিক পাঠাতে সমস্যা হয়েছে: " + res.error + "\n\nএখন সাধারণ শেয়ার লিঙ্ক ওপেন করা হচ্ছে...");
+                    }
+                }
+            }
+
+            // Fallback: Open standard WhatsApp share link
+            const waShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(formattedMsg)}`;
+            window.open(waShareUrl, '_blank');
+        };
+
+        // Initialize WA config immediately
+        initWhatsAppConfig();
+
+        // ===== TSBD NAVBAR AUTH UI =====
+        const tsbdDrawer = document.getElementById("tsbdDrawer");
+        const tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
+        const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
+        const tsbdClose = document.getElementById("tsbdClose");
+
+        function tsbdOpenDrawer(){if(tsbdDrawer){tsbdDrawer.classList.add("open");tsbdOverlay.classList.add("open");tsbdDrawer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}}
+        function tsbdCloseDrawer(){if(tsbdDrawer){tsbdDrawer.classList.remove("open");tsbdOverlay.classList.remove("open");tsbdDrawer.setAttribute("aria-hidden","true");document.body.style.overflow=""}}
+        tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
+        tsbdClose?.addEventListener("click", tsbdCloseDrawer);
+        tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
+
+        // Dropdown toggle elements
+        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
+        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
+        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
+        const mobileUserWrap = document.getElementById('tsbdMobileUser');
+        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
+
+        desktopAvatar?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            desktopDropdown?.classList.toggle('show');
+        });
+
+        mobileUserToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileUserWrap?.classList.toggle('open');
+            mobileDropdown?.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
+                desktopDropdown.classList.remove('show');
+            }
+        });
+
+        function tsbdSetUser(user){
+            const desktopUser = document.getElementById("tsbdDesktopUser");
+            const mobileUser = document.getElementById("tsbdMobileUser");
+            const desktopAvatar = document.getElementById("tsbdDesktopAvatar");
+            const mobileAvatar = document.getElementById("tsbdMobileAvatar");
+            const mobileName = document.getElementById("tsbdMobileName");
+            const loginLink = document.getElementById("loginLink");
+            const loginLinkMobile = document.getElementById("loginLinkMobile");
+            const adminDashboardLink = document.getElementById("adminDashboardLink");
+            const adminDashboardLinkMobile = document.getElementById("adminDashboardLinkMobile");
+
+            const isAdmin = isAdminUser(user);
+            if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
+            if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
+
+            if(user){
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName||user.email||'Admin')}&background=6366F1&color=fff`;
+                if(desktopAvatar) desktopAvatar.src = photo;
+                if(mobileAvatar) mobileAvatar.src = photo;
+                if(mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
+                if(desktopUser) desktopUser.style.display = "inline-flex";
+                if(mobileUser) mobileUser.style.display = "block";
+                if(loginLink) loginLink.style.display = "none";
+                if(loginLinkMobile) loginLinkMobile.style.display = "none";
+            } else {
+                if(desktopUser) desktopUser.style.display = "none";
+                if(mobileUser) mobileUser.style.display = "none";
+                if(desktopDropdown) desktopDropdown.classList.remove('show');
+                if(mobileDropdown) mobileDropdown.classList.remove('show');
+                if(loginLink) loginLink.style.display = "inline-flex";
+                if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+            }
+        }
+
+        // UI Elements
+        const loginContainer = document.getElementById('login-container');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginError = document.getElementById('login-error');
+        const postForm = document.getElementById('post-tuition-form');
+        const listContainer = document.getElementById('tuition-cards-container');
+
+        // === Authentication & Role Verification ===
+        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com"];
+
+        setPersistence(auth, browserLocalPersistence);
+
+        function isAdminUser(user) {
+            if (!user || !user.email) return false;
+            const isAllowedEmail = ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase().trim());
+            return isAllowedEmail;
+        }
+
+        // Fast-path: Preload cached avatar, admin status & show dashboard immediately on reload
+        const cachedPhoto = localStorage.getItem('tutorPhotoURL');
+        const cachedName = localStorage.getItem('tutorDisplayName');
+        const cachedEmail = localStorage.getItem('userEmail');
+        if (cachedPhoto || cachedEmail) {
+            tsbdSetUser({ photoURL: cachedPhoto, displayName: cachedName, email: cachedEmail });
+            if (cachedEmail && ALLOWED_ADMIN_EMAILS.includes(cachedEmail.toLowerCase().trim())) {
+                if (loginContainer) loginContainer.style.display = 'none';
+                if (dashboardContainer) dashboardContainer.style.display = 'block';
+            }
+        }
+
+        async function tsbdLogout(){
+            try {
+                if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
+                if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
+                await signOut(auth);
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorSession");
+                tsbdCloseDrawer();
+                window.location.reload();
+            } catch(e) {
+                console.error("Logout error:", e);
+                alert("Logout failed. Please try again.");
+            }
+        }
+        document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
+        document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
+
+        // === Tab Switching Logic (Global) ===
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if(tabName === 'post') {
+                document.getElementById('section-post').classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            } else {
+                document.getElementById('section-list').classList.add('active');
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (isAdminUser(user)) {
+                if (user.email) localStorage.setItem("userEmail", user.email);
+                tsbdSetUser(user);
+                loginContainer.style.display = 'none';
+                dashboardContainer.style.display = 'block';
+                loadTuitions(); // Load data on verified admin login
+            } else {
+                if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
+                if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
+                localStorage.removeItem("userEmail");
+                tsbdSetUser(null);
+                loginContainer.style.display = 'flex';
+                dashboardContainer.style.display = 'none';
+            }
+        });
+
+        // Password Show/Hide Toggle
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const loginPasswordInput = document.getElementById('login-password');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+        togglePasswordBtn?.addEventListener('click', () => {
+            const isPassword = loginPasswordInput.type === 'password';
+            loginPasswordInput.type = isPassword ? 'text' : 'password';
+            if (togglePasswordIcon) {
+                togglePasswordIcon.className = isPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+            
+            btn.innerText = 'লগইন হচ্ছে...';
+            loginError.style.display = 'none';
+
+            if (!ALLOWED_ADMIN_EMAILS.includes(email.toLowerCase())) {
+                loginError.innerText = 'অননুমোদিত অ্যাডমিন ইমেইল!';
+                loginError.style.display = 'block';
+                btn.innerText = 'লগইন করুন';
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                console.error("Login attempt error:", error);
+                if (ALLOWED_ADMIN_EMAILS.includes(email.toLowerCase()) && 
+                   (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential')) {
+                    try {
+                        await createUserWithEmailAndPassword(auth, email, pass);
+                        btn.innerText = 'লগইন করুন';
+                        return;
+                    } catch (createErr) {
+                        console.error("Auto create admin error:", createErr);
+                        if (createErr.code === 'auth/email-already-in-use') {
+                            loginError.innerText = 'ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।';
+                        } else if (createErr.code === 'auth/operation-not-allowed') {
+                            loginError.innerText = 'Firebase Console > Authentication-এ Email/Password চালু করুন।';
+                        } else {
+                            loginError.innerText = createErr.message || 'লগইন ব্যর্থ হয়েছে।';
+                        }
+                        loginError.style.display = 'block';
+                    }
+                } else if (error.code === 'auth/wrong-password') {
+                    loginError.innerText = 'ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।';
+                    loginError.style.display = 'block';
+                } else if (error.code === 'auth/operation-not-allowed') {
+                    loginError.innerText = 'Firebase Console > Authentication-এ Email/Password চালু করুন।';
+                    loginError.style.display = 'block';
+                } else {
+                    loginError.innerText = error.message || 'ভুল ইমেইল বা পাসওয়ার্ড!';
+                    loginError.style.display = 'block';
+                }
+            }
+            btn.innerText = 'লগইন করুন';
+        });
+
+        logoutBtn.addEventListener('click', tsbdLogout);
+
+        // ==========================================
+        // CRM, Analytics & Data Logic
+        // ==========================================
+        let allTuitions = [];
+        let allApplications = [];
+        let currentFilter = 'pending';
+
+        function normStatus(str) {
+            return (str || '').normalize('NFC').trim();
+        }
+
+        function getLocalYYYYMMDD(dateObj) {
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getTodayString() { return getLocalYYYYMMDD(new Date()); }
+        function getTomorrowString() {
+            const d = new Date();
+            d.setDate(d.getDate() + 1);
+            return getLocalYYYYMMDD(d);
+        }
+
+        function parseSalary(val) {
+            if (typeof val === 'number') return val;
+            if (!val) return 0;
+            const cleaned = String(val).replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+
+        function parseCommissionPercent(val) {
+            if (typeof val === 'number') return val;
+            if (!val) return 50;
+            const cleaned = String(val).replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 50;
+        }
+
+        const safe = (value) => String(value ?? 'N/A')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+        const fileLink = (url, label) => {
+            if (!url) return 'N/A';
+            const cleanUrl = String(url).replace(/"/g, '&quot;');
+            return `<a class="file-link" href="${cleanUrl}" target="_blank" rel="noopener">${safe(label)}</a>`;
+        };
+
+        // Realtime Listeners
+        let unsubscribeApps = null;
+        let unsubscribeTuitions = null;
+
+        function loadTuitions() {
+            if (unsubscribeApps) unsubscribeApps();
+            if (unsubscribeTuitions) unsubscribeTuitions();
+
+            // Listen to applications in realtime
+            unsubscribeApps = onSnapshot(collection(db, "applications"), (appSnap) => {
+                allApplications = [];
+                appSnap.forEach(docSnap => {
+                    allApplications.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderTuitionCards();
+            }, (error) => {
+                console.warn("Applications snapshot notice:", error.message);
+            });
+
+            // Listen to tuitions in realtime
+            const q = query(collection(db, "tuitions"), orderBy("createdAt", "desc"));
+            unsubscribeTuitions = onSnapshot(q, (snapshot) => {
+                allTuitions = [];
+                snapshot.forEach((docSnap) => {
+                    allTuitions.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                calculateProfitAnalytics();
+                updateTabCounts();
+                renderTuitionCards();
+            }, (error) => {
+                listContainer.innerHTML = `<p class="loading" style="color:red;">ডাটা লোড করতে সমস্যা হয়েছে: ${error.message}</p>`;
+            });
+        }
+
+        function calculateProfitAnalytics() {
+            let earnedProfit = 0;
+            let pendingProfit = 0;
+            let totalSalaryVolume = 0;
+
+            allTuitions.forEach(item => {
+                const salary = parseSalary(item.salary || item.offer?.salary);
+                const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+                const estCommission = Math.round((salary * commPercent) / 100);
+                const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+                const queueAction = normStatus(item.tracking?.queueAction || item.queueAction);
+                const status = normStatus(item.status);
+
+                totalSalaryVolume += salary;
+
+                if (queueAction === normStatus('বাতিল হয়ে গেছে') || status === normStatus('closed')) {
+                    // Cancelled/Closed without earnings unless paidAmount exists
+                    earnedProfit += paidAmount;
+                } else if (queueAction === normStatus('সফল হয়েছে') || status === normStatus('assigned')) {
+                    earnedProfit += Math.max(paidAmount, estCommission);
+                } else if (paidAmount > 0) {
+                    earnedProfit += paidAmount;
+                    pendingProfit += Math.max(estCommission - paidAmount, 0);
+                } else {
+                    pendingProfit += estCommission;
+                }
+            });
+
+            document.getElementById('earnedProfitVal').innerText = `৳ ${earnedProfit.toLocaleString('bn-BD')}`;
+            document.getElementById('pendingProfitVal').innerText = `৳ ${pendingProfit.toLocaleString('bn-BD')}`;
+            document.getElementById('totalSalaryVal').innerText = `৳ ${totalSalaryVolume.toLocaleString('bn-BD')}`;
+        }
+
+        function updateTabCounts() {
+            const today = getTodayString();
+            const tomorrow = getTomorrowString();
+
+            const countAll = allTuitions.length;
+            const countToday = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today).length;
+            const countTomorrow = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow).length;
+            const countPending = allTuitions.filter(item => {
+                const q = normStatus(item.tracking?.queueAction || item.queueAction);
+                const s = normStatus(item.status);
+                return s !== normStatus('assigned') && s !== normStatus('closed') && q !== normStatus('সফল হয়েছে') && q !== normStatus('বাতিল হয়ে গেছে');
+            }).length;
+            const countAssigned = allTuitions.filter(item => {
+                const q = normStatus(item.tracking?.queueAction || item.queueAction);
+                const s = normStatus(item.status);
+                return s === normStatus('assigned') || q === normStatus('সফল হয়েছে');
+            }).length;
+
+            if (document.getElementById('count-all')) document.getElementById('count-all').innerText = countAll;
+            if (document.getElementById('count-today')) document.getElementById('count-today').innerText = countToday;
+            if (document.getElementById('count-tomorrow')) document.getElementById('count-tomorrow').innerText = countTomorrow;
+            if (document.getElementById('count-pending')) document.getElementById('count-pending').innerText = countPending;
+            if (document.getElementById('count-assigned')) document.getElementById('count-assigned').innerText = countAssigned;
+        }
+
+        window.setTuitionFilter = function(filterKey, btnElement) {
+            currentFilter = filterKey;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+            renderTuitionCards();
+        }
+
+        function renderTuitionCards() {
+            if (!listContainer) return;
+            listContainer.innerHTML = '';
+
+            const today = getTodayString();
+            const tomorrow = getTomorrowString();
+
+            let filtered = [...allTuitions];
+
+            if (currentFilter === 'today') {
+                filtered = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today);
+            } else if (currentFilter === 'tomorrow') {
+                filtered = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow);
+            } else if (currentFilter === 'pending') {
+                filtered = allTuitions.filter(item => {
+                    const q = normStatus(item.tracking?.queueAction || item.queueAction);
+                    const s = normStatus(item.status);
+                    return s !== normStatus('assigned') && s !== normStatus('closed') && q !== normStatus('সফল হয়েছে') && q !== normStatus('বাতিল হয়ে গেছে');
+                });
+            } else if (currentFilter === 'assigned') {
+                filtered = allTuitions.filter(item => {
+                    const q = normStatus(item.tracking?.queueAction || item.queueAction);
+                    const s = normStatus(item.status);
+                    return s === normStatus('assigned') || q === normStatus('সফল হয়েছে');
+                });
+            }
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = '<div class="loading" style="color:var(--text-muted);">কোনো টিউশন পাওয়া যায়নি।</div>';
+                return;
+            }
+
+            filtered.forEach((item) => {
+                const id = item.id;
+                const salary = parseSalary(item.salary || item.offer?.salary);
+                const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+                const estCommissionAmount = Math.round((salary * commPercent) / 100);
+                const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+                const remainingAmount = Math.max(estCommissionAmount - paidAmount, 0);
+
+                const queueAction = item.tracking?.queueAction || item.queueAction || 'অ্যাকশন নির্ধারিত হয়নি';
+                const nextPlanAction = item.tracking?.nextDayPlan?.action || item.nextPlanAction || 'পরবর্তী প্ল্যান নেই';
+                const nextPlanDate = item.tracking?.nextDayPlan?.date || item.nextPlanDate || '';
+
+                let statusClass = 'status-open';
+                let statusText = 'Open';
+                if (item.status === 'assigned' || normStatus(queueAction) === normStatus('সফল হয়েছে')) {
+                    statusClass = 'status-assigned';
+                    statusText = 'Assigned';
+                } else if (item.status === 'closed' || normStatus(queueAction) === normStatus('বাতিল হয়ে গেছে')) {
+                    statusClass = 'status-closed';
+                    statusText = 'Closed';
+                }
+
+                let paymentPillClass = 'paid-none';
+                let paymentPillText = '💰 কমিশন পরিশোধ হয়নি';
+                if (paidAmount >= estCommissionAmount && estCommissionAmount > 0) {
+                    paymentPillClass = 'paid-full';
+                    paymentPillText = `✅ পুরো কমিশন পরিশোধিত (৳${paidAmount})`;
+                } else if (paidAmount > 0) {
+                    paymentPillClass = 'paid-partial';
+                    paymentPillText = `⏳ পরিশোধ: ৳${paidAmount} | বাকি: ৳${remainingAmount}`;
+                }
+
+                let planAlertBadge = '';
+                if (nextPlanDate === today) {
+                    planAlertBadge = `<span class="plan-alert-tag today"><i class="fa-solid fa-bell"></i> আজ ফলো-আপ</span>`;
+                } else if (nextPlanDate === tomorrow) {
+                    planAlertBadge = `<span class="plan-alert-tag tomorrow"><i class="fa-solid fa-clock"></i> আগামীকাল</span>`;
+                } else if (nextPlanDate) {
+                    planAlertBadge = `<span class="plan-alert-tag" style="background:rgba(56,189,248,0.15);color:#38BDF8;border-color:rgba(56,189,248,0.3);"><i class="fa-solid fa-calendar"></i> ${nextPlanDate}</span>`;
+                }
+
+                // Count applicants
+                const appsCount = allApplications.filter(a => a.tuitionId === id).length;
+
+                const card = document.createElement('div');
+                card.className = `tuition-card ${statusClass}`;
+                card.innerHTML = `
+                    <div class="tuition-header">
+                        <div>
+                            <span class="tuition-job-id">#${safe(item.jobId || id.slice(0, 5))}</span>
+                            <h3 class="tuition-title">📚 ${safe(item.className || 'শ্রেণী উল্লেখ নেই')} - ${safe(item.subject || 'সকল বিষয়')}</h3>
+                            <div class="tuition-meta">
+                                <span><i class="fa-solid fa-location-dot"></i> ${safe(item.location || 'লোকেশন উল্লেখ নেই')}</span>
+                                <span><i class="fa-solid fa-calendar-days"></i> ${safe(item.days || '৩ দিন')}</span>
+                                <span><i class="fa-solid fa-clock"></i> ${safe(item.time || 'সন্ধ্যা')}</span>
+                                <span><i class="fa-solid fa-user-tag"></i> টিউটর: ${safe(item.preferredTutor || 'Any')}</span>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                            <div style="font-size:18px; font-weight:800; color:#34D399; margin-top:6px;">৳ ${salary.toLocaleString('bn-BD')}</div>
+                        </div>
+                    </div>
+
+                    <div class="card-highlights-row">
+                        <div class="highlight-box commission-box">
+                            <div class="highlight-title">
+                                <span><i class="fa-solid fa-percent"></i> মিডিয়া কমিশন (${commPercent}%)</span>
+                                <span style="color:#34D399; font-weight:800;">৳ ${estCommissionAmount.toLocaleString('bn-BD')}</span>
+                            </div>
+                            <div style="margin-top:6px;"><span class="payment-pill ${paymentPillClass}">${paymentPillText}</span></div>
+                        </div>
+                        <div class="highlight-box crm-box">
+                            <div class="highlight-title">
+                                <span><i class="fa-solid fa-list-check"></i> CRM প্রোগ্রেস</span>
+                                ${planAlertBadge}
+                            </div>
+                            <div style="font-weight:600; color:#F8FAFC; margin-bottom:2px;">📍 ${safe(queueAction)}</div>
+                            <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-arrow-right"></i> Next: ${safe(nextPlanAction)}</div>
+                        </div>
+                    </div>
+
+                    <div class="card-action-bar">
+                        <button type="button" class="btn-card-action btn-whatsapp-card" onclick="shareToWhatsApp('${id}')" title="হোয়াটসঅ্যাপ গ্রুপে পাঠান">
+                            <i class="fa-brands fa-whatsapp"></i> হোয়াটসঅ্যাপ
+                        </button>
+                        <button type="button" class="btn-card-action btn-edit-card" onclick="openEditModal('${id}')">
+                            <i class="fa-solid fa-pen-to-square"></i> এডিট ও ট্র্যাকিং
+                        </button>
+                        <button type="button" class="btn-card-action btn-view-apps" onclick="toggleExpand('${id}')">
+                            <i class="fa-solid fa-users"></i> আবেদনকারী (${appsCount})
+                        </button>
+                        <button type="button" class="btn-card-action btn-delete-card" onclick="handleDeleteTuition('${id}')">
+                            <i class="fa-solid fa-trash"></i> মুছুন
+                        </button>
+                    </div>
+
+                    <div class="tuition-details" id="details-${id}">
+                        <div class="loading">ডেটা লোড হচ্ছে...</div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // Modal Handlers (Edit & Tracking)
+        // ==========================================
+        window.openEditModal = function(tuitionId) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
+
+            document.getElementById('editDocId').value = tuitionId;
+            document.getElementById('editClass').value = item.className || item.class || '';
+            document.getElementById('editLocation').value = item.location || '';
+            document.getElementById('editSubjects').value = item.subject || item.subjects || '';
+            document.getElementById('editTime').value = item.time || '';
+            document.getElementById('editDays').value = item.days || '';
+            document.getElementById('editGender').value = item.studentGender || 'Any';
+            document.getElementById('editSalary').value = item.salary || '';
+            document.getElementById('editCommission').value = item.commission || item.offer?.commission || '50%';
+            document.getElementById('editPhone').value = item.guardianPhone || '';
+            document.getElementById('editStatus').value = item.status || 'open';
+            document.getElementById('editNotes').value = item.specialNotes || '';
+
+            const tracking = item.tracking || {};
+            document.getElementById('editQueueAction').value = tracking.queueAction || item.queueAction || '';
+            
+            const actDate = tracking.actionDate || item.actionDate || '';
+            if (window.actionDatePicker) {
+                window.actionDatePicker.setDate(actDate || null, true);
+            } else {
+                document.getElementById('editActionDate').value = actDate;
+            }
+
+            document.getElementById('editNextPlanAction').value = tracking.nextDayPlan?.action || item.nextPlanAction || '';
+            const npDate = tracking.nextDayPlan?.date || item.nextPlanDate || '';
+            if (window.nextPlanDatePicker) {
+                window.nextPlanDatePicker.setDate(npDate || null, true);
+            } else {
+                document.getElementById('editNextPlanDate').value = npDate;
+            }
+
+            document.getElementById('editPaidAmount').value = tracking.paidAmount || item.paidAmount || 0;
+
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Initialize Flatpickr instances for professional date styling
+        function initDatePickers() {
+            if (typeof flatpickr !== 'undefined') {
+                window.actionDatePicker = flatpickr("#editActionDate", {
+                    altInput: true,
+                    altFormat: "d M, Y",
+                    dateFormat: "Y-m-d",
+                    altInputClass: "flatpickr-input-custom",
+                    placeholder: "তারিখ নির্বাচন করুন 📅",
+                    disableMobile: true
+                });
+
+                window.nextPlanDatePicker = flatpickr("#editNextPlanDate", {
+                    altInput: true,
+                    altFormat: "d M, Y",
+                    dateFormat: "Y-m-d",
+                    altInputClass: "flatpickr-input-custom",
+                    placeholder: "তারিখ নির্বাচন করুন 📅",
+                    disableMobile: true
+                });
+            }
+        }
+        setTimeout(initDatePickers, 100);
+
+        window.closeEditModal = function() {
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        window.handleModalUpdate = async function(event) {
+            event.preventDefault();
+            const tuitionId = document.getElementById('editDocId').value;
+            if (!tuitionId) return;
+
+            const updatedData = {
+                className: document.getElementById('editClass').value,
+                location: document.getElementById('editLocation').value,
+                subject: document.getElementById('editSubjects').value,
+                time: document.getElementById('editTime').value,
+                days: document.getElementById('editDays').value,
+                studentGender: document.getElementById('editGender').value,
+                salary: document.getElementById('editSalary').value,
+                commission: document.getElementById('editCommission').value,
+                guardianPhone: document.getElementById('editPhone').value,
+                status: document.getElementById('editStatus').value,
+                specialNotes: document.getElementById('editNotes').value,
+                tracking: {
+                    queueAction: document.getElementById('editQueueAction').value,
+                    actionDate: document.getElementById('editActionDate').value,
+                    nextDayPlan: {
+                        action: document.getElementById('editNextPlanAction').value,
+                        date: document.getElementById('editNextPlanDate').value
+                    },
+                    paidAmount: Number(document.getElementById('editPaidAmount').value || 0)
+                }
+            };
+
+            try {
+                await updateDoc(doc(db, "tuitions", tuitionId), updatedData);
+                closeEditModal();
+            } catch (err) {
+                alert("আপডেট করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        }
+
+        window.handleDeleteFromModal = async function() {
+            const tuitionId = document.getElementById('editDocId').value;
+            if (!tuitionId) return;
+            handleDeleteTuition(tuitionId);
+            closeEditModal();
+        }
+
+        window.handleDeleteTuition = async function(tuitionId) {
+            if (!confirm("আপনি কি নিশ্চিতভাবে এই টিউশনটি মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।")) return;
+            try {
+                await deleteDoc(doc(db, "tuitions", tuitionId));
+            } catch (err) {
+                alert("মুছে ফেলতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        }
+
+        // ==========================================
+        // Section 1: Post Tuition Form Handler
+        // ==========================================
+        postForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-tuition-btn');
+            btn.innerText = 'পোস্ট করা হচ্ছে...';
+            btn.disabled = true;
+
+            const shouldAutoPostWA = document.getElementById('post-wa-autopost')?.checked ?? true;
+
+            const autoJobId = String(Math.floor(10000 + Math.random() * 90000));
+            const autoPostedDate = new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+
+            const tuitionData = {
+                jobId: autoJobId,
+                postedDate: autoPostedDate,
+                tuitionType: document.getElementById('t-tuitiontype').value,
+                category: document.getElementById('t-category').value,
+                className: document.getElementById('t-class').value,
+                subject: document.getElementById('t-subject').value,
+                studentGender: document.getElementById('t-gender').value,
+                preferredTutor: document.getElementById('t-preferred-tutor').value,
+                days: document.getElementById('t-days').value,
+                time: document.getElementById('t-time').value,
+                salary: document.getElementById('t-salary').value,
+                commission: document.getElementById('t-commission').value,
+                location: document.getElementById('t-location').value,
+                noOfStudents: Number(document.getElementById('t-nostudents').value),
+                guardianPhone: document.getElementById('t-phone').value,
+                specialNotes: document.getElementById('t-notes').value,
+                status: "open",
+                assignedTutor: null,
+                tracking: {
+                    queueAction: '',
+                    actionDate: '',
+                    nextDayPlan: {
+                        action: '',
+                        date: ''
+                    },
+                    paidAmount: 0
+                },
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                const docRef = await addDoc(collection(db, "tuitions"), tuitionData);
+                postForm.reset();
+                const autoCheckbox = document.getElementById('post-wa-autopost');
+                if (autoCheckbox) autoCheckbox.checked = true;
+
+                const successMsg = document.getElementById('post-success-msg');
+                successMsg.style.display = 'block';
+
+                // WhatsApp Automation Trigger
+                if (shouldAutoPostWA) {
+                    const isConfigured = (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                                         (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                                         (waConfig.provider === 'custom' && waConfig.webhookUrl);
+
+                    if (isConfigured) {
+                        btn.innerText = 'হোয়াটসঅ্যাপে পাঠানো হচ্ছে...';
+                        const waText = formatWhatsAppMessage(tuitionData, docRef.id);
+                        const waRes = await sendWhatsAppGroupMessage(waText);
+                        if (waRes.success) {
+                            successMsg.innerHTML = '✅ সফলভাবে পোস্ট হয়েছে এবং হোয়াটসঅ্যাপ গ্রুপে মেসেজ পাঠানো হয়েছে!';
+                            successMsg.style.color = 'var(--success)';
+                        } else {
+                            successMsg.innerHTML = `⚠️ পোস্ট হয়েছে, কিন্তু হোয়াটসঅ্যাপ এরর: ${safe(waRes.error)}`;
+                            successMsg.style.color = 'var(--warning)';
+                        }
+                    } else {
+                        successMsg.innerHTML = '✅ পোস্ট হয়েছে! (হোয়াটসঅ্যাপে অটো-পাঠাতে <a href="javascript:void(0)" onclick="openWhatsAppModal()" style="color:#38BDF8;text-decoration:underline;">হোয়াটসঅ্যাপ অটোমেশন</a> সেটআপ করুন)';
+                        successMsg.style.color = 'var(--success)';
+                    }
+                } else {
+                    successMsg.innerHTML = '✅ সফলভাবে পোস্ট হয়েছে!';
+                    successMsg.style.color = 'var(--success)';
+                }
+
+                setTimeout(() => { 
+                    successMsg.style.display = 'none'; 
+                    successMsg.style.color = 'var(--success)';
+                    successMsg.innerHTML = '✅ সফলভাবে পোস্ট হয়েছে!';
+                }, 6000);
+
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+            btn.innerText = 'টিউশন পোস্ট করুন';
+            btn.disabled = false;
+        });
+
+        // ==========================================
+        // Expand Card: Show complete tuition + tutor/application data
+        // ==========================================
+        window.toggleExpand = async function(tuitionId) {
+            const detailsDiv = document.getElementById(`details-${tuitionId}`);
+            if (!detailsDiv) return;
+
+            if (detailsDiv.style.display === 'block') {
+                detailsDiv.style.display = 'none';
+                return;
+            }
+
+            document.querySelectorAll('.tuition-details').forEach(div => div.style.display = 'none');
+            detailsDiv.style.display = 'block';
+            detailsDiv.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ডেটা লোড হচ্ছে...</div>';
+
+            try {
+                const tuitionSnap = await getDoc(doc(db, "tuitions", tuitionId));
+                if (!tuitionSnap.exists()) {
+                    detailsDiv.innerHTML = '<p style="color:var(--danger)">টিউশন ডাটা পাওয়া যায়নি।</p>';
+                    return;
+                }
+
+                const tuitionData = tuitionSnap.data();
+
+                // Complete tuition information
+                let html = `
+                    <h4 style="color:var(--accent);margin-bottom:10px;"><i class="fa-solid fa-circle-info"></i> টিউশনের সম্পূর্ণ তথ্য</h4>
+                    <table class="data-table">
+                        <tr><th>Job ID</th><td>${safe(tuitionData.jobId)}</td></tr>
+                        <tr><th>Posted Date</th><td>${safe(tuitionData.postedDate)}</td></tr>
+                        <tr><th>Tuition Type</th><td>${safe(tuitionData.tuitionType)}</td></tr>
+                        <tr><th>Category</th><td>${safe(tuitionData.category)}</td></tr>
+                        <tr><th>Class</th><td>${safe(tuitionData.className)}</td></tr>
+                        <tr><th>Subject</th><td>${safe(tuitionData.subject)}</td></tr>
+                        <tr><th>Student Gender</th><td>${safe(tuitionData.studentGender)}</td></tr>
+                        <tr><th>Preferred Tutor</th><td>${safe(tuitionData.preferredTutor)}</td></tr>
+                        <tr><th>Days</th><td>${safe(tuitionData.days)}</td></tr>
+                        <tr><th>Time</th><td>${safe(tuitionData.time)}</td></tr>
+                        <tr><th>Salary</th><td>${safe(tuitionData.salary)}</td></tr>
+                        <tr><th>Media Commission</th><td>${safe(tuitionData.commission || '50%')}</td></tr>
+                        <tr><th>Location</th><td>${safe(tuitionData.location)}</td></tr>
+                        <tr><th>No. of Students</th><td>${safe(tuitionData.noOfStudents)}</td></tr>
+                        <tr><th>Guardian Phone</th><td>${safe(tuitionData.guardianPhone)}</td></tr>
+                        <tr><th>Special Notes</th><td>${safe(tuitionData.specialNotes)}</td></tr>
+                        <tr><th>Status</th><td>${safe(tuitionData.status)}</td></tr>
+                    </table>
+                `;
+
+                // Assigned tutor
+                if (tuitionData.assignedTutor) {
+                    const tutorSnap = await getDoc(doc(db, "tutors", tuitionData.assignedTutor));
+                    if (tutorSnap.exists()) {
+                        const tData = tutorSnap.data();
+                        html += `
+                            <div class="assigned-tutor-box">
+                                <strong style="color:var(--accent);font-size:15px;"><i class="fa-solid fa-user-check"></i> বর্তমানে দায়িত্বে থাকা টিউটর</strong>
+                                <table class="data-table" style="margin-top:8px;">
+                                    <tr><th>UID</th><td>${safe(tutorSnap.id)}</td></tr>
+                                    <tr><th>Name</th><td>${safe(tData.name)}</td></tr>
+                                    <tr><th>Institution</th><td>${safe(tData.institution || tData.institute)}</td></tr>
+                                    <tr><th>Email</th><td>${safe(tData.email)}</td></tr>
+                                    <tr><th>Phone</th><td>${safe(tData.phone)}</td></tr>
+                                    <tr><th>Address</th><td>${safe(tData.address)}</td></tr>
+                                    <tr><th>Gender</th><td>${safe(tData.gender)}</td></tr>
+                                    <tr><th>Experience</th><td>${safe(tData.experience)}</td></tr>
+                                    <tr><th>Locations</th><td>${safe(Array.isArray(tData.locations) ? tData.locations.join(', ') : tData.locations)}</td></tr>
+                                    <tr><th>Subjects</th><td>${safe(Array.isArray(tData.subjects) ? tData.subjects.join(', ') : tData.subjects)}</td></tr>
+                                    <tr><th>Documents</th><td>${fileLink(tData.nidUrl || tData.nidFileUrl, 'NID/Birth Certificate')} ${fileLink(tData.msUrl || tData.marksheetFileUrl, 'Marksheet')}</td></tr>
+                                </table>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Applications query
+                const appQuery = query(
+                    collection(db, "applications"),
+                    where("tuitionId", "==", tuitionId)
+                );
+                const appSnaps = await getDocs(appQuery);
+
+                html += `<h4 style="color:var(--accent);margin:20px 0 10px;"><i class="fa-solid fa-users"></i> আবেদনকারীদের সম্পূর্ণ তথ্য (${appSnaps.size} জন)</h4>`;
+
+                if (appSnaps.empty) {
+                    html += `<div class="applicant-detail" style="color:var(--text-muted)">এখনও কেউ আবেদন করেনি।</div>`;
+                } else {
+                    appSnaps.forEach((appDoc, index) => {
+                        const ad = appDoc.data();
+                        html += `
+                            <div class="applicant-detail">
+                                <h5>আবেদনকারী #${index + 1} - ${safe(ad.tutorName || ad.name)}</h5>
+                                <table class="data-table">
+                                    <tr><th>Application ID</th><td>${safe(appDoc.id)}</td></tr>
+                                    <tr><th>UID</th><td>${safe(ad.uid)}</td></tr>
+                                    <tr><th>Name</th><td>${safe(ad.tutorName || ad.name)}</td></tr>
+                                    <tr><th>Institution</th><td>${safe(ad.institute || ad.institution)}</td></tr>
+                                    <tr><th>Email</th><td>${safe(ad.email)}</td></tr>
+                                    <tr><th>Phone</th><td><a href="tel:${safe(ad.phone || ad.tutorPhone)}" style="color:#38BDF8;font-weight:700;">${safe(ad.phone || ad.tutorPhone)}</a></td></tr>
+                                    <tr><th>Address</th><td>${safe(ad.address)}</td></tr>
+                                    <tr><th>Gender</th><td>${safe(ad.gender)}</td></tr>
+                                    <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy)}</td></tr>
+                                    <tr><th>Status</th><td>${safe(ad.status)}</td></tr>
+                                    <tr><th>NID / Birth Certificate</th><td>${fileLink(ad.nidFileUrl || ad.nidUrl, 'View Document')}</td></tr>
+                                    <tr><th>SSC/HSC Marksheet</th><td>${fileLink(ad.marksheetFileUrl || ad.msUrl, 'View Document')}</td></tr>
+                                </table>
+                            </div>
+                        `;
+                    });
+                }
+
+                html += `<div class="action-buttons">`;
+                if (tuitionData.status !== 'closed') {
+                    if (tuitionData.assignedTutor) {
+                        html += `<button class="btn-warning" onclick="nextTutor('${tuitionId}', '${String(tuitionData.assignedTutor).replace(/'/g, "\\'")}')"><i class="fa-solid fa-forward"></i> এই টিউটর ব্যর্থ, পরেরজনকে দাও</button>`;
+                    }
+                    html += `<button class="btn-danger" onclick="closeTuition('${tuitionId}')"><i class="fa-solid fa-ban"></i> টিউশন বন্ধ করুন</button>`;
+                } else {
+                    html += `<p style="color:var(--danger)">এই টিউশনটি বন্ধ করা হয়েছে।</p>`;
+                }
+                html += `</div>`;
+
+                detailsDiv.innerHTML = html;
+
+            } catch (error) {
+                detailsDiv.innerHTML = `<p style="color:var(--danger)">লোড করতে সমস্যা: ${safe(error.message)}</p>`;
+                console.error(error);
+            }
+        }
+
+        // Action: Next Tutor
+        window.nextTutor = async function(tuitionId, currentTutorUid) {
+            if(!confirm('আপনি কি নিশ্চিত? বর্তমান টিউটরকে সরিয়ে ওয়েটলিস্ট থেকে পরের জনকে দায়িত্ব দেওয়া হবে।')) return;
+            
+            try {
+                const tuitionRef = doc(db, 'tuitions', tuitionId);
+                const tuitionSnap = await getDoc(tuitionRef);
+                const tuitionData = tuitionSnap.data();
+                const previousTutors = tuitionData.previousTutors || [];
+
+                const appQuery = query(collection(db, 'applications'), where('tuitionId', '==', tuitionId), orderBy('appliedAt', 'asc'));
+                const applicantsSnap = await getDocs(appQuery);
+
+                let nextTutorUid = null;
+                
+                applicantsSnap.forEach(docSnap => {
+                    const applicant = docSnap.data();
+                    const applicantUid = applicant.uid;
+                    if (applicantUid !== currentTutorUid && !previousTutors.includes(applicantUid)) {
+                        if (!nextTutorUid) nextTutorUid = applicantUid;
+                    }
+                });
+
+                if (nextTutorUid) {
+                    await updateDoc(tuitionRef, {
+                        assignedTutor: nextTutorUid,
+                        status: 'assigned',
+                        previousTutors: arrayUnion(currentTutorUid)
+                    });
+                    alert('পরবর্তী টিউটরকে সফলভাবে দায়িত্ব দেওয়া হয়েছে!');
+                } else {
+                    await updateDoc(tuitionRef, {
+                        assignedTutor: null,
+                        status: 'open',
+                        previousTutors: arrayUnion(currentTutorUid)
+                    });
+                    alert('অপেক্ষমান তালিকায় আর কোনো নতুন টিউটর নেই। টিউশনটি আবার "Open" করা হয়েছে।');
+                }
+                toggleExpand(tuitionId);
+                setTimeout(() => toggleExpand(tuitionId), 100);
+
+            } catch (error) {
+                alert('এরর: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        // Action: Close Tuition
+        window.closeTuition = async function(tuitionId) {
+            if(!confirm('এই টিউশনটি কি সম্পূর্ণ বন্ধ করে দিতে চান?')) return;
+            try {
+                await updateDoc(doc(db, 'tuitions', tuitionId), {
+                    status: 'closed'
+                });
+                alert('টিউশনটি বন্ধ করা হয়েছে!');
+                toggleExpand(tuitionId);
+                setTimeout(() => toggleExpand(tuitionId), 100);
+            } catch (error) {
+                alert('এরর: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

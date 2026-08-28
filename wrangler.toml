@@ -1,0 +1,12 @@
+name = "jts-uploader"
+main = "cloudflare-worker.js"
+compatibility_date = "2024-03-01"
+
+# Bind R2 Bucket for Tutor Images and Documents
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "jts-uploads"
+
+# Optional environment variables
+[vars]
+PUBLIC_URL_PREFIX = ""

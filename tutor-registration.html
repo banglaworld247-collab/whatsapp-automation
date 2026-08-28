@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Registration</title>
+    
+    <!-- Google Fonts: Noto Sans Bengali -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            --bg-color: #0A1A2F;
+            --card-bg: #112240;
+            --accent-color: #3B82F6;
+            --accent-hover: #2563EB;
+            --text-main: #E2E8F0;
+            --text-muted: #8892B0;
+            --error-color: #EF4444;
+            --success-color: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 0 0 30px 0;
+            min-height: 100vh;
+        }
+
+        .container-holder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            padding: 20px;
+        }
+
+        /* ===== TSBD NAVBAR ===== */
+        .tsbd-navbar{position:sticky;top:0;z-index:900;width:100%;margin:0 auto 28px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border-color,#E5E7EB);box-shadow:0 4px 18px rgba(15,23,42,.06);backdrop-filter:blur(12px)}
+        .tsbd-nav-inner{max-width:1200px;margin:0 auto;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .tsbd-logo{text-decoration:none;display:inline-flex;align-items:center;gap:10px;color:#1F2937;font-weight:800;font-size:22px;letter-spacing:-.5px}
+        .tsbd-logo-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#6366F1,#3B82F6);font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(99,102,241,.25)}
+        .tsbd-nav-links{display:flex;align-items:center;gap:8px}
+        .tsbd-nav-link{border:0;background:transparent;text-decoration:none;color:#4B5563;font-size:14px;font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s ease}
+        .tsbd-nav-link:hover{background:#F3F4F6;color:#4F46E5}
+        .tsbd-nav-link.active{background:rgba(99,102,241,.12);color:#4F46E5;font-weight:700}
+        
+        /* User Avatar & Dropdown */
+        .tsbd-user{position:relative;display:none;align-items:center;margin-left:4px}
+        .tsbd-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #6366F1;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;user-select:none}
+        .tsbd-avatar:hover{transform:scale(1.06);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+        .tsbd-avatar:active{transform:scale(0.96)}
+        
+        .tsbd-avatar-dropdown{position:absolute;top:calc(100% + 10px);right:0;min-width:140px;background:#ffffff;border:1px solid #E5E7EB;border-radius:10px;padding:6px;box-shadow:0 10px 25px -5px rgba(0,0,0,.12),0 8px 10px -6px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1),visibility .22s ease;z-index:1000;pointer-events:none}
+        .tsbd-avatar-dropdown.show{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+        .tsbd-avatar-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease;white-space:nowrap}
+        .tsbd-avatar-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
+        
+        .tsbd-menu-btn{display:none;width:42px;height:42px;border:1px solid #E5E7EB;background:#fff;border-radius:10px;cursor:pointer;font-size:19px;color:#1F2937;align-items:center;justify-content:center}
+        .tsbd-drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:1090;opacity:0;visibility:hidden;transition:.25s ease}
+        .tsbd-drawer{position:fixed;top:0;right:0;width:min(82vw,320px);height:100vh;background:#fff;z-index:1100;padding:22px;box-shadow:-10px 0 30px rgba(15,23,42,.15);transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column}
+        .tsbd-drawer.open{transform:translateX(0)}.tsbd-drawer-overlay.open{opacity:1;visibility:visible}
+        .tsbd-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #E5E7EB}
+        .tsbd-close{border:0;background:#F3F4F6;width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center}
+        .tsbd-drawer .tsbd-nav-link{width:100%;justify-content:flex-start;padding:12px 14px;margin-bottom:6px;font-size:15px}
+        
+        /* Mobile Drawer User Dropdown */
+        .tsbd-mobile-user-wrap{margin-top:10px;border-top:1px solid #E5E7EB;padding-top:8px}
+        .tsbd-mobile-user-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:8px;transition:background .2s ease}
+        .tsbd-mobile-user-row:hover{background:#F3F4F6}
+        .tsbd-mobile-caret{margin-left:auto;font-size:12px;color:#9CA3AF;transition:transform .25s ease}
+        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret{transform:rotate(180deg)}
+        .tsbd-mobile-dropdown{opacity:0;max-height:0;overflow:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .25s ease,max-height .25s ease;padding:0 10px}
+        .tsbd-mobile-dropdown.show{opacity:1;max-height:80px;transform:translateY(0);padding:6px 10px}
+        .tsbd-mobile-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease}
+        .tsbd-mobile-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
+        
+        @media(max-width:768px){body{padding:12px}.tsbd-navbar{margin:-12px -12px 24px;width:calc(100% + 24px);}.tsbd-nav-links{display:none}.tsbd-menu-btn{display:flex}.tsbd-user{display:none!important}}
+
+        /* =========================================
+           CARD & BUTTONS
+           ========================================= */
+        .card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .card h2 {
+            margin-bottom: 24px;
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google {
+            background-color: #ffffff;
+            color: #333333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-google img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-primary:disabled {
+            background-color: #4B5563;
+            color: #9CA3AF;
+            cursor: not-allowed;
+        }
+
+        /* =========================================
+           MODAL (REGISTRATION FORM)
+           ========================================= */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(10, 26, 47, 0.85);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label.title {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Phone Input */
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #4B5563;
+            background-color: #1E293B;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="tel"]:focus,
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="file"]:focus,
+        textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #4B5563;
+            background-color: #1E293B;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .help-text {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .file-name {
+            margin-top: 6px;
+            color: var(--success-color);
+            font-size: 12px;
+            word-break: break-word;
+        }
+
+        /* Chips / Tags for Checkboxes (Mobile Friendly) */
+        .checkbox-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .chip input {
+            display: none;
+        }
+
+        .chip span {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #4B5563;
+            background-color: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .chip input:checked + span {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #ffffff;
+        }
+
+        /* =========================================
+           LOADING SPINNER & TOAST
+           ========================================= */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(10, 26, 47, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 500;
+            z-index: 3000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            text-align: center;
+            width: max-content;
+            max-width: 90vw;
+        }
+        
+        .welcome-msg {
+            font-size: 18px;
+            color: var(--success-color);
+            margin-top: 15px;
+            display: none;
+        }
+        
+        /* Custom Scrollbar for Modal */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- TSBD NAVBAR -->
+    <nav class="tsbd-navbar">
+        <div class="tsbd-nav-inner">
+            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
+            <div class="tsbd-nav-links">
+                <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+                <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+                <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+                <a class="tsbd-nav-link active" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <div class="tsbd-user" id="tsbdDesktopUser">
+                    <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Google profile" title="প্রোফাইল মেনু">
+                    <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                    </div>
+                </div>
+            </div>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+    <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
+    <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
+        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+        <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+        <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+        <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+        <a class="tsbd-nav-link active" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
+            <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
+                <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Google profile">
+                <span style="font-size:14px;font-weight:600;color:#374151" id="tsbdMobileName">Signed in</span>
+                <i class="fa-solid fa-chevron-down tsbd-mobile-caret"></i>
+            </div>
+            <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
+                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="container-holder">
+        <!-- 1. INITIAL LOGIN CARD -->
+        <div class="card" id="loginCard">
+            <h2>টিউটর পোর্টাল</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">এগিয়ে যেতে আপনার গুগল একাউন্ট দিয়ে লগ ইন করুন</p>
+            
+            <button class="btn btn-google" id="googleSignInBtn">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                Google দিয়ে সাইন ইন করুন
+            </button>
+
+            <div id="welcomeMessage" class="welcome-msg"></div>
+        </div>
+    </div>
+
+    <!-- 2. REGISTRATION MODAL (For New Users) -->
+    <div class="modal-overlay" id="registrationModal">
+        <div class="modal-content">
+            <h3>টিউটর রেজিস্ট্রেশন</h3>
+
+            <div class="form-group">
+                <label class="title">১. আপনার নাম *</label>
+                <input type="text" id="nameInput" placeholder="আপনার পূর্ণ নাম" autocomplete="name">
+            </div>
+
+            <div class="form-group">
+                <label class="title">২. শিক্ষাপ্রতিষ্ঠান (Department) *</label>
+                <input type="text" id="institutionInput" placeholder="শিক্ষাপ্রতিষ্ঠান / Department">
+            </div>
+
+            <div class="form-group" id="phoneGroup">
+                <label class="title">৩. ফোন নাম্বার (অবশ্যই WhatsApp নম্বর হতে হবে) *</label>
+                <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric" autocomplete="tel">
+                <span class="help-text">সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন। নম্বরটি অবশ্যই WhatsApp-এ সক্রিয় হতে হবে।</span>
+            </div>
+
+            <div class="form-group">
+                <label class="title">৪. বর্তমান ঠিকানা *</label>
+                <textarea id="addressInput" placeholder="বর্তমান ঠিকানা লিখুন"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="title">৫. লিঙ্গ *</label>
+                <div class="checkbox-grid">
+                    <label class="chip"><input type="radio" name="gender" value="পুরুষ"><span>পুরুষ</span></label>
+                    <label class="chip"><input type="radio" name="gender" value="মহিলা"><span>মহিলা</span></label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="title">৬. অভিজ্ঞতা *</label>
+                <textarea id="experienceInput" placeholder="যেমন: ৩ বছর / অভিজ্ঞতা নেই / পূর্বের পড়ানোর অভিজ্ঞতা"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="title">৭. যে বিষয় পড়াতে চান *</label>
+                <div class="checkbox-grid" id="subjectsGrid"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="title">পছন্দের এলাকা (একাধিক নির্বাচন করা যাবে) *</label>
+                <div class="checkbox-grid" id="locationsGrid"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="title">৮. NID / Birth Certificate (ছবি/পিডিএফ) *</label>
+                <input type="file" id="nidInput" accept="image/*,application/pdf">
+                <div class="file-name" id="nidFileName"></div>
+                <span class="help-text">সর্বোচ্চ ৮ MB।</span>
+            </div>
+
+            <div class="form-group">
+                <label class="title">৯. SSC/HSC Marksheet (ছবি/পিডিএফ) *</label>
+                <input type="file" id="marksheetInput" accept="image/*,application/pdf">
+                <div class="file-name" id="marksheetFileName"></div>
+                <span class="help-text">সর্বোচ্চ ৮ MB।</span>
+            </div>
+
+            <div class="form-group">
+                <label class="title">১০. Email (Google account থেকে automatic)</label>
+                <input type="email" id="emailInput" readonly>
+            </div>
+
+            <button class="btn btn-primary" id="saveProfileBtn" disabled>রেজিস্ট্রেশন সম্পন্ন করুন</button>
+        </div>
+    </div>
+
+    <!-- 3. LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: #fff; font-weight: 500;">অপেক্ষা করুন...</p>
+    </div>
+
+    <!-- 4. TOAST MESSAGE -->
+    <div class="toast" id="toastMessage"></div>
+
+    <!-- =========================================
+         JAVASCRIPT (Firebase Modular SDK)
+         ========================================= -->
+    <script type="module">
+        // 1. IMPORT FIREBASE MODULES
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // ==========================================
+        // 🔴 CONFIGURATION: আপনার তথ্য এখানে দিন
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
+            authDomain: "cms-of-jts.firebaseapp.com",
+            projectId: "cms-of-jts",
+            storageBucket: "cms-of-jts.firebasestorage.app",
+            messagingSenderId: "300970842151",
+            appId: "1:300970842151:web:9885ce2a591cf5f4eed602",
+            measurementId: "G-TRJNGCB98F"
+        };
+
+        // Redirect URLs
+        const REDIRECT_NEW_USER = "tuitions-offers.html";
+        const REDIRECT_OLD_USER = "tuitions-offers.html";
+
+        // Upload Endpoint: Set your deployed Cloudflare Worker URL here
+        // (e.g. "https://jts-uploader.your-subdomain.workers.dev")
+        const CLOUDFLARE_WORKER_URL = "https://jts-uploader.banglaworld247.workers.dev"; 
+
+        // Legacy / Fallback Google Apps Script URL
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyq20tVZkZOw6wfzjCqzuwM7ARZNEOoklWCKSsqmWPhxM4l-klvySR3WqRRtunRL7dX/exec";
+        
+        // Active upload URL: Prefers Cloudflare Worker if set, otherwise uses Apps Script
+        const UPLOAD_ENDPOINT = CLOUDFLARE_WORKER_URL || APPS_SCRIPT_URL;
+        // ==========================================
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        setPersistence(auth, browserLocalPersistence);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // ===== TSBD NAVBAR AUTH UI =====
+        const tsbdDrawer = document.getElementById("tsbdDrawer");
+        const tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
+        const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
+        const tsbdClose = document.getElementById("tsbdClose");
+
+        function tsbdOpenDrawer(){if(tsbdDrawer){tsbdDrawer.classList.add("open");tsbdOverlay.classList.add("open");tsbdDrawer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}}
+        function tsbdCloseDrawer(){if(tsbdDrawer){tsbdDrawer.classList.remove("open");tsbdOverlay.classList.remove("open");tsbdDrawer.setAttribute("aria-hidden","true");document.body.style.overflow=""}}
+        tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
+        tsbdClose?.addEventListener("click", tsbdCloseDrawer);
+        tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
+
+        // Dropdown toggle elements
+        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
+        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
+        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
+        const mobileUserWrap = document.getElementById('tsbdMobileUser');
+        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
+
+        desktopAvatar?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            desktopDropdown?.classList.toggle('show');
+        });
+
+        mobileUserToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileUserWrap?.classList.toggle('open');
+            mobileDropdown?.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
+                desktopDropdown.classList.remove('show');
+            }
+        });
+
+        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com"];
+
+        function isAdminUser(u) {
+            if (!u || !u.email) return false;
+            return ALLOWED_ADMIN_EMAILS.includes(u.email.toLowerCase().trim());
+        }
+
+        function tsbdSetUser(user){
+            const desktopUser = document.getElementById("tsbdDesktopUser");
+            const mobileUser = document.getElementById("tsbdMobileUser");
+            const desktopAvatar = document.getElementById("tsbdDesktopAvatar");
+            const mobileAvatar = document.getElementById("tsbdMobileAvatar");
+            const mobileName = document.getElementById("tsbdMobileName");
+            const loginLink = document.getElementById("loginLink");
+            const loginLinkMobile = document.getElementById("loginLinkMobile");
+            const adminDashboardLink = document.getElementById("adminDashboardLink");
+            const adminDashboardLinkMobile = document.getElementById("adminDashboardLinkMobile");
+
+            const isAdmin = isAdminUser(user);
+            if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
+            if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
+
+            if(user){
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName||user.email||(isAdmin ? 'Admin' : 'Tutor'))}&background=6366F1&color=fff`;
+                if(desktopAvatar) desktopAvatar.src = photo;
+                if(mobileAvatar) mobileAvatar.src = photo;
+                if(mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
+                if(desktopUser) desktopUser.style.display = "inline-flex";
+                if(mobileUser) mobileUser.style.display = "block";
+                if(loginLink) loginLink.style.display = "none";
+                if(loginLinkMobile) loginLinkMobile.style.display = "none";
+            } else {
+                if(desktopUser) desktopUser.style.display = "none";
+                if(mobileUser) mobileUser.style.display = "none";
+                if(desktopDropdown) desktopDropdown.classList.remove('show');
+                if(mobileDropdown) mobileDropdown.classList.remove('show');
+                if(loginLink) loginLink.style.display = "inline-flex";
+                if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+            }
+        }
+
+        // Preload cached avatar and admin status immediately on page load
+        const cachedPhoto = localStorage.getItem('tutorPhotoURL');
+        const cachedName = localStorage.getItem('tutorDisplayName');
+        const cachedEmail = localStorage.getItem('userEmail');
+        if (cachedPhoto || cachedEmail) {
+            tsbdSetUser({ photoURL: cachedPhoto, displayName: cachedName, email: cachedEmail });
+        }
+
+        async function tsbdLogout(){
+            try {
+                await signOut(auth);
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorSession");
+                tsbdCloseDrawer();
+                window.location.reload();
+            } catch(e) {
+                console.error("Logout error:", e);
+                alert("Logout failed. Please try again.");
+            }
+        }
+        document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
+        document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || '';
+                if (photo) localStorage.setItem("tutorPhotoURL", photo);
+                if (user.displayName || user.email) localStorage.setItem("tutorDisplayName", user.displayName || user.email);
+                if (user.email) localStorage.setItem("userEmail", user.email);
+                tsbdSetUser(user);
+            } else {
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                tsbdSetUser(null);
+            }
+        });
+
+        // DOM Elements
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        const loginCard = document.getElementById('loginCard');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const registrationModal = document.getElementById('registrationModal');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const nameInput = document.getElementById('nameInput');
+        const institutionInput = document.getElementById('institutionInput');
+        const phoneInput = document.getElementById('phoneInput');
+        const addressInput = document.getElementById('addressInput');
+        const experienceInput = document.getElementById('experienceInput');
+        const emailInput = document.getElementById('emailInput');
+        const nidInput = document.getElementById('nidInput');
+        const marksheetInput = document.getElementById('marksheetInput');
+        const nidFileName = document.getElementById('nidFileName');
+        const marksheetFileName = document.getElementById('marksheetFileName');
+        const locationsGrid = document.getElementById('locationsGrid');
+        const subjectsGrid = document.getElementById('subjectsGrid');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // Data Arrays
+        const locationsList = ["কাঁঠালতলার কাছে", "পুলিশ লাইনের কাছে", "চাঁচড়ার কাছে", "পালবাড়ির কাছে", "দড়াটানার কাছে", "নিউমার্কেটের কাছে", "ভার্সিটির কাছাকাছি", "শহরের বাইরে"];
+        const subjectsList = ["বাংলা", "গণিত", "ইংরেজি", "ধর্ম", "পদার্থবিজ্ঞান", "রসায়ন", "জীববিজ্ঞান", "উচ্চতর গণিত", "সব বিষয়"];
+
+        let currentUser = null; // Store Google user temporarily
+
+        // Utility Functions
+        function showLoading(text) {
+            loadingText.innerText = text;
+            loadingOverlay.style.display = "flex";
+        }
+
+        function hideLoading() {
+            loadingOverlay.style.display = "none";
+        }
+
+        function showToast(message, type = "error") {
+            toastMessage.innerText = message;
+            toastMessage.style.backgroundColor = type === "success" ? "var(--success-color)" : "var(--error-color)";
+            toastMessage.style.display = "block";
+            setTimeout(() => { toastMessage.style.display = "none"; }, 3500);
+        }
+
+        // Render Checkboxes dynamically
+        function renderCheckboxes(container, list, name) {
+            container.innerHTML = list.map(item => `
+                <label class="chip">
+                    <input type="checkbox" name="${name}" value="${item}">
+                    <span>${item}</span>
+                </label>
+            `).join('');
+            
+            // Add change listener to validate form
+            container.querySelectorAll('input').forEach(input => {
+                input.addEventListener('change', validateForm);
+            });
+        }
+        
+        // Form Validation Logic
+        function isValidBDPhone(phone) {
+            return /^01[3-9]\d{8}$/.test(phone);
+        }
+
+        function getSelectedGender() {
+            return document.querySelector('input[name="gender"]:checked')?.value || "";
+        }
+
+        function validateForm() {
+            const valid =
+                nameInput.value.trim() &&
+                institutionInput.value.trim() &&
+                isValidBDPhone(phoneInput.value.trim()) &&
+                addressInput.value.trim() &&
+                getSelectedGender() &&
+                experienceInput.value.trim() &&
+                document.querySelectorAll('input[name="location"]:checked').length > 0 &&
+                document.querySelectorAll('input[name="subject"]:checked').length > 0 &&
+                nidInput.files.length === 1 &&
+                marksheetInput.files.length === 1;
+
+            saveProfileBtn.disabled = !valid;
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const result = String(reader.result || "");
+                    resolve(result.includes(",") ? result.split(",")[1] : result);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Requested: session is stored using the tutor's registered phone number.
+        function setPhoneSession(phone) {
+            sessionStorage.setItem("tutorPhone", phone);
+            sessionStorage.setItem("tutorSession", "active");
+            localStorage.setItem("tutorPhone", phone);
+        }
+
+        function clearTutorSession() {
+            sessionStorage.removeItem("tutorPhone");
+            sessionStorage.removeItem("tutorSession");
+        }
+
+        // Initialize UI
+        renderCheckboxes(locationsGrid, locationsList, "location");
+        renderCheckboxes(subjectsGrid, subjectsList, "subject");
+
+        [
+            nameInput, institutionInput, phoneInput, addressInput,
+            experienceInput, nidInput, marksheetInput
+        ].forEach(el => el.addEventListener('input', validateForm));
+
+        document.querySelectorAll('input[name="gender"]').forEach(el =>
+            el.addEventListener('change', validateForm)
+        );
+
+        nidInput.addEventListener("change", () => {
+            nidFileName.textContent = nidInput.files[0]?.name || "";
+            validateForm();
+        });
+
+        marksheetInput.addEventListener("change", () => {
+            marksheetFileName.textContent = marksheetInput.files[0]?.name || "";
+            validateForm();
+        });
+
+        // ==========================================
+        // AUTHENTICATION FLOW
+        // ==========================================
+        googleSignInBtn.addEventListener('click', async () => {
+            try {
+                clearTutorSession();
+                showLoading("লগ ইন করা হচ্ছে...");
+
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                currentUser = user;
+
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || '';
+                if (photo) localStorage.setItem("tutorPhotoURL", photo);
+                if (user.displayName || user.email) localStorage.setItem("tutorDisplayName", user.displayName || user.email);
+                if (user.email) localStorage.setItem("userEmail", user.email);
+                tsbdSetUser(user);
+
+                showLoading("প্রোফাইল চেক করা হচ্ছে...");
+
+                const docRef = doc(db, "tutors", user.uid);
+                let docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists() && user.email) {
+                    const emailQuery = query(collection(db, "tutors"), where("email", "==", user.email));
+                    const emailSnap = await getDocs(emailQuery);
+                    if (!emailSnap.empty) docSnap = emailSnap.docs[0];
+                }
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const savedPhone = String(data.phone || "").trim();
+
+                    if (!isValidBDPhone(savedPhone)) {
+                        hideLoading();
+                        nameInput.value = data.name || user.displayName || "";
+                        institutionInput.value = data.institution || "";
+                        phoneInput.value = savedPhone;
+                        addressInput.value = data.address || "";
+                        experienceInput.value = data.experience || "";
+                        emailInput.value = user.email || data.email || "";
+                        registrationModal.style.display = "flex";
+                        showToast("প্রোফাইলে সঠিক ফোন নম্বর নেই। তথ্য সম্পূর্ণ করুন।");
+                        validateForm();
+                        return;
+                    }
+
+                    // Login session uses the registered phone number.
+                    setPhoneSession(savedPhone);
+
+                    hideLoading();
+                    googleSignInBtn.style.display = "none";
+                    welcomeMessage.innerText = `স্বাগতম, ${data.name || user.displayName || "টিউটর"}!`;
+                    welcomeMessage.style.display = "block";
+
+                    setTimeout(() => {
+                        window.location.href = REDIRECT_OLD_USER;
+                    }, 1000);
+                } else {
+                    hideLoading();
+                    nameInput.value = user.displayName || "";
+                    emailInput.value = user.email || "";
+
+                    if (user.phoneNumber) {
+                        const googlePhone = user.phoneNumber.replace(/^\+88/, "");
+                        if (isValidBDPhone(googlePhone)) phoneInput.value = googlePhone;
+                    }
+
+                    registrationModal.style.display = "flex";
+                    validateForm();
+                }
+            } catch (error) {
+                hideLoading();
+                console.error("Auth Error:", error);
+                showToast("লগ ইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+            }
+        });
+
+        // ==========================================
+        // REGISTRATION SUBMIT FLOW
+        // ==========================================
+        saveProfileBtn.addEventListener('click', async () => {
+            const selectedLocations = Array.from(document.querySelectorAll('input[name="location"]:checked')).map(cb => cb.value);
+            const selectedSubjects = Array.from(document.querySelectorAll('input[name="subject"]:checked')).map(cb => cb.value);
+            const gender = getSelectedGender();
+            const phone = phoneInput.value.trim();
+            const nidFile = nidInput.files[0];
+            const marksheetFile = marksheetInput.files[0];
+
+            if (!currentUser) {
+                showToast("লগ ইন সেশন পাওয়া যায়নি!");
+                return;
+            }
+
+            if (!isValidBDPhone(phone)) {
+                showToast("সঠিক ১১ ডিজিটের বাংলাদেশি মোবাইল নম্বর দিন।");
+                return;
+            }
+
+            if (!nidFile || !marksheetFile) {
+                showToast("NID/Birth Certificate এবং SSC/HSC Marksheet দুটিই দিন।");
+                return;
+            }
+
+            if (nidFile.size > 8 * 1024 * 1024 || marksheetFile.size > 8 * 1024 * 1024) {
+                showToast("প্রতিটি ফাইল সর্বোচ্চ ৮ MB হতে পারবে।");
+                return;
+            }
+
+            if (!UPLOAD_ENDPOINT || UPLOAD_ENDPOINT.includes("YOUR_")) {
+                showToast("প্রথমে আপলোড Endpoint (Cloudflare Worker URL) বসান।");
+                return;
+            }
+
+            try {
+                showLoading("Cloudflare R2-এ ডকুমেন্ট আপলোড করা হচ্ছে...");
+
+                let uploadResult;
+
+                // Check if using Cloudflare Worker (supports fast binary FormData upload)
+                const isCloudflare = !UPLOAD_ENDPOINT.includes("script.google.com");
+
+                if (isCloudflare) {
+                    const formData = new FormData();
+                    formData.append("phone", phone);
+                    formData.append("email", currentUser.email || "");
+                    formData.append("nid", nidFile);
+                    formData.append("marksheet", marksheetFile);
+
+                    const uploadResponse = await fetch(UPLOAD_ENDPOINT, {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    if (!uploadResponse.ok) {
+                        throw new Error(`আপলোড ব্যর্থ হয়েছে (HTTP ${uploadResponse.status})`);
+                    }
+
+                    uploadResult = await uploadResponse.json();
+                } else {
+                    // Fallback to Google Apps Script Base64 upload
+                    const [nidBase64, msBase64] = await Promise.all([
+                        fileToBase64(nidFile),
+                        fileToBase64(marksheetFile)
+                    ]);
+
+                    const uploadResponse = await fetch(UPLOAD_ENDPOINT, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify({
+                            action: "registerTutorDocuments",
+                            phone,
+                            email: currentUser.email || "",
+                            nidBase64,
+                            nidMime: nidFile.type,
+                            nidName: nidFile.name,
+                            msBase64,
+                            msMime: marksheetFile.type,
+                            msName: marksheetFile.name
+                        })
+                    });
+
+                    uploadResult = await uploadResponse.json();
+                }
+
+                if (uploadResult.status !== "success" && uploadResult.status !== "duplicate") {
+                    throw new Error(uploadResult.message || "Document upload failed.");
+                }
+
+                showLoading("তথ্য সংরক্ষণ করা হচ্ছে...");
+
+                const tutorData = {
+                    name: nameInput.value.trim(),
+                    institution: institutionInput.value.trim(),
+                    email: currentUser.email || "",
+                    phone,
+                    address: addressInput.value.trim(),
+                    gender,
+                    experience: experienceInput.value.trim(),
+                    locations: selectedLocations,
+                    subjects: selectedSubjects,
+                    nidUrl: uploadResult.nidUrl || "",
+                    msUrl: uploadResult.msUrl || "",
+                    nidFileId: uploadResult.nidFileId || "",
+                    msFileId: uploadResult.msFileId || "",
+                    registeredAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                await setDoc(doc(db, "tutors", currentUser.uid), tutorData);
+
+                // Phone-number session for subsequent login/page access.
+                setPhoneSession(phone);
+
+                hideLoading();
+                registrationModal.style.display = "none";
+                googleSignInBtn.style.display = "none";
+                welcomeMessage.innerText = `স্বাগতম, ${tutorData.name}!`;
+                welcomeMessage.style.display = "block";
+                showToast("রেজিস্ট্রেশন সফলভাবে সম্পন্ন হয়েছে!", "success");
+
+                setTimeout(() => {
+                    window.location.href = REDIRECT_NEW_USER;
+                }, 1000);
+
+            } catch (error) {
+                hideLoading();
+                console.error("Registration Error:", error);
+                showToast(error.message || "তথ্য সংরক্ষণে সমস্যা হয়েছে।");
+            }
+        });
+
+
+    </script>
+</body>
+</html>
