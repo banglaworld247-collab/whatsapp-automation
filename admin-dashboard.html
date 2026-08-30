@@ -390,6 +390,34 @@
             color: var(--accent);
         }
 
+        .btn-google-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #1F2937;
+            border: 1px solid #E5E7EB;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .btn-google-login:hover {
+            background: #F9FAFB;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-google-login:active {
+            transform: translateY(0);
+        }
+
         /* Form Elements */
         .form-group {
             margin-bottom: 15px;
@@ -1330,7 +1358,7 @@
             <form id="login-form">
                 <div class="form-group">
                     <label>ইমেইল</label>
-                    <input type="email" id="login-email" required placeholder="banglaworld247@gmail.com">
+                    <input type="email" id="login-email" required placeholder="অ্যাডমিন ইমেইল লিখুন">
                 </div>
                 <div class="form-group">
                     <label for="login-password">পাসওয়ার্ড</label>
@@ -1346,6 +1374,15 @@
                 </p>
                 <button type="submit" id="login-btn">লগইন করুন</button>
             </form>
+            <div style="display:flex;align-items:center;margin:18px 0;gap:10px;">
+                <div style="flex:1;height:1px;background:var(--border-color);"></div>
+                <span style="font-size:13px;color:var(--text-muted);">অথবা</span>
+                <div style="flex:1;height:1px;background:var(--border-color);"></div>
+            </div>
+            <button type="button" id="google-login-btn" class="btn-google-login">
+                <i class="fa-brands fa-google" style="color:#EA4335;font-size:18px;"></i>
+                <span>গুগল দিয়ে অ্যাডমিন লগইন</span>
+            </button>
         </div>
     </div>
 
@@ -1747,7 +1784,17 @@
     <!-- Firebase SDK (Modular v9+) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            onAuthStateChanged, 
+            signOut, 
+            setPersistence, 
+            browserLocalPersistence,
+            GoogleAuthProvider,
+            signInWithPopup
+        } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, getDoc, getDocs, where, arrayUnion, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // === আপনার ফায়ারবেস কনফিগ এখানে বসান ===
@@ -1789,17 +1836,19 @@
                 console.error("Local WA config parse error:", e);
             }
 
-            // Sync from Firestore settings collection if available
-            getDoc(doc(db, "settings", "whatsapp")).then(snap => {
-                if (snap.exists()) {
-                    const remoteData = snap.data();
-                    waConfig = { ...waConfig, ...remoteData };
-                    localStorage.setItem('tsbd_wa_config', JSON.stringify(waConfig));
-                    updateWaUIFromConfig();
-                }
-            }).catch(err => {
-                console.log("Remote WA config fetch notice:", err.message);
-            });
+            // Sync from Firestore settings collection ONLY if user is logged in as admin
+            if (auth.currentUser && isAdminUser(auth.currentUser)) {
+                getDoc(doc(db, "settings", "whatsapp")).then(snap => {
+                    if (snap && snap.exists()) {
+                        const remoteData = snap.data();
+                        waConfig = { ...waConfig, ...remoteData };
+                        localStorage.setItem('tsbd_wa_config', JSON.stringify(waConfig));
+                        updateWaUIFromConfig();
+                    }
+                }).catch(err => {
+                    console.log("Remote WA config fetch notice:", err.message);
+                });
+            }
 
             updateWaUIFromConfig();
         }
@@ -2265,6 +2314,7 @@ ${detailsUrl}`;
                 tsbdSetUser(user);
                 loginContainer.style.display = 'none';
                 dashboardContainer.style.display = 'block';
+                initWhatsAppConfig(); // Load WhatsApp remote config on verified admin auth
                 loadTuitions(); // Load data on verified admin login
             } else {
                 if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
@@ -2289,6 +2339,33 @@ ${detailsUrl}`;
             }
         });
 
+        // Google Sign-In for Admin
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        googleLoginBtn?.addEventListener('click', async () => {
+            loginError.style.display = 'none';
+            googleLoginBtn.disabled = true;
+            googleLoginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>গুগল লগইন হচ্ছে...</span>';
+            try {
+                const provider = new GoogleAuthProvider();
+                const res = await signInWithPopup(auth, provider);
+                const user = res.user;
+                if (!isAdminUser(user)) {
+                    await signOut(auth);
+                    loginError.innerText = `অননুমোদিত ইমেইল (${user.email})! শুধুমাত্র অনুমোদিত অ্যাডমিন ইমেইল দিয়ে লগইন করতে পারবেন।`;
+                    loginError.style.display = 'block';
+                }
+            } catch (err) {
+                console.error("Google admin login error:", err);
+                if (err.code !== 'auth/popup-closed-by-user') {
+                    loginError.innerText = err.message || 'গুগল লগইন সম্পন্ন করা যায়নি!';
+                    loginError.style.display = 'block';
+                }
+            } finally {
+                googleLoginBtn.disabled = false;
+                googleLoginBtn.innerHTML = '<i class="fa-brands fa-google" style="color:#EA4335;font-size:18px;"></i> <span>গুগল দিয়ে অ্যাডমিন লগইন</span>';
+            }
+        });
+
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
@@ -2309,35 +2386,19 @@ ${detailsUrl}`;
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (error) {
                 console.error("Login attempt error:", error);
-                if (ALLOWED_ADMIN_EMAILS.includes(email.toLowerCase()) &&
-                    (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential')) {
-                    try {
-                        await createUserWithEmailAndPassword(auth, email, pass);
-                        btn.innerText = 'লগইন করুন';
-                        return;
-                    } catch (createErr) {
-                        console.error("Auto create admin error:", createErr);
-                        if (createErr.code === 'auth/email-already-in-use') {
-                            loginError.innerText = 'ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।';
-                        } else if (createErr.code === 'auth/operation-not-allowed') {
-                            loginError.innerText = 'Firebase Console > Authentication-এ Email/Password চালু করুন।';
-                        } else {
-                            loginError.innerText = createErr.message || 'লগইন ব্যর্থ হয়েছে।';
-                        }
-                        loginError.style.display = 'block';
-                    }
-                } else if (error.code === 'auth/wrong-password') {
-                    loginError.innerText = 'ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।';
-                    loginError.style.display = 'block';
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    loginError.innerText = 'ভুল পাসওয়ার্ড বা ভুল ইমেইল! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন অথবা গুগল দিয়ে লগইন করুন।';
+                } else if (error.code === 'auth/user-not-found') {
+                    loginError.innerText = 'এই ইমেইলে কোনো পাসওয়ার্ড অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে "গুগল দিয়ে অ্যাডমিন লগইন" করুন।';
                 } else if (error.code === 'auth/operation-not-allowed') {
-                    loginError.innerText = 'Firebase Console > Authentication-এ Email/Password চালু করুন।';
-                    loginError.style.display = 'block';
+                    loginError.innerText = 'Firebase Authentication-এ Email/Password সক্রিয় নেই। অনুগ্রহ করে "গুগল দিয়ে অ্যাডমিন লগইন" করুন।';
                 } else {
-                    loginError.innerText = error.message || 'ভুল ইমেইল বা পাসওয়ার্ড!';
-                    loginError.style.display = 'block';
+                    loginError.innerText = error.message || 'লগইন ব্যর্থ হয়েছে!';
                 }
+                loginError.style.display = 'block';
+            } finally {
+                btn.innerText = 'লগইন করুন';
             }
-            btn.innerText = 'লগইন করুন';
         });
 
         logoutBtn.addEventListener('click', tsbdLogout);
