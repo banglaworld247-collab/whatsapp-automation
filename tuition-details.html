@@ -822,6 +822,61 @@
             escapeHtml
         } from "./js/utils.js";
 
+        // ===== TSBD NAVBAR AUTH UI =====
+        const tsbdDrawer = document.getElementById("tsbdDrawer");
+        const tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
+        const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
+        const tsbdClose = document.getElementById("tsbdClose");
+
+        function tsbdOpenDrawer(){if(tsbdDrawer){tsbdDrawer.classList.add("open");tsbdOverlay.classList.add("open");tsbdDrawer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}}
+        function tsbdCloseDrawer(){if(tsbdDrawer){tsbdDrawer.classList.remove("open");tsbdOverlay.classList.remove("open");tsbdDrawer.setAttribute("aria-hidden","true");document.body.style.overflow=""}}
+        tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
+        tsbdClose?.addEventListener("click", tsbdCloseDrawer);
+        tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
+
+        // Dropdown toggle elements
+        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
+        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
+        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
+        const mobileUserWrap = document.getElementById('tsbdMobileUser');
+        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
+
+        desktopAvatar?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            desktopDropdown?.classList.toggle('show');
+        });
+
+        mobileUserToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileUserWrap?.classList.toggle('open');
+            mobileDropdown?.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
+                desktopDropdown.classList.remove('show');
+            }
+        });
+
+        async function tsbdLogout() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorSession");
+                tsbdCloseDrawer();
+                window.location.reload();
+            } catch (e) {
+                console.error("Logout error:", e);
+                alert("Logout failed. Please try again.");
+            }
+        }
+        document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
+        document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
+
         function tsbdSetUser(user) {
             const desktopUser = document.getElementById("tsbdDesktopUser");
             const mobileUser = document.getElementById("tsbdMobileUser");

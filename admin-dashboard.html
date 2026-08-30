@@ -2296,6 +2296,8 @@
 ${detailsUrl}`;
         }
 
+        const WA_OFFER_FOLLOWUP_MSG = "📌 টিউশনে আবেদন করার আগে ডিটেইলস/রিকোয়ারমেন্ট ভালোভাবে চেক করে নিন। আপনাদের সুবিধার্থে আবেদন করা সম্পূর্ণ ফ্রি রাখা হয়েছে, তাই ভেবেচিন্তে আবেদন করুন। সিলেক্ট হয়ে না গেলে অন্য একজন যোগ্য টিউটরের হক নষ্ট হয় — দয়া করে দায়িত্বশীল থাকুন।";
+
         async function sendWhatsAppGroupMessage(messageText) {
             if (!waConfig) {
                 return { success: false, error: 'হোয়াটসঅ্যাপ কনফিগারেশন পাওয়া যায়নি।' };
@@ -2429,7 +2431,10 @@ ${detailsUrl}`;
                 if (confirm("আপনি কি কনফিগার করা হোয়াটসঅ্যাপ গ্রুপে এই টিউশনটি অটো-পোস্ট করতে চান?")) {
                     const res = await sendWhatsAppGroupMessage(formattedMsg);
                     if (res.success) {
-                        alert("✅ হোয়াটসঅ্যাপ গ্রুপে সফলভাবে মেসেজ পাঠানো হয়েছে!");
+                        // Send follow-up advice note as next message
+                        await new Promise(r => setTimeout(r, 1200));
+                        await sendWhatsAppGroupMessage(WA_OFFER_FOLLOWUP_MSG);
+                        alert("✅ হোয়াটসঅ্যাপ গ্রুপে সফলভাবে টিউশন অফার ও সতর্কবার্তা পাঠানো হয়েছে!");
                         return;
                     } else {
                         alert("অটোমেটিক পাঠাতে সমস্যা হয়েছে: " + res.error + "\n\nএখন সাধারণ শেয়ার লিঙ্ক ওপেন করা হচ্ছে...");
@@ -2438,7 +2443,8 @@ ${detailsUrl}`;
             }
 
             // Fallback: Open standard WhatsApp share link
-            const waShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(formattedMsg)}`;
+            const combinedShareMsg = `${formattedMsg}\n\n${WA_OFFER_FOLLOWUP_MSG}`;
+            const waShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(combinedShareMsg)}`;
             window.open(waShareUrl, '_blank');
         };
 
@@ -3170,6 +3176,10 @@ ${detailsUrl}`;
                         const waText = formatWhatsAppMessage(tuitionData, docRef.id);
                         const waRes = await sendWhatsAppGroupMessage(waText);
                         if (waRes.success) {
+                            // Send follow-up advice note as next message
+                            await new Promise(r => setTimeout(r, 1200));
+                            await sendWhatsAppGroupMessage(WA_OFFER_FOLLOWUP_MSG);
+
                             successMsg.innerHTML = '✅ সফলভাবে পোস্ট হয়েছে এবং হোয়াটসঅ্যাপ গ্রুপে মেসেজ পাঠানো হয়েছে!';
                             successMsg.style.color = 'var(--success)';
                         } else {
