@@ -397,6 +397,23 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
         ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 3px; }
+
+        @media (max-width: 768px) {
+            body { padding: 0 0 30px 0 !important; }
+            .tsbd-navbar { margin: 0 0 16px 0 !important; width: 100% !important; }
+            .tsbd-nav-inner { padding: 0 14px; min-height: 60px; }
+            .tsbd-logo { font-size: 20px; }
+            .tsbd-logo-mark { width: 34px; height: 34px; font-size: 13px; }
+            .tsbd-nav-links { display: none; }
+            .tsbd-menu-btn { display: flex; }
+            .tsbd-user { display: none !important; }
+            .container-holder { padding: 12px; }
+            .card { padding: 26px 18px; border-radius: 16px; width: 100%; max-width: 100%; }
+            .modal-overlay { padding: 0; align-items: flex-end; }
+            .modal-content { max-width: 100%; border-radius: 20px 20px 0 0; padding: 20px 16px; max-height: 92vh; }
+            input[type="text"], input[type="tel"], input[type="email"], textarea { min-height: 46px; font-size: 15px !important; }
+            .btn { min-height: 48px; font-size: 15px; }
+        }
     </style>
 </head>
 <body>

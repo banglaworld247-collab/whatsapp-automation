@@ -1294,6 +1294,286 @@
             font-weight: 700 !important;
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
         }
+
+        /* =========================================================
+           PROFESSIONAL MOBILE & TABLET OPTIMIZATION (RESPONSIVE ENGINE)
+           ========================================================= */
+        @media (max-width: 1024px) {
+            #dashboard-container {
+                padding: 16px 14px;
+            }
+            .profit-summary-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0 0 40px 0 !important;
+                font-size: 14px;
+            }
+
+            /* Navbar Adjustments */
+            .tsbd-navbar {
+                margin: 0 0 16px 0 !important;
+                width: 100% !important;
+            }
+            .tsbd-nav-inner {
+                padding: 0 14px;
+                min-height: 60px;
+            }
+            .tsbd-logo {
+                font-size: 20px;
+            }
+            .tsbd-logo-mark {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+
+            /* Login Box Mobile */
+            #login-container {
+                padding: 12px;
+                min-height: calc(100dvh - 100px);
+            }
+            .login-box {
+                padding: 26px 18px;
+                border-radius: 14px;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            }
+            .login-box h2 {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+
+            /* Inputs prevent auto-zoom on iOS */
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            select,
+            textarea {
+                font-size: 15px !important;
+                padding: 12px 14px !important;
+                border-radius: 8px !important;
+                min-height: 46px;
+            }
+
+            button {
+                min-height: 46px;
+                font-size: 15px;
+                border-radius: 8px;
+                touch-action: manipulation;
+            }
+
+            /* Dashboard Container */
+            #dashboard-container {
+                padding: 0 12px 30px 12px;
+            }
+
+            /* Top Bar */
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 14px 16px;
+                border-radius: 12px;
+                margin-bottom: 14px;
+            }
+            .top-bar h2 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .top-bar button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Navigation Tabs - Horizontal Touch Scroll */
+            .tabs {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                gap: 8px;
+                padding: 2px 2px 8px 2px;
+                margin-bottom: 14px;
+            }
+            .tabs::-webkit-scrollbar {
+                display: none;
+            }
+            .tab-btn {
+                flex-shrink: 0;
+                padding: 9px 16px;
+                font-size: 13px;
+                border-radius: 8px;
+                min-height: 40px;
+            }
+
+            /* Profit / Financial Metric Cards */
+            .profit-summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .profit-card {
+                padding: 14px 12px;
+                border-radius: 10px;
+                gap: 4px;
+            }
+            .profit-card-title {
+                font-size: 11px;
+            }
+            .profit-card-value {
+                font-size: 19px;
+            }
+
+            /* Filter Pills Bar - Horizontal Touch Scroll */
+            .filter-bar {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                flex-wrap: nowrap;
+                gap: 8px;
+                padding-bottom: 8px;
+                margin-bottom: 14px;
+            }
+            .filter-bar::-webkit-scrollbar {
+                display: none;
+            }
+            .filter-btn {
+                flex-shrink: 0;
+                padding: 8px 14px;
+                font-size: 12px;
+                border-radius: 20px;
+                white-space: nowrap;
+            }
+
+            /* Sections & Form Grid */
+            .section {
+                padding: 16px 12px;
+                border-radius: 12px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+
+            /* Tuition Cards Grid & Elements */
+            .tuition-cards-grid {
+                gap: 12px;
+            }
+            .tuition-card {
+                padding: 14px 12px;
+                border-radius: 10px;
+            }
+            .tuition-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .tuition-title {
+                font-size: 16px;
+                line-height: 1.4;
+            }
+            .tuition-meta {
+                font-size: 12px;
+                gap: 8px;
+            }
+            .status-badge {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+
+            /* Highlights & CRM Info */
+            .card-highlights-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .highlight-box {
+                padding: 9px 10px;
+                font-size: 12px;
+            }
+
+            /* Card Action Buttons: Mobile Thumb-friendly Grid */
+            .card-action-bar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-top: 12px;
+            }
+            .btn-card-action {
+                width: 100% !important;
+                justify-content: center;
+                padding: 10px 8px;
+                font-size: 12px;
+                min-height: 40px;
+                border-radius: 8px;
+            }
+            .btn-view-apps {
+                grid-column: span 2;
+                font-weight: 700;
+            }
+
+            /* Modals Optimization */
+            .modal {
+                padding: 8px;
+                align-items: flex-end;
+            }
+            .modal-content {
+                max-width: 100%;
+                max-height: 92vh;
+                padding: 18px 14px;
+                border-radius: 16px 16px 0 0;
+            }
+            .modal-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .modal-actions-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .modal-actions-bar button {
+                width: 100%;
+                min-height: 46px;
+            }
+
+            /* Data Tables Responsive */
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                font-size: 12px;
+            }
+            .data-table th {
+                width: 120px;
+                font-size: 12px;
+            }
+
+            /* WhatsApp Settings Guide */
+            .wa-guide-box {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .profit-summary-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-action-bar {
+                grid-template-columns: 1fr;
+            }
+            .btn-view-apps {
+                grid-column: span 1;
+            }
+        }
     </style>
 </head>
 

@@ -382,12 +382,26 @@
             width: 100%;
         }
 
-        @media(max-width: 640px) {
-            .hero-title { font-size: 28px; }
-            .hero-desc { font-size: 14.5px; }
-            .calculator-card { padding: 20px 16px; }
-            .action-group { flex-direction: column; width: 100%; }
-            .btn { width: 100%; justify-content: center; }
+        @media(max-width: 768px) {
+            body { padding: 0 0 30px 0 !important; }
+            .tsbd-navbar { margin: 0 0 16px 0 !important; width: 100% !important; }
+            .tsbd-nav-inner { padding: 0 14px; min-height: 60px; }
+            .tsbd-logo { font-size: 20px; }
+            .tsbd-logo-mark { width: 34px; height: 34px; font-size: 13px; }
+            .tsbd-nav-links { display: none; }
+            .tsbd-menu-btn { display: flex; }
+            .tsbd-user { display: none !important; }
+            .partner-wrapper { padding: 10px 14px 20px 14px; }
+            .hero-title { font-size: 24px; line-height: 1.35; }
+            .hero-desc { font-size: 14px; }
+            .calculator-card { padding: 20px 14px; border-radius: 16px; }
+            .preset-buttons { gap: 6px; }
+            .preset-btn { padding: 6px 10px; font-size: 12px; }
+            .result-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .steps-grid { grid-template-columns: 1fr; gap: 12px; }
+            .step-card { padding: 18px 14px; border-radius: 14px; }
+            .action-group { flex-direction: column; width: 100%; gap: 10px; }
+            .btn { width: 100%; justify-content: center; min-height: 48px; font-size: 15px; }
         }
     </style>
 </head>
