@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পার্টনার প্রোগ্রাম - TSBD (Tuition Service BD)</title>
+    <meta name="description" content="TSBD (Tuition Service BD) Partner Program - পরিচিত শিক্ষার্থী বা অভিভাবকদের টিউশন রেফার করে প্রতিটি সফল টিউশনে ১৫% নগদ কমিশন আয় করুন।">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0B132B;
+            --card-bg: #1C2541;
+            --primary: #6366F1;
+            --primary-hover: #4F46E5;
+            --accent: #38BDF8;
+            --accent-glow: rgba(56, 189, 248, 0.25);
+            --text-light: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-color: #334155;
+            --success: #10B981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.2) 0px, transparent 50%),
+                radial-gradient(at 85% 65%, rgba(56, 189, 248, 0.15) 0px, transparent 50%);
+        }
+
+        /* ===== TSBD NAVBAR ===== */
+        .tsbd-navbar{position:sticky;top:0;z-index:900;width:100%;margin:0 auto 28px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border-color,#E5E7EB);box-shadow:0 4px 18px rgba(15,23,42,.06);backdrop-filter:blur(12px)}
+        .tsbd-nav-inner{max-width:1200px;margin:0 auto;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+        .tsbd-logo{text-decoration:none;display:inline-flex;align-items:center;gap:10px;color:#1F2937;font-weight:800;font-size:22px;letter-spacing:-.5px}
+        .tsbd-logo-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#6366F1,#3B82F6);font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(99,102,241,.25)}
+        .tsbd-nav-links{display:flex;align-items:center;gap:6px}
+        .tsbd-nav-link{border:0;background:transparent;text-decoration:none;color:#4B5563;font-size:14px;font-weight:600;padding:9px 12px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s ease;white-space:nowrap}
+        .tsbd-nav-link:hover{background:#F3F4F6;color:#4F46E5}
+        .tsbd-nav-link.active{background:rgba(99,102,241,.12);color:#4F46E5;font-weight:700}
+        
+        /* User Avatar & Dropdown */
+        .tsbd-user{position:relative;display:none;align-items:center;margin-left:4px}
+        .tsbd-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #6366F1;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;user-select:none}
+        .tsbd-avatar:hover{transform:scale(1.06);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+        .tsbd-avatar:active{transform:scale(0.96)}
+        
+        .tsbd-avatar-dropdown{position:absolute;top:calc(100% + 10px);right:0;min-width:140px;background:#ffffff;border:1px solid #E5E7EB;border-radius:10px;padding:6px;box-shadow:0 10px 25px -5px rgba(0,0,0,.12),0 8px 10px -6px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1),visibility .22s ease;z-index:1000;pointer-events:none}
+        .tsbd-avatar-dropdown.show{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+        .tsbd-avatar-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease;white-space:nowrap}
+        .tsbd-avatar-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
+        
+        .tsbd-menu-btn{display:none;width:42px;height:42px;border:1px solid #E5E7EB;background:#fff;border-radius:10px;cursor:pointer;font-size:19px;color:#1F2937;align-items:center;justify-content:center}
+        .tsbd-drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:1090;opacity:0;visibility:hidden;transition:.25s ease}
+        .tsbd-drawer{position:fixed;top:0;right:0;width:min(82vw,320px);height:100vh;background:#fff;z-index:1100;padding:22px;box-shadow:-10px 0 30px rgba(15,23,42,.15);transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column}
+        .tsbd-drawer.open{transform:translateX(0)}.tsbd-drawer-overlay.open{opacity:1;visibility:visible}
+        .tsbd-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #E5E7EB}
+        .tsbd-close{border:0;background:#F3F4F6;width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center;color:#1F2937;}
+        .tsbd-drawer .tsbd-nav-link{width:100%;justify-content:flex-start;padding:12px 14px;margin-bottom:6px;font-size:15px;color:#4B5563;}
+        
+        /* Mobile Drawer User Dropdown */
+        .tsbd-mobile-user-wrap{margin-top:10px;border-top:1px solid #E5E7EB;padding-top:8px}
+        .tsbd-mobile-user-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:8px;transition:background .2s ease}
+        .tsbd-mobile-user-row:hover{background:#F3F4F6}
+        .tsbd-mobile-caret{margin-left:auto;font-size:12px;color:#9CA3AF;transition:transform .25s ease}
+        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret{transform:rotate(180deg)}
+        .tsbd-mobile-dropdown{opacity:0;max-height:0;overflow:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .25s ease,max-height .25s ease;padding:0 10px}
+        .tsbd-mobile-dropdown.show{opacity:1;max-height:80px;transform:translateY(0);padding:6px 10px}
+        .tsbd-mobile-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease}
+        .tsbd-mobile-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
+        
+        @media(max-width:768px){body{padding:12px}.tsbd-navbar{margin:-12px -12px 24px;width:calc(100% + 24px);}.tsbd-nav-links{display:none}.tsbd-menu-btn{display:flex}.tsbd-user{display:none!important}}
+
+        /* Container */
+        .partner-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 50px 20px 60px;
+            text-align: center;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.15);
+            color: #A5B4FC;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13.5px;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.35;
+            margin-bottom: 16px;
+            color: #FFFFFF;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #818CF8, #38BDF8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 16.5px;
+            color: var(--text-muted);
+            max-width: 720px;
+            margin: 0 auto 36px auto;
+            line-height: 1.7;
+        }
+
+        /* Calculator Card */
+        .calculator-card {
+            background: linear-gradient(145deg, rgba(28, 37, 65, 0.95), rgba(15, 23, 42, 0.95));
+            border: 1px solid #475569;
+            border-radius: 20px;
+            padding: 32px 24px;
+            margin: 0 auto 40px auto;
+            max-width: 700px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.12);
+            text-align: left;
+        }
+
+        .calc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .calc-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .calc-badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ADE80;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .calc-input-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .calc-input-group {
+            display: flex;
+            align-items: center;
+            background: #0F172A;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px 16px;
+            margin-bottom: 14px;
+        }
+
+        .calc-currency {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .calc-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #FFFFFF;
+            font-size: 22px;
+            font-weight: 700;
+            outline: none;
+            padding: 10px 0;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: #CBD5E1;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            background: var(--primary);
+            color: #FFF;
+            border-color: var(--primary);
+        }
+
+        /* Result Grid */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .result-box {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .result-box:hover {
+            transform: translateY(-2px);
+            border-color: #6366F1;
+        }
+
+        .result-box.highlight {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .result-label {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .result-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: #38BDF8;
+        }
+
+        .result-box.highlight .result-val {
+            color: #4ADE80;
+        }
+
+        /* How it works steps */
+        .steps-section {
+            margin: 40px auto 40px auto;
+            text-align: left;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: #FFFFFF;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: rgba(28, 37, 65, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1, #38BDF8);
+            color: #FFF;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        .step-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #FFF;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* CTA Button */
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-whatsapp {
+            background: #22C55E;
+            color: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+            border: none;
+        }
+
+        .btn-whatsapp:hover {
+            background: #16A34A;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #94A3B8;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #64748B;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 24px 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        @media(max-width: 640px) {
+            .hero-title { font-size: 28px; }
+            .hero-desc { font-size: 14.5px; }
+            .calculator-card { padding: 20px 16px; }
+            .action-group { flex-direction: column; width: 100%; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TSBD NAVBAR -->
+    <nav class="tsbd-navbar">
+        <div class="tsbd-nav-inner">
+            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
+            <div class="tsbd-nav-links">
+                <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+                <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+                <a class="tsbd-nav-link active" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+                <a class="tsbd-nav-link" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+                <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <div class="tsbd-user" id="tsbdDesktopUser">
+                    <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Profile" title="প্রোফাইল মেনু">
+                    <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                    </div>
+                </div>
+            </div>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+    <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
+    <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
+        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+        <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+        <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+        <a class="tsbd-nav-link active" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+        <a class="tsbd-nav-link" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+        <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
+            <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
+                <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Profile">
+                <span style="font-size:14px;font-weight:600;color:#374151" id="tsbdMobileName">Signed in</span>
+                <i class="fa-solid fa-chevron-down tsbd-mobile-caret"></i>
+            </div>
+            <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
+                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="partner-wrapper">
+        <div class="badge-pill">
+            <i class="fa-solid fa-handshake-angle"></i> TSBD টিউশন পার্টনারশিপ প্রোগ্রাম
+        </div>
+
+        <h1 class="hero-title">
+            টিউশন অফার রেফার করুন,<br><span>প্রতিটিতে জিতে নিন ১৫% নিশ্চিত কমিশন!</span>
+        </h1>
+
+        <p class="hero-desc">
+            আপনার পরিচিত শিক্ষার্থী বা অভিভাবকদের গৃহশিক্ষক প্রয়োজন? শুধু টিউশনের বিবরণ আমাদের হোয়াটসঅ্যাপে পাঠান। টিউশন সফলভাবে কনফার্ম হলেই বেতনের <strong>১৫% নগদ ক্যাশ কমিশন</strong> পৌঁছে যাবে আপনার বিকাশ বা নগদে!
+        </p>
+
+        <!-- 15% Interactive Calculator -->
+        <div class="calculator-card">
+            <div class="calc-header">
+                <div class="calc-title">
+                    <i class="fa-solid fa-calculator" style="color:var(--accent);"></i> ১৫% পার্টনার ইনকাম ক্যালকুলেটর
+                </div>
+                <span class="calc-badge">১৫% ফিক্সড কমিশন</span>
+            </div>
+
+            <label class="calc-input-label" for="salaryInput">টিউশনের মাসিক বেতন লিখুন (৳):</label>
+            <div class="calc-input-group">
+                <span class="calc-currency">৳</span>
+                <input type="number" id="salaryInput" class="calc-input" value="5000" min="500" step="500" placeholder="বেতন লিখুন">
+            </div>
+
+            <div class="preset-buttons">
+                <button type="button" class="preset-btn" onclick="setSalary(3000)">৳ ৩,০০০</button>
+                <button type="button" class="preset-btn active" onclick="setSalary(5000)">৳ ৫,০০০</button>
+                <button type="button" class="preset-btn" onclick="setSalary(8000)">৳ ৮,০০০</button>
+                <button type="button" class="preset-btn" onclick="setSalary(10000)">৳ ১০,০০০</button>
+                <button type="button" class="preset-btn" onclick="setSalary(15000)">৳ ১৫,০০০</button>
+            </div>
+
+            <div class="result-grid">
+                <div class="result-box highlight">
+                    <div class="result-label">১টি টিউশনে আয়</div>
+                    <div class="result-label" style="display:none;"></div>
+                    <div class="result-val" id="singleIncome">৳ ৭৫০</div>
+                </div>
+                <div class="result-box">
+                    <div class="result-label">৩টি টিউশনে আয়</div>
+                    <div class="result-val" id="threeIncome">৳ ২,২৫০</div>
+                </div>
+                <div class="result-box">
+                    <div class="result-label">৫টি টিউশনে আয়</div>
+                    <div class="result-val" id="fiveIncome">৳ ৩,৭৫০</div>
+                </div>
+                <div class="result-box">
+                    <div class="result-label">১০টি টিউশনে আয়</div>
+                    <div class="result-val" id="tenIncome">৳ ৭,৫০০</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3 Simple Steps -->
+        <section class="steps-section">
+            <h2 class="section-title">সহজ ৩টি ধাপে আয় শুরু করুন</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">১</div>
+                    <h3>টিউশন ডিটেইলস পাঠান</h3>
+                    <p>অভিভাবকের প্রয়োজন (ক্লাস, বিষয়, লোকেশন ও বেতন) আমাদের হোয়াটসঅ্যাপে মেসেজ দিয়ে জানান।</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">২</div>
+                    <h3>আমরা শিক্ষক দেব</h3>
+                    <p>আমাদের ভেরিফাইড পুল থেকে সেরা শিক্ষক দিয়ে ডেমো ক্লাস ও অভিভাবকের সাথে ডিল কনফার্ম করব।</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">৩</div>
+                    <h3>১৫% কমিশন বুঝে নিন</h3>
+                    <p>টিউশন কনফার্ম ও প্রথম মাসের কমিশন পাওয়া মাত্রই ১৫% টাকা আপনার বিকাশ/নগদে পাঠানো হবে।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- WhatsApp Action Button (Without displaying raw phone number) -->
+        <div class="action-group">
+            <a href="https://wa.me/8801735698076?text=%E0%A6%86%E0%A6%B8%E0%A6%B8%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%81%20%E0%A6%86%E0%A6%B2%E0%A6%BE%E0%A6%87%E0%A6%95%E0%A7%81%E0%A6%AE,%20%E0%A6%86%E0%A6%AE%E0%A6%BF%20TSBD%20%E0%A6%AA%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%9F%E0%A6%A8%E0%A6%BE%E0%A6%B0%20%E0%A6%B9%E0%A6%BF%E0%A6%B8%E0%A7%87%E0%A6%AC%E0%A7%87%20%E0%A6%9F%E0%A6%BF%E0%A6%89%E0%A6%B6%E0%A6%A8%20%E0%A6%B0%E0%A7%87%E0%A6%AB%E0%A6%BE%E0%A6%B0%20%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A7%A4" target="_blank" class="btn btn-whatsapp">
+                <i class="fa-brands fa-whatsapp" style="font-size:20px;"></i> হোয়াটসঅ্যাপে টিউশন রেফার করুন
+            </a>
+            <a href="tuitions-offers.html" class="btn btn-outline">
+                <i class="fa-solid fa-arrow-left"></i> টিউশন অফার দেখুন
+            </a>
+        </div>
+    </main>
+
+    <footer class="footer-note">
+        &copy; 2026 TSBD (Tuition Service BD). সর্বস্বত্ব সংরক্ষিত।
+    </footer>
+
+    <script type="module">
+        import { 
+            auth, 
+            isAdminUser, 
+            onAuthStateChanged, 
+            signOut 
+        } from "./js/firebase-config.js";
+
+        // ===== TSBD NAVBAR AUTH UI =====
+        const tsbdDrawer = document.getElementById("tsbdDrawer");
+        const tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
+        const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
+        const tsbdClose = document.getElementById("tsbdClose");
+
+        function tsbdOpenDrawer(){if(tsbdDrawer){tsbdDrawer.classList.add("open");tsbdOverlay.classList.add("open");tsbdDrawer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}}
+        function tsbdCloseDrawer(){if(tsbdDrawer){tsbdDrawer.classList.remove("open");tsbdOverlay.classList.remove("open");tsbdDrawer.setAttribute("aria-hidden","true");document.body.style.overflow=""}}
+        tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
+        tsbdClose?.addEventListener("click", tsbdCloseDrawer);
+        tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
+
+        // Dropdown toggle elements
+        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
+        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
+        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
+        const mobileUserWrap = document.getElementById('tsbdMobileUser');
+        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
+
+        desktopAvatar?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            desktopDropdown?.classList.toggle('show');
+        });
+
+        mobileUserToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileUserWrap?.classList.toggle('open');
+            mobileDropdown?.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
+                desktopDropdown.classList.remove('show');
+            }
+        });
+
+        function tsbdSetUser(user){
+            const desktopUser = document.getElementById('tsbdDesktopUser');
+            const mobileUser = document.getElementById('tsbdMobileUser');
+            const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
+            const mobileAvatar = document.getElementById('tsbdMobileAvatar');
+            const mobileName = document.getElementById('tsbdMobileName');
+            const loginLink = document.getElementById('loginLink');
+            const loginLinkMobile = document.getElementById('loginLinkMobile');
+            const tutorRegLink = document.getElementById('tutorRegLink');
+            const tutorRegLinkMobile = document.getElementById('tutorRegLinkMobile');
+            const adminDashboardLink = document.getElementById('adminDashboardLink');
+            const adminDashboardLinkMobile = document.getElementById('adminDashboardLinkMobile');
+
+            const isAdmin = isAdminUser(user);
+            if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
+            if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
+
+            if(user){
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName||user.email||(isAdmin ? 'Admin' : 'Tutor'))}&background=6366F1&color=fff`;
+                if(desktopAvatar) desktopAvatar.src = photo;
+                if(mobileAvatar) mobileAvatar.src = photo;
+                if(mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
+                if(desktopUser) desktopUser.style.display = "inline-flex";
+                if(mobileUser) mobileUser.style.display = "block";
+                if(loginLink) loginLink.style.display = "none";
+                if(loginLinkMobile) loginLinkMobile.style.display = "none";
+                if(tutorRegLink) tutorRegLink.style.display = "none";
+                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
+            } else {
+                if(desktopUser) desktopUser.style.display = "none";
+                if(mobileUser) mobileUser.style.display = "none";
+                if(desktopDropdown) desktopDropdown.classList.remove('show');
+                if(mobileDropdown) mobileDropdown.classList.remove('show');
+                if(loginLink) loginLink.style.display = "inline-flex";
+                if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if(tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
+            }
+        }
+
+        const cachedPhoto = localStorage.getItem('tutorPhotoURL');
+        const cachedName = localStorage.getItem('tutorDisplayName');
+        const cachedEmail = localStorage.getItem('userEmail');
+        if (cachedPhoto || cachedEmail) {
+            tsbdSetUser({ photoURL: cachedPhoto, displayName: cachedName, email: cachedEmail });
+        }
+
+        async function tsbdLogout(){
+            try {
+                await signOut(auth);
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorPhone");
+                sessionStorage.removeItem("tutorSession");
+                tsbdCloseDrawer();
+                window.location.reload();
+            } catch(e) {
+                console.error("Logout error:", e);
+                alert("Logout failed. Please try again.");
+            }
+        }
+        document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
+        document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || '';
+                if (photo) localStorage.setItem("tutorPhotoURL", photo);
+                if (user.displayName || user.email) localStorage.setItem("tutorDisplayName", user.displayName || user.email);
+                if (user.email) localStorage.setItem("userEmail", user.email);
+                tsbdSetUser(user);
+            } else {
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                tsbdSetUser(null);
+            }
+        });
+
+        // Bengali Numeral Helper
+        function toBnDigits(num) {
+            const bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return String(num).replace(/[0-9]/g, d => bn[d]);
+        }
+
+        // 15% Calculator Logic
+        const salaryInput = document.getElementById('salaryInput');
+        const singleIncome = document.getElementById('singleIncome');
+        const threeIncome = document.getElementById('threeIncome');
+        const fiveIncome = document.getElementById('fiveIncome');
+        const tenIncome = document.getElementById('tenIncome');
+
+        function calculateCommission() {
+            let salary = parseFloat(salaryInput.value) || 0;
+            if (salary < 0) salary = 0;
+
+            const single = Math.round(salary * 0.15);
+            const three = single * 3;
+            const five = single * 5;
+            const ten = single * 10;
+
+            singleIncome.innerText = `৳ ${toBnDigits(single.toLocaleString('en-IN'))}`;
+            threeIncome.innerText = `৳ ${toBnDigits(three.toLocaleString('en-IN'))}`;
+            fiveIncome.innerText = `৳ ${toBnDigits(five.toLocaleString('en-IN'))}`;
+            tenIncome.innerText = `৳ ${toBnDigits(ten.toLocaleString('en-IN'))}`;
+        }
+
+        window.setSalary = function(amount) {
+            salaryInput.value = amount;
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(amount.toLocaleString('en-IN')));
+            });
+            calculateCommission();
+        };
+
+        salaryInput.addEventListener('input', () => {
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            calculateCommission();
+        });
+
+        // Initialize calculation
+        calculateCommission();
+    </script>
+</body>
+</html>

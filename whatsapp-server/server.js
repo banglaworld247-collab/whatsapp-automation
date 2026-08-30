@@ -26,6 +26,56 @@ let currentQrCode = null;
 let connectionStatus = 'initializing'; // 'connecting' | 'connected' | 'disconnected'
 let connectionUser = null;
 
+// ==========================================
+// ANTI-BAN MESSAGE QUEUE
+// ==========================================
+const messageQueue = [];
+let isProcessingQueue = false;
+let queueStats = { sent: 0, failed: 0, pending: 0 };
+
+async function processQueue() {
+    if (isProcessingQueue) return;
+    isProcessingQueue = true;
+
+    while (messageQueue.length > 0) {
+        queueStats.pending = messageQueue.length;
+        const task = messageQueue.shift();
+
+        if (connectionStatus !== 'connected' || !sock) {
+            console.warn(`⚠️ হোয়াটসঅ্যাপ ডিসকানেক্ট থাকায় মেসেজ হোল্ড করা হয়েছে (Queue length: ${messageQueue.length})`);
+            messageQueue.unshift(task); // Re-insert at front
+            break;
+        }
+
+        try {
+            const jid = formatRecipientJid(task.to);
+            const res = await sock.sendMessage(jid, { text: String(task.message) });
+            queueStats.sent++;
+            console.log(`✉️ [Queue] মেসেজ সফলভাবে পাঠানো হয়েছে: ${jid} (ID: ${res.key?.id})`);
+            if (task.resolve) task.resolve({ success: true, msgId: res.key?.id });
+        } catch (err) {
+            queueStats.failed++;
+            console.error(`❌ [Queue] মেসেজ পাঠাতে ব্যর্থ (${task.to}):`, err.message);
+            if (task.reject) task.reject(err);
+        }
+
+        // Anti-ban delay: randomized 2.5s - 4.5s pause between messages
+        const delayMs = Math.floor(Math.random() * 2000) + 2500;
+        await new Promise(r => setTimeout(r, delayMs));
+    }
+
+    queueStats.pending = messageQueue.length;
+    isProcessingQueue = false;
+}
+
+function queueMessage(to, message) {
+    return new Promise((resolve, reject) => {
+        messageQueue.push({ to, message, resolve, reject, time: Date.now() });
+        queueStats.pending = messageQueue.length;
+        processQueue();
+    });
+}
+
 // Initialize WhatsApp connection
 async function connectToWhatsApp() {
     try {
@@ -41,7 +91,7 @@ async function connectToWhatsApp() {
             logger: pino({ level: 'silent' }),
             printQRInTerminal: true,
             auth: state,
-            browser: ['JTS Tuition Portal', 'Chrome', '1.0.0'],
+            browser: ['TSBD Tuition Portal', 'Chrome', '1.0.0'],
             syncFullHistory: false
         });
 
@@ -78,6 +128,8 @@ async function connectToWhatsApp() {
                 currentQrCode = null;
                 connectionUser = sock.user?.id || 'Connected';
                 console.log('✅ WhatsApp সফলভাবে সংযুক্ত হয়েছে! ইউজার:', connectionUser);
+                // Resume queued messages if any
+                processQueue();
             }
         });
 
@@ -115,17 +167,22 @@ function formatRecipientJid(rawNumber) {
 // ----------------------------------------------------
 
 // 1. Status Check API
-app.get('/status', (req, res) => {
+app.get(['/status', '/health', '/ping'], (req, res) => {
     res.json({
         success: true,
         status: connectionStatus,
         user: connectionUser,
-        hasQr: !!currentQrCode
+        hasQr: !!currentQrCode,
+        queue: {
+            pending: messageQueue.length,
+            isProcessing: isProcessingQueue,
+            stats: queueStats
+        }
     });
 });
 
-// 2. Send Message API (Used by tuition-details.html & admin-dashboard.html)
-app.post('/send-message', async (req, res) => {
+// 2. Single Message Send (Queued & Safe - supports multiple route aliases)
+app.post(['/send-message', '/send', '/api/send-message', '/api/send'], async (req, res) => {
     try {
         const { to, message } = req.body;
 
@@ -139,20 +196,17 @@ app.post('/send-message', async (req, res) => {
         if (connectionStatus !== 'connected' || !sock) {
             return res.status(503).json({
                 success: false,
-                error: 'WhatsApp বট এখনও কানেক্টেড হয়নি। দয়া করে QR কোড স্ক্যান করে লগইন করুন।'
+                error: 'WhatsApp বট এখনও কানেক্টেড হয়নি। Render ড্যাশবোর্ডে গিয়ে QR কোড স্ক্যান করে লগইন করুন।'
             });
         }
 
-        const jid = formatRecipientJid(to);
+        // Add to anti-ban queue
+        queueMessage(to, message).then().catch(() => {});
 
-        // Send message via Baileys
-        const result = await sock.sendMessage(jid, { text: String(message) });
-
-        console.log(`✉️ মেসেজ পাঠানো হয়েছে: ${jid}`);
         return res.json({
             success: true,
-            message: 'মেসেজ সফলভাবে পৌঁছেছে',
-            msgId: result.key?.id
+            message: 'মেসেজ কিউ-তে যুক্ত হয়েছে এবং নিরাপদে পাঠানো হচ্ছে।',
+            queuePosition: messageQueue.length
         });
 
     } catch (error) {
@@ -164,7 +218,84 @@ app.post('/send-message', async (req, res) => {
     }
 });
 
-// 3. Web Dashboard UI (Visit in browser to see status & scan QR)
+// 2.1 Direct High-Priority OTP Send Endpoint (Immediate delivery for verification)
+app.post(['/send-otp', '/api/send-otp'], async (req, res) => {
+    try {
+        const { to, otp, message } = req.body;
+
+        if (!to || (!otp && !message)) {
+            return res.status(400).json({
+                success: false,
+                error: 'to (মোবাইল নম্বর) এবং otp অথবা message প্রয়োজন।'
+            });
+        }
+
+        if (connectionStatus !== 'connected' || !sock) {
+            return res.status(503).json({
+                success: false,
+                error: 'WhatsApp বট এখনও কানেক্টেড নয়।'
+            });
+        }
+
+        const otpText = message || `🔒 *TSBD টিউশন পোর্টাল (ভেরিফিকেশন)*\n\nআপনার WhatsApp ভেরিফিকেশন কোড (OTP) হলো:\n\n👉 *${otp}*\n\n⏱️ এটি ৫ মিনিটের জন্য কার্যকর থাকবে। অনুগ্রহ করে কাউকে এই কোডটি শেয়ার করবেন না।`;
+        const jid = formatRecipientJid(to);
+        const sendResult = await sock.sendMessage(jid, { text: otpText });
+
+        console.log(`🔐 [OTP] ভেরিফিকেশন কোড পাঠানো হয়েছে: ${jid} (ID: ${sendResult.key?.id})`);
+
+        return res.json({
+            success: true,
+            message: 'WhatsApp-এ OTP সফলভাবে পাঠানো হয়েছে!',
+            msgId: sendResult.key?.id
+        });
+
+    } catch (error) {
+        console.error('OTP পাঠাতে সমস্যা:', error);
+        return res.status(500).json({
+            success: false,
+            error: error.message || 'OTP পাঠানো ব্যর্থ হয়েছে'
+        });
+    }
+});
+
+// 3. Bulk Message Send API (Broadcast with automated delays)
+app.post('/send-bulk', async (req, res) => {
+    try {
+        const { recipients, message } = req.body;
+
+        if (!Array.isArray(recipients) || recipients.length === 0 || !message) {
+            return res.status(400).json({
+                success: false,
+                error: 'recipients (নম্বরের লিস্ট/Array) এবং message প্রয়োজন।'
+            });
+        }
+
+        if (connectionStatus !== 'connected' || !sock) {
+            return res.status(503).json({
+                success: false,
+                error: 'WhatsApp বট কানেক্টেড নয়।'
+            });
+        }
+
+        recipients.forEach(to => {
+            if (to) queueMessage(to, message).catch(() => {});
+        });
+
+        return res.json({
+            success: true,
+            message: `${recipients.length} টি নম্বরে ব্রডকাস্ট কিউ-তে পাঠানো হয়েছে।`,
+            totalQueued: messageQueue.length
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message || 'বাল্ক মেসেজ ব্যর্থ হয়েছে।'
+        });
+    }
+});
+
+// 4. Web Dashboard UI
 app.get('/', (req, res) => {
     res.send(`
 <!DOCTYPE html>
@@ -172,7 +303,7 @@ app.get('/', (req, res) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JTS WhatsApp Bot Server</title>
+    <title>TSBD WhatsApp Bot Server (Anti-Ban Engine)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -186,17 +317,20 @@ app.get('/', (req, res) => {
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans Bengali', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .logo { font-size: 48px; color: #22C55E; margin-bottom: 12px; }
         h1 { font-size: 22px; margin-bottom: 8px; color: #FFF; }
         p { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
-        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 14px; margin-bottom: 24px; }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 14px; margin-bottom: 20px; }
         .connected { background: rgba(34, 197, 94, 0.2); color: #4ADE80; border: 1px solid rgba(34, 197, 94, 0.4); }
         .connecting { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
         .disconnected { background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); }
         .qr-wrapper { background: #FFF; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .qr-wrapper img { width: 220px; height: 220px; display: block; }
-        .test-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-top: 20px; text-align: left; }
+        .queue-box { display: flex; justify-content: space-around; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .queue-item { font-size: 12px; color: var(--muted); }
+        .queue-item span { display: block; font-size: 18px; font-weight: 700; color: #FFF; margin-top: 4px; }
+        .test-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-top: 10px; text-align: left; }
         .test-box input, .test-box textarea { width: 100%; padding: 10px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); color: #FFF; margin-bottom: 10px; font-size: 13px; }
         .btn { background: #22C55E; color: #FFF; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; }
         .btn:hover { background: #16A34A; }
@@ -205,15 +339,15 @@ app.get('/', (req, res) => {
 <body>
     <div class="box">
         <div class="logo"><i class="fa-brands fa-whatsapp"></i></div>
-        <h1>JTS WhatsApp Bot Server</h1>
-        <p>২৪/৭ ফ্রিতে আনলিমিটেড টিউটর ও গ্রুপে মেসেজ অটোমেশন</p>
+        <h1>TSBD WhatsApp Bot Server</h1>
+        <p>Anti-Ban স্মার্ট কিউ সিস্টেম সহ অটোমেশন সার্ভার</p>
 
         <div id="statusWrap">
             ${connectionStatus === 'connected' ? `
                 <div class="status-badge connected">
                     <i class="fa-solid fa-circle-check"></i> কানেক্টেড (${connectionUser || 'Active'})
                 </div>
-                <p style="color:#34D399;font-size:13px;"><i class="fa-solid fa-bolt"></i> বট সক্রিয় আছে এবং মেসেজ পাঠানোর জন্য প্রস্তুত!</p>
+                <p style="color:#34D399;font-size:13px;"><i class="fa-solid fa-shield-halved"></i> অ্যান্টি-ব্যান সুরক্ষা ও মেসেজ কিউ সক্রিয় রয়েছে।</p>
             ` : connectionStatus === 'connecting' && currentQrCode ? `
                 <div class="status-badge connecting">
                     <i class="fa-solid fa-qrcode"></i> QR কোড স্ক্যান করুন
@@ -221,19 +355,26 @@ app.get('/', (req, res) => {
                 <div class="qr-wrapper">
                     <img src="${currentQrCode}" alt="WhatsApp QR Code">
                 </div>
-                <p style="font-size:12px;color:var(--muted)">আপনার ফোনের WhatsApp > Linked Devices-এ গিয়ে স্ক্যান করুন।</p>
+                <p style="color:#FBBF24;font-size:13px;">হোয়াটসঅ্যাপ থেকে Linked Devices > Link a Device অপশনে স্ক্যান করুন।</p>
             ` : `
                 <div class="status-badge disconnected">
-                    <i class="fa-solid fa-spinner fa-spin"></i> সংযোগ চালু হচ্ছে...
+                    <i class="fa-solid fa-circle-xmark"></i> ডিসকানেক্টেড
                 </div>
+                <p style="color:#F87171;font-size:13px;">সার্ভারে কিউআর কোড জেনারেট হচ্ছে... পৃষ্ঠা রিফ্রেশ করুন।</p>
             `}
+        </div>
+
+        <div class="queue-box">
+            <div class="queue-item">পেন্ডিং কিউ <span id="qPending">${queueStats.pending}</span></div>
+            <div class="queue-item">সফল মেসেজ <span id="qSent" style="color:#4ADE80;">${queueStats.sent}</span></div>
+            <div class="queue-item">ব্যর্থ মেসেজ <span id="qFailed" style="color:#F87171;">${queueStats.failed}</span></div>
         </div>
 
         <div class="test-box">
             <h4 style="font-size:14px;color:#38BDF8;margin-bottom:10px;"><i class="fa-solid fa-paper-plane"></i> টেস্ট মেসেজ পাঠান</h4>
-            <input type="text" id="testTo" placeholder="নম্বর: 017XXXXXXXX">
-            <textarea id="testMsg" rows="2" placeholder="টেস্ট মেসেজ লিখুন..."></textarea>
-            <button type="button" class="btn" onclick="sendTest()"><i class="fa-solid fa-paper-plane"></i> মেসেজ পাঠান</button>
+            <input type="text" id="testTo" placeholder="নম্বর বা গ্রুপ আইডি: 017XXXXXXXX">
+            <textarea id="testMsg" rows="2" placeholder="টেস্ট বার্তা লিখুন..."></textarea>
+            <button type="button" class="btn" onclick="sendTest()"><i class="fa-solid fa-paper-plane"></i> কিউ-তে পাঠান</button>
             <p id="testStatus" style="margin-top:8px;font-size:12px;display:none;"></p>
         </div>
     </div>
@@ -246,7 +387,7 @@ app.get('/', (req, res) => {
             if(!to || !msg) { alert('নম্বর ও মেসেজ দিন'); return; }
             status.style.display = 'block';
             status.style.color = '#93C5FD';
-            status.innerText = 'পাঠানো হচ্ছে...';
+            status.innerText = 'কিউ-তে যোগ হচ্ছে...';
 
             try {
                 const res = await fetch('/send-message', {
@@ -257,7 +398,7 @@ app.get('/', (req, res) => {
                 const data = await res.json();
                 if(data.success) {
                     status.style.color = '#34D399';
-                    status.innerText = '✅ মেসেজ সফলভাবে পাঠানো হয়েছে!';
+                    status.innerText = '✅ ' + data.message;
                 } else {
                     status.style.color = '#F87171';
                     status.innerText = '❌ এরর: ' + data.error;
@@ -268,17 +409,21 @@ app.get('/', (req, res) => {
             }
         }
 
-        // Auto refresh page if waiting for QR or status change
         setInterval(async () => {
             try {
                 const res = await fetch('/status');
                 const data = await res.json();
+                if (data.queue) {
+                    document.getElementById('qPending').innerText = data.queue.pending;
+                    document.getElementById('qSent').innerText = data.queue.stats.sent;
+                    document.getElementById('qFailed').innerText = data.queue.stats.failed;
+                }
                 if((data.status === 'connected' && document.querySelector('.connecting')) ||
                    (data.status === 'connecting' && document.querySelector('.disconnected'))) {
                     location.reload();
                 }
             } catch(e) {}
-        }, 4000);
+        }, 3000);
     </script>
 </body>
 </html>
@@ -287,5 +432,5 @@ app.get('/', (req, res) => {
 
 // Start Express Server
 app.listen(PORT, () => {
-    console.log(`🚀 JTS WhatsApp Bot সার্ভার চালু হয়েছে: http://localhost:${PORT}`);
+    console.log(`🚀 TSBD WhatsApp Bot (Anti-Ban v2) চালু হয়েছে: http://localhost:${PORT}`);
 });

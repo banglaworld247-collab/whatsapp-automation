@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অ্যাডমিন ড্যাশবোর্ড | টিউশন ম্যানেজমেন্ট</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Flatpickr Date Picker CDN (CSS & Dark Theme) -->
@@ -39,46 +41,329 @@
         }
 
         /* ===== TSBD NAVBAR ===== */
-        .tsbd-navbar{position:sticky;top:0;z-index:900;width:100%;margin:0 auto 28px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border-color,#E5E7EB);box-shadow:0 4px 18px rgba(15,23,42,.06);backdrop-filter:blur(12px)}
-        .tsbd-nav-inner{max-width:1200px;margin:0 auto;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-        .tsbd-logo{text-decoration:none;display:inline-flex;align-items:center;gap:10px;color:#1F2937;font-weight:800;font-size:22px;letter-spacing:-.5px}
-        .tsbd-logo-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#6366F1,#3B82F6);font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(99,102,241,.25)}
-        .tsbd-nav-links{display:flex;align-items:center;gap:8px}
-        .tsbd-nav-link{border:0;background:transparent;text-decoration:none;color:#4B5563;font-size:14px;font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s ease}
-        .tsbd-nav-link:hover{background:#F3F4F6;color:#4F46E5}
-        .tsbd-nav-link.active{background:rgba(99,102,241,.12);color:#4F46E5;font-weight:700}
-        
+        .tsbd-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            width: 100%;
+            margin: 0 auto 28px;
+            background: rgba(255, 255, 255, .96);
+            border-bottom: 1px solid var(--border-color, #E5E7EB);
+            box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
+            backdrop-filter: blur(12px)
+        }
+
+        .tsbd-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px
+        }
+
+        .tsbd-logo {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1F2937;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -.5px
+        }
+
+        .tsbd-logo-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: linear-gradient(135deg, #6366F1, #3B82F6);
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 5px 12px rgba(99, 102, 241, .25)
+        }
+
+        .tsbd-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .tsbd-nav-link {
+            border: 0;
+            background: transparent;
+            text-decoration: none;
+            color: #4B5563;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: .2s ease
+        }
+
+        .tsbd-nav-link:hover {
+            background: #F3F4F6;
+            color: #4F46E5
+        }
+
+        .tsbd-nav-link.active {
+            background: rgba(99, 102, 241, .12);
+            color: #4F46E5;
+            font-weight: 700
+        }
+
         /* User Avatar & Dropdown */
-        .tsbd-user{position:relative;display:none;align-items:center;margin-left:4px}
-        .tsbd-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #6366F1;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;user-select:none}
-        .tsbd-avatar:hover{transform:scale(1.06);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
-        .tsbd-avatar:active{transform:scale(0.96)}
-        
-        .tsbd-avatar-dropdown{position:absolute;top:calc(100% + 10px);right:0;min-width:140px;background:#ffffff;border:1px solid #E5E7EB;border-radius:10px;padding:6px;box-shadow:0 10px 25px -5px rgba(0,0,0,.12),0 8px 10px -6px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1),visibility .22s ease;z-index:1000;pointer-events:none}
-        .tsbd-avatar-dropdown.show{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
-        .tsbd-avatar-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease;white-space:nowrap}
-        .tsbd-avatar-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
-        
-        .tsbd-menu-btn{display:none;width:42px;height:42px;border:1px solid #E5E7EB;background:#fff;border-radius:10px;cursor:pointer;font-size:19px;color:#1F2937;align-items:center;justify-content:center}
-        .tsbd-drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:1090;opacity:0;visibility:hidden;transition:.25s ease}
-        .tsbd-drawer{position:fixed;top:0;right:0;width:min(82vw,320px);height:100vh;background:#fff;z-index:1100;padding:22px;box-shadow:-10px 0 30px rgba(15,23,42,.15);transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column}
-        .tsbd-drawer.open{transform:translateX(0)}.tsbd-drawer-overlay.open{opacity:1;visibility:visible}
-        .tsbd-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #E5E7EB}
-        .tsbd-close{border:0;background:#F3F4F6;width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center}
-        .tsbd-drawer .tsbd-nav-link{width:100%;justify-content:flex-start;padding:12px 14px;margin-bottom:6px;font-size:15px}
-        
+        .tsbd-user {
+            position: relative;
+            display: none;
+            align-items: center;
+            margin-left: 4px
+        }
+
+        .tsbd-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #6366F1;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease;
+            user-select: none
+        }
+
+        .tsbd-avatar:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .2)
+        }
+
+        .tsbd-avatar:active {
+            transform: scale(0.96)
+        }
+
+        .tsbd-avatar-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 140px;
+            background: #ffffff;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .12), 0 8px 10px -6px rgba(0, 0, 0, .08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity .22s cubic-bezier(.16, 1, .3, 1), transform .22s cubic-bezier(.16, 1, .3, 1), visibility .22s ease;
+            z-index: 1000;
+            pointer-events: none
+        }
+
+        .tsbd-avatar-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto
+        }
+
+        .tsbd-avatar-dropdown .tsbd-logout {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 6px;
+            color: #EF4444;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: .2s ease;
+            white-space: nowrap
+        }
+
+        .tsbd-avatar-dropdown .tsbd-logout:hover {
+            background: rgba(239, 68, 68, .1);
+            color: #DC2626
+        }
+
+        .tsbd-menu-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid #E5E7EB;
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 19px;
+            color: #1F2937;
+            align-items: center;
+            justify-content: center
+        }
+
+        .tsbd-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .4);
+            z-index: 1090;
+            opacity: 0;
+            visibility: hidden;
+            transition: .25s ease
+        }
+
+        .tsbd-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(82vw, 320px);
+            height: 100vh;
+            background: #fff;
+            z-index: 1100;
+            padding: 22px;
+            box-shadow: -10px 0 30px rgba(15, 23, 42, .15);
+            transform: translateX(100%);
+            transition: transform .28s ease;
+            display: flex;
+            flex-direction: column
+        }
+
+        .tsbd-drawer.open {
+            transform: translateX(0)
+        }
+
+        .tsbd-drawer-overlay.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .tsbd-drawer-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #E5E7EB
+        }
+
+        .tsbd-close {
+            border: 0;
+            background: #F3F4F6;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            display: grid;
+            place-items: center
+        }
+
+        .tsbd-drawer .tsbd-nav-link {
+            width: 100%;
+            justify-content: flex-start;
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            font-size: 15px
+        }
+
         /* Mobile Drawer User Dropdown */
-        .tsbd-mobile-user-wrap{margin-top:10px;border-top:1px solid #E5E7EB;padding-top:8px}
-        .tsbd-mobile-user-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:8px;transition:background .2s ease}
-        .tsbd-mobile-user-row:hover{background:#F3F4F6}
-        .tsbd-mobile-caret{margin-left:auto;font-size:12px;color:#9CA3AF;transition:transform .25s ease}
-        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret{transform:rotate(180deg)}
-        .tsbd-mobile-dropdown{opacity:0;max-height:0;overflow:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .25s ease,max-height .25s ease;padding:0 10px}
-        .tsbd-mobile-dropdown.show{opacity:1;max-height:80px;transform:translateY(0);padding:6px 10px}
-        .tsbd-mobile-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease}
-        .tsbd-mobile-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
-        
-        @media(max-width:768px){body{padding:12px}.tsbd-navbar{margin:-12px -12px 24px;width:calc(100% + 24px);}.tsbd-nav-links{display:none}.tsbd-menu-btn{display:flex}.tsbd-user{display:none!important}}
+        .tsbd-mobile-user-wrap {
+            margin-top: 10px;
+            border-top: 1px solid #E5E7EB;
+            padding-top: 8px
+        }
+
+        .tsbd-mobile-user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background .2s ease
+        }
+
+        .tsbd-mobile-user-row:hover {
+            background: #F3F4F6
+        }
+
+        .tsbd-mobile-caret {
+            margin-left: auto;
+            font-size: 12px;
+            color: #9CA3AF;
+            transition: transform .25s ease
+        }
+
+        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret {
+            transform: rotate(180deg)
+        }
+
+        .tsbd-mobile-dropdown {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-4px);
+            transition: opacity .25s ease, transform .25s ease, max-height .25s ease;
+            padding: 0 10px
+        }
+
+        .tsbd-mobile-dropdown.show {
+            opacity: 1;
+            max-height: 80px;
+            transform: translateY(0);
+            padding: 6px 10px
+        }
+
+        .tsbd-mobile-dropdown .tsbd-logout {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #EF4444;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: .2s ease
+        }
+
+        .tsbd-mobile-dropdown .tsbd-logout:hover {
+            background: rgba(239, 68, 68, .1);
+            color: #DC2626
+        }
+
+        @media(max-width:768px) {
+            body {
+                padding: 12px
+            }
+
+            .tsbd-navbar {
+                margin: -12px -12px 24px;
+                width: calc(100% + 24px);
+            }
+
+            .tsbd-nav-links {
+                display: none
+            }
+
+            .tsbd-menu-btn {
+                display: flex
+            }
+
+            .tsbd-user {
+                display: none !important
+            }
+        }
 
         /* Login Container */
         #login-container {
@@ -95,7 +380,7 @@
             border-radius: 10px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
         }
 
@@ -158,7 +443,12 @@
             outline: none;
         }
 
-        input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, textarea {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        select,
+        textarea {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
@@ -168,7 +458,9 @@
             outline: none;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             border-color: var(--accent);
         }
 
@@ -264,22 +556,38 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .profit-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
         }
 
-        .profit-card.earned { border-left: 4px solid var(--success); }
-        .profit-card.earned .profit-card-value { color: #34D399; }
+        .profit-card.earned {
+            border-left: 4px solid var(--success);
+        }
 
-        .profit-card.pending { border-left: 4px solid var(--warning); }
-        .profit-card.pending .profit-card-value { color: #FBBF24; }
+        .profit-card.earned .profit-card-value {
+            color: #34D399;
+        }
 
-        .profit-card.volume { border-left: 4px solid var(--accent); }
-        .profit-card.volume .profit-card-value { color: #38BDF8; }
+        .profit-card.pending {
+            border-left: 4px solid var(--warning);
+        }
+
+        .profit-card.pending .profit-card-value {
+            color: #FBBF24;
+        }
+
+        .profit-card.volume {
+            border-left: 4px solid var(--accent);
+        }
+
+        .profit-card.volume .profit-card-value {
+            color: #38BDF8;
+        }
 
         .profit-card-title {
             font-size: 13px;
@@ -365,18 +673,26 @@
             border-left: 5px solid var(--accent);
             border-radius: 10px;
             padding: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .tuition-card:hover {
             border-color: var(--accent);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
         }
 
-        .tuition-card.status-open { border-left-color: var(--accent); }
-        .tuition-card.status-assigned { border-left-color: var(--success); }
-        .tuition-card.status-closed { border-left-color: var(--text-muted); }
+        .tuition-card.status-open {
+            border-left-color: var(--accent);
+        }
+
+        .tuition-card.status-assigned {
+            border-left-color: var(--success);
+        }
+
+        .tuition-card.status-closed {
+            border-left-color: var(--text-muted);
+        }
 
         .tuition-header {
             display: flex;
@@ -384,7 +700,7 @@
             align-items: flex-start;
             gap: 12px;
             margin-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 10px;
         }
 
@@ -424,9 +740,21 @@
             gap: 4px;
             white-space: nowrap;
         }
-        .status-open { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-assigned { background-color: rgba(56, 189, 248, 0.2); color: var(--accent); }
-        .status-closed { background-color: rgba(156, 163, 175, 0.2); color: var(--text-muted); }
+
+        .status-open {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-assigned {
+            background-color: rgba(56, 189, 248, 0.2);
+            color: var(--accent);
+        }
+
+        .status-closed {
+            background-color: rgba(156, 163, 175, 0.2);
+            color: var(--text-muted);
+        }
 
         /* Commission & CRM Highlights inside Card */
         .card-highlights-row {
@@ -437,8 +765,8 @@
         }
 
         .highlight-box {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 8px;
             padding: 10px 12px;
             font-size: 13px;
@@ -471,9 +799,24 @@
             border-radius: 12px;
             display: inline-block;
         }
-        .payment-pill.paid-full { background: rgba(34, 197, 94, 0.2); color: #4ADE80; border: 1px solid rgba(34, 197, 94, 0.4); }
-        .payment-pill.paid-partial { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
-        .payment-pill.paid-none { background: rgba(148, 163, 184, 0.15); color: #94A3B8; border: 1px dashed rgba(148, 163, 184, 0.3); }
+
+        .payment-pill.paid-full {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ADE80;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .payment-pill.paid-partial {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .payment-pill.paid-none {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94A3B8;
+            border: 1px dashed rgba(148, 163, 184, 0.3);
+        }
 
         .plan-alert-tag {
             display: inline-flex;
@@ -487,8 +830,16 @@
             color: #F87171;
             border: 1px solid rgba(239, 68, 68, 0.4);
         }
-        .plan-alert-tag.today { background: rgba(239, 68, 68, 0.25); color: #FCA5A5; }
-        .plan-alert-tag.tomorrow { background: rgba(245, 158, 11, 0.2); color: #FCD34D; }
+
+        .plan-alert-tag.today {
+            background: rgba(239, 68, 68, 0.25);
+            color: #FCA5A5;
+        }
+
+        .plan-alert-tag.tomorrow {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FCD34D;
+        }
 
         /* Card Action Bar */
         .card-action-bar {
@@ -524,6 +875,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
+
         .btn-whatsapp-settings:hover {
             background: linear-gradient(135deg, #059669, #047857);
             transform: translateY(-1px);
@@ -535,6 +887,7 @@
             color: white;
             border: 1px solid rgba(16, 185, 129, 0.4);
         }
+
         .btn-whatsapp-card:hover {
             background: #047857;
         }
@@ -548,16 +901,19 @@
             font-size: 12px;
             font-weight: 700;
         }
+
         .wa-status-active {
             background: rgba(16, 185, 129, 0.2);
             color: #34D399;
             border: 1px solid rgba(16, 185, 129, 0.4);
         }
+
         .wa-status-inactive {
             background: rgba(239, 68, 68, 0.2);
             color: #F87171;
             border: 1px solid rgba(239, 68, 68, 0.4);
         }
+
         .wa-guide-box {
             background: rgba(59, 130, 246, 0.08);
             border: 1px solid rgba(59, 130, 246, 0.2);
@@ -568,13 +924,16 @@
             color: #93C5FD;
             line-height: 1.5;
         }
+
         .wa-guide-box ol {
             margin-left: 18px;
             margin-top: 6px;
         }
+
         .wa-guide-box li {
             margin-bottom: 4px;
         }
+
         .wa-test-result {
             margin-top: 12px;
             padding: 10px 12px;
@@ -582,25 +941,45 @@
             font-size: 13px;
             display: none;
         }
+
         .wa-test-result.success {
             background: rgba(16, 185, 129, 0.15);
             border: 1px solid #10B981;
             color: #34D399;
         }
+
         .wa-test-result.error {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid #EF4444;
             color: #F87171;
         }
 
-        .btn-edit-card { background: #D97706; color: white; }
-        .btn-edit-card:hover { background: #B45309; }
+        .btn-edit-card {
+            background: #D97706;
+            color: white;
+        }
 
-        .btn-view-apps { background: #2563EB; color: white; }
-        .btn-view-apps:hover { background: #1D4ED8; }
+        .btn-edit-card:hover {
+            background: #B45309;
+        }
 
-        .btn-delete-card { background: #DC2626; color: white; }
-        .btn-delete-card:hover { background: #B91C1C; }
+        .btn-view-apps {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-view-apps:hover {
+            background: #1D4ED8;
+        }
+
+        .btn-delete-card {
+            background: #DC2626;
+            color: white;
+        }
+
+        .btn-delete-card:hover {
+            background: #B91C1C;
+        }
 
         /* Expanded Details */
         .tuition-details {
@@ -625,18 +1004,22 @@
             margin: 10px 0 18px;
             font-size: 13px;
         }
-        .data-table th, .data-table td {
+
+        .data-table th,
+        .data-table td {
             border: 1px solid var(--border-color);
             padding: 8px 10px;
             text-align: left;
             vertical-align: top;
         }
+
         .data-table th {
             width: 180px;
             color: var(--text-muted);
             font-weight: 600;
-            background: rgba(255,255,255,0.02);
+            background: rgba(255, 255, 255, 0.02);
         }
+
         .applicant-detail {
             background: var(--bg-dark);
             border: 1px solid var(--border-color);
@@ -644,11 +1027,13 @@
             padding: 14px;
             margin: 10px 0;
         }
+
         .applicant-detail h5 {
             color: var(--accent);
             margin: 0 0 8px 0;
             font-size: 15px;
         }
+
         .file-link {
             color: var(--accent);
             text-decoration: underline;
@@ -661,10 +1046,19 @@
             margin-top: 15px;
         }
 
-        .btn-warning { background-color: var(--warning); }
-        .btn-danger { background-color: var(--danger); }
-        
-        .loading { text-align: center; color: var(--text-muted); padding: 20px; }
+        .btn-warning {
+            background-color: var(--warning);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
+        }
 
         /* Modal Styles */
         .modal {
@@ -703,6 +1097,7 @@
             padding-bottom: 12px;
             margin-bottom: 16px;
         }
+
         .modal-header h2 {
             margin: 0;
             font-size: 18px;
@@ -722,7 +1117,11 @@
             width: auto;
             line-height: 1;
         }
-        .close-btn:hover { color: #FFF; background: none; }
+
+        .close-btn:hover {
+            color: #FFF;
+            background: none;
+        }
 
         .modal-grid {
             display: grid;
@@ -733,7 +1132,7 @@
         .modal-sec-title {
             color: var(--accent);
             margin: 16px 0 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding-bottom: 5px;
             font-size: 15px;
             font-weight: 700;
@@ -756,7 +1155,10 @@
             cursor: pointer;
             flex: 2;
         }
-        .btn-save:hover { background: #15803D; }
+
+        .btn-save:hover {
+            background: #15803D;
+        }
 
         .btn-modal-delete {
             background: #DC2626;
@@ -769,7 +1171,10 @@
             cursor: pointer;
             flex: 1;
         }
-        .btn-modal-delete:hover { background: #B91C1C; }
+
+        .btn-modal-delete:hover {
+            background: #B91C1C;
+        }
 
         /* ===== PROFESSIONAL DATE PICKER STYLES ===== */
         .flatpickr-input-custom {
@@ -789,15 +1194,18 @@
             transition: all 0.2s ease !important;
             letter-spacing: 0.3px;
         }
+
         .flatpickr-input-custom:hover {
             border-color: var(--accent) !important;
             background-color: rgba(10, 26, 47, 0.9) !important;
         }
+
         .flatpickr-input-custom:focus {
             border-color: var(--accent) !important;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
             outline: none !important;
         }
+
         .flatpickr-calendar {
             background: #13233D !important;
             border: 1px solid #1E3A5F !important;
@@ -806,40 +1214,52 @@
             font-family: 'Noto Sans Bengali', sans-serif !important;
             padding: 6px !important;
         }
-        .flatpickr-calendar.arrowTop:before, .flatpickr-calendar.arrowTop:after {
+
+        .flatpickr-calendar.arrowTop:before,
+        .flatpickr-calendar.arrowTop:after {
             border-bottom-color: #13233D !important;
         }
+
         .flatpickr-months .flatpickr-month {
             color: #F8FAFC !important;
             fill: #F8FAFC !important;
         }
+
         .flatpickr-current-month .flatpickr-monthDropdown-months {
             font-weight: 700 !important;
         }
+
         .flatpickr-weekdays {
-            border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
             margin-bottom: 6px !important;
         }
+
         span.flatpickr-weekday {
             color: #94A3B8 !important;
             font-weight: 600 !important;
         }
+
         .flatpickr-day {
             color: #E2E8F0 !important;
             border-radius: 8px !important;
             font-weight: 500 !important;
             transition: all 0.15s ease !important;
         }
+
         .flatpickr-day:hover {
             background: rgba(59, 130, 246, 0.25) !important;
             border-color: transparent !important;
             color: #FFF !important;
         }
+
         .flatpickr-day.today {
             border-color: #38BDF8 !important;
             color: #38BDF8 !important;
         }
-        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
             background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
             border-color: transparent !important;
             color: #FFF !important;
@@ -848,36 +1268,48 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- TSBD NAVBAR -->
     <nav class="tsbd-navbar">
         <div class="tsbd-nav-inner">
-            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
+            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span
+                    class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
             <div class="tsbd-nav-links">
                 <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
                 <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
-                <a class="tsbd-nav-link active" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+                <a class="tsbd-nav-link" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+                <a class="tsbd-nav-link active" id="adminDashboardLink" href="admin-dashboard.html"
+                    style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i
+                        class="fa-solid fa-right-to-bracket"></i> লগইন</a>
                 <div class="tsbd-user" id="tsbdDesktopUser">
                     <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Google profile" title="প্রোফাইল মেনু">
                     <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
-                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i
+                                class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
                     </div>
                 </div>
             </div>
-            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i
+                    class="fa-solid fa-bars"></i></button>
         </div>
     </nav>
     <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
     <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
-        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span
+                    class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose"
+                type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
         <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
         <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
-        <a class="tsbd-nav-link active" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+        <a class="tsbd-nav-link" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+        <a class="tsbd-nav-link active" id="adminDashboardLinkMobile" href="admin-dashboard.html"
+            style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i
+                class="fa-solid fa-right-to-bracket"></i> লগইন</a>
         <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
             <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
                 <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Google profile">
@@ -885,7 +1317,8 @@
                 <i class="fa-solid fa-chevron-down tsbd-mobile-caret"></i>
             </div>
             <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
-                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i
+                        class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
             </div>
         </div>
     </aside>
@@ -903,12 +1336,14 @@
                     <label for="login-password">পাসওয়ার্ড</label>
                     <div class="password-input-wrapper">
                         <input type="password" id="login-password" required placeholder="••••••••">
-                        <button type="button" id="togglePasswordBtn" class="password-toggle-btn" aria-label="Toggle password visibility">
+                        <button type="button" id="togglePasswordBtn" class="password-toggle-btn"
+                            aria-label="Toggle password visibility">
                             <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
                         </button>
                     </div>
                 </div>
-                <p id="login-error" style="color: var(--danger); font-size: 14px; margin-bottom: 10px; display: none;"></p>
+                <p id="login-error" style="color: var(--danger); font-size: 14px; margin-bottom: 10px; display: none;">
+                </p>
                 <button type="submit" id="login-btn">লগইন করুন</button>
             </form>
         </div>
@@ -919,7 +1354,8 @@
         <div class="top-bar">
             <h2><i class="fa-solid fa-gauge-high"></i> অ্যাডমিন ড্যাশবোর্ড</h2>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <button type="button" id="whatsapp-settings-btn" class="btn-whatsapp-settings" onclick="openWhatsAppModal()">
+                <button type="button" id="whatsapp-settings-btn" class="btn-whatsapp-settings"
+                    onclick="openWhatsAppModal()">
                     <i class="fa-brands fa-whatsapp" style="font-size: 16px;"></i> হোয়াটসঅ্যাপ অটোমেশন
                 </button>
                 <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
@@ -927,13 +1363,16 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
-            <button class="tab-btn active" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
+            <button class="tab-btn" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট
+                করুন</button>
+            <button class="tab-btn active" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও
+                আবেদনকারী</button>
         </div>
 
         <!-- Section 1: Post Tuition -->
         <div id="section-post" class="section">
-            <h3 style="margin-bottom: 20px; color: var(--accent);"><i class="fa-solid fa-file-circle-plus"></i> নতুন টিউশনের তথ্য দিন</h3>
+            <h3 style="margin-bottom: 20px; color: var(--accent);"><i class="fa-solid fa-file-circle-plus"></i> নতুন
+                টিউশনের তথ্য দিন</h3>
             <form id="post-tuition-form">
                 <div class="form-grid">
                     <div class="form-group">
@@ -992,7 +1431,7 @@
                     </div>
                     <div class="form-group">
                         <label>এলাকা (Location)</label>
-                        <input type="text" id="t-location" required placeholder="যেমন: মাইক পট্রী, jashore">
+                        <input type="text" id="t-location" required placeholder="যেমন: ধানমন্ডি, ঢাকা / উপশহর, যশোর">
                     </div>
                     <div class="form-group">
                         <label>No. of Students</label>
@@ -1007,20 +1446,26 @@
                         <textarea id="t-notes" rows="3" placeholder="টিউটরের জন্য কোনো বিশেষ শর্ত..."></textarea>
                     </div>
                     <div class="form-group full-width" style="margin-bottom: 5px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 12px 16px; border-radius: 8px; flex-wrap: wrap; gap: 10px;">
-                            <label for="post-wa-autopost" style="cursor: pointer; font-size: 14px; font-weight: 700; color: #34D399; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <div
+                            style="display: flex; align-items: center; justify-content: space-between; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 12px 16px; border-radius: 8px; flex-wrap: wrap; gap: 10px;">
+                            <label for="post-wa-autopost"
+                                style="cursor: pointer; font-size: 14px; font-weight: 700; color: #34D399; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i>
                                 পোস্ট করার সাথে সাথে হোয়াটসঅ্যাপ গ্রুপে অটো-পোস্ট করুন
                             </label>
-                            <input type="checkbox" id="post-wa-autopost" style="width: 20px; height: 20px; cursor: pointer; accent-color: #10B981;" checked>
+                            <input type="checkbox" id="post-wa-autopost"
+                                style="width: 20px; height: 20px; cursor: pointer; accent-color: #10B981;" checked>
                         </div>
                     </div>
                     <div class="form-group full-width">
-                        <button type="submit" id="submit-tuition-btn"><i class="fa-solid fa-paper-plane"></i> টিউশন পোস্ট করুন</button>
+                        <button type="submit" id="submit-tuition-btn"><i class="fa-solid fa-paper-plane"></i> টিউশন
+                            পোস্ট করুন</button>
                     </div>
                 </div>
             </form>
-            <p id="post-success-msg" style="color: var(--success); display: none; margin-top: 15px; text-align: center; font-weight: 700;">✅ সফলভাবে পোস্ট হয়েছে!</p>
+            <p id="post-success-msg"
+                style="color: var(--success); display: none; margin-top: 15px; text-align: center; font-weight: 700;">✅
+                সফলভাবে পোস্ট হয়েছে!</p>
         </div>
 
         <!-- Section 2: Tuition List with Profit Analytics & Smart Filters -->
@@ -1028,11 +1473,13 @@
             <!-- Profit & Financial Analytics Overview Section -->
             <div class="profit-summary-grid">
                 <div class="profit-card earned">
-                    <span class="profit-card-title"><i class="fa-solid fa-sack-dollar"></i> মোট অর্জিত প্রফিট (সফল)</span>
+                    <span class="profit-card-title"><i class="fa-solid fa-sack-dollar"></i> মোট অর্জিত প্রফিট
+                        (সফল)</span>
                     <span class="profit-card-value" id="earnedProfitVal">৳ 0</span>
                 </div>
                 <div class="profit-card pending">
-                    <span class="profit-card-title"><i class="fa-solid fa-hourglass-half"></i> সম্ভাব্য প্রফিট (Pending)</span>
+                    <span class="profit-card-title"><i class="fa-solid fa-hourglass-half"></i> সম্ভাব্য প্রফিট
+                        (Pending)</span>
                     <span class="profit-card-value" id="pendingProfitVal">৳ 0</span>
                 </div>
                 <div class="profit-card volume">
@@ -1044,19 +1491,23 @@
             <!-- Smart Filter Buttons -->
             <div class="filter-bar">
                 <button class="filter-btn active" onclick="setTuitionFilter('pending', this)">
-                    <i class="fa-solid fa-hourglass-half"></i> Pending <span class="badge-count" id="count-pending">0</span>
+                    <i class="fa-solid fa-hourglass-half"></i> Pending <span class="badge-count"
+                        id="count-pending">0</span>
                 </button>
                 <button class="filter-btn" onclick="setTuitionFilter('all', this)">
                     <i class="fa-solid fa-list-check"></i> সব অফার <span class="badge-count" id="count-all">0</span>
                 </button>
                 <button class="filter-btn" onclick="setTuitionFilter('today', this)">
-                    <i class="fa-solid fa-calendar-day"></i> আজকের প্ল্যান <span class="badge-count" id="count-today">0</span>
+                    <i class="fa-solid fa-calendar-day"></i> আজকের প্ল্যান <span class="badge-count"
+                        id="count-today">0</span>
                 </button>
                 <button class="filter-btn" onclick="setTuitionFilter('tomorrow', this)">
-                    <i class="fa-solid fa-calendar-week"></i> আগামীকালের প্ল্যান <span class="badge-count" id="count-tomorrow">0</span>
+                    <i class="fa-solid fa-calendar-week"></i> আগামীকালের প্ল্যান <span class="badge-count"
+                        id="count-tomorrow">0</span>
                 </button>
                 <button class="filter-btn" onclick="setTuitionFilter('assigned', this)">
-                    <i class="fa-solid fa-circle-check"></i> সফল / Assigned <span class="badge-count" id="count-assigned">0</span>
+                    <i class="fa-solid fa-circle-check"></i> সফল / Assigned <span class="badge-count"
+                        id="count-assigned">0</span>
                 </button>
             </div>
 
@@ -1071,7 +1522,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fa-solid fa-pen-to-square"></i> টিউশন অফার ও সিআরএম ট্র্যাকিং এডিট করুন</h2>
-                <button class="close-btn" type="button" onclick="closeEditModal()" aria-label="Close modal">&times;</button>
+                <button class="close-btn" type="button" onclick="closeEditModal()"
+                    aria-label="Close modal">&times;</button>
             </div>
             <form id="editForm" onsubmit="handleModalUpdate(event)">
                 <input type="hidden" id="editDocId">
@@ -1183,8 +1635,10 @@
                 </div>
 
                 <div class="modal-actions-bar">
-                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> আপডেট সেভ করুন</button>
-                    <button type="button" class="btn-modal-delete" onclick="handleDeleteFromModal()"><i class="fa-solid fa-trash"></i> মুছে ফেলুন</button>
+                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> আপডেট সেভ
+                        করুন</button>
+                    <button type="button" class="btn-modal-delete" onclick="handleDeleteFromModal()"><i
+                            class="fa-solid fa-trash"></i> মুছে ফেলুন</button>
                 </div>
             </form>
         </div>
@@ -1195,18 +1649,22 @@
         <div class="modal-content" style="max-width: 620px;">
             <div class="modal-header">
                 <h2><i class="fa-brands fa-whatsapp" style="color:#22C55E;"></i> হোয়াটসঅ্যাপ গ্রুপ অটোমেশন সেটিংস</h2>
-                <button class="close-btn" type="button" onclick="closeWhatsAppModal()" aria-label="Close modal">&times;</button>
+                <button class="close-btn" type="button" onclick="closeWhatsAppModal()"
+                    aria-label="Close modal">&times;</button>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
                 <span style="font-size: 14px; color: var(--text-muted);">বর্তমান স্ট্যাটাস:</span>
-                <span id="waStatusBadge" class="wa-status-pill wa-status-inactive"><i class="fa-solid fa-circle-xmark"></i> কনফিগার করা হয়নি</span>
+                <span id="waStatusBadge" class="wa-status-pill wa-status-inactive"><i
+                        class="fa-solid fa-circle-xmark"></i> কনফিগার করা হয়নি</span>
             </div>
 
             <form id="waConfigForm" onsubmit="handleSaveWaConfig(event)">
                 <div class="form-group">
                     <label>WhatsApp Gateway Provider:</label>
-                    <select id="waProvider" onchange="toggleWaProviderFields()" style="background:var(--bg-dark);color:var(--text-light);border:1px solid var(--border-color);padding:10px;border-radius:6px;width:100%;font-size:14px;">
+                    <select id="waProvider" onchange="toggleWaProviderFields()"
+                        style="background:var(--bg-dark);color:var(--text-light);border:1px solid var(--border-color);padding:10px;border-radius:6px;width:100%;font-size:14px;">
                         <option value="green-api">Green-API (রেকমেন্ডেড - ফ্রি ডেভেলপার মোড)</option>
                         <option value="ultramsg">UltraMsg API</option>
                         <option value="custom">Custom Webhook / Baileys Node API</option>
@@ -1234,7 +1692,8 @@
                     </div>
                     <div class="form-group" id="waHostField">
                         <label>Green-API Host URL (ঐচ্ছিক):</label>
-                        <input type="text" id="waApiHost" placeholder="https://api.green-api.com (অথবা https://7103.api.greenapi.com)">
+                        <input type="text" id="waApiHost"
+                            placeholder="https://api.green-api.com (অথবা https://7103.api.greenapi.com)">
                     </div>
                 </div>
 
@@ -1242,7 +1701,8 @@
                 <div id="waCustomFields" style="display:none;">
                     <div class="form-group">
                         <label>Webhook URL (POST):</label>
-                        <input type="url" id="waWebhookUrl" placeholder="https://your-bot-server.com/api/send-group-message">
+                        <input type="url" id="waWebhookUrl"
+                            placeholder="https://whatsapp-automation-386s.onrender.com">
                     </div>
                     <div class="form-group">
                         <label>Group ID (ঐচ্ছিক):</label>
@@ -1254,9 +1714,13 @@
                 <div class="wa-guide-box">
                     <strong><i class="fa-solid fa-circle-info"></i> Green-API সেটআপ করার ৩টি সহজ ধাপ:</strong>
                     <ol>
-                        <li><a href="https://green-api.com" target="_blank" style="color:#60A5FA;text-decoration:underline;">green-api.com</a>-এ ফ্রি একাউন্ট খুলে QR Code স্ক্যান করে WhatsApp কানেক্ট করুন।</li>
-                        <li>ড্যাশবোর্ড থেকে <strong>Instance ID</strong> এবং <strong>API Token</strong> কপি করে এখানে বসান।</li>
-                        <li>আপনার যে গ্রুপে পোস্ট পাঠাতে চান, সেটির <strong>Chat ID</strong> দিন (গ্রুপ চ্যাট আইডি পেতে গ্রিন-এপিআই ড্যাশবোর্ডে চ্যাট লিস্টে ক্লিক করলেই পাওয়া যায়)।</li>
+                        <li><a href="https://green-api.com" target="_blank"
+                                style="color:#60A5FA;text-decoration:underline;">green-api.com</a>-এ ফ্রি একাউন্ট খুলে
+                            QR Code স্ক্যান করে WhatsApp কানেক্ট করুন।</li>
+                        <li>ড্যাশবোর্ড থেকে <strong>Instance ID</strong> এবং <strong>API Token</strong> কপি করে এখানে
+                            বসান।</li>
+                        <li>আপনার যে গ্রুপে পোস্ট পাঠাতে চান, সেটির <strong>Chat ID</strong> দিন (গ্রুপ চ্যাট আইডি পেতে
+                            গ্রিন-এপিআই ড্যাশবোর্ডে চ্যাট লিস্টে ক্লিক করলেই পাওয়া যায়)।</li>
                     </ol>
                 </div>
 
@@ -1264,7 +1728,9 @@
                 <div id="waTestStatus" class="wa-test-result"></div>
 
                 <div class="modal-actions-bar" style="margin-top: 18px;">
-                    <button type="button" class="btn-card-action" style="background:#2563EB;color:#fff;padding:11px 16px;flex:1;justify-content:center;" onclick="handleTestWaMessage()">
+                    <button type="button" class="btn-card-action"
+                        style="background:#2563EB;color:#fff;padding:11px 16px;flex:1;justify-content:center;"
+                        onclick="handleTestWaMessage()">
                         <i class="fa-solid fa-paper-plane"></i> টেস্ট মেসেজ পাঠান
                     </button>
                     <button type="submit" class="btn-save" style="flex:1;">
@@ -1340,8 +1806,8 @@
 
         function updateWaUIFromConfig() {
             const isConfigured = (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
-                                 (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
-                                 (waConfig.provider === 'custom' && waConfig.webhookUrl);
+                (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                (waConfig.provider === 'custom' && waConfig.webhookUrl);
 
             const badge = document.getElementById('waStatusBadge');
             if (badge) {
@@ -1365,7 +1831,7 @@
             toggleWaProviderFields();
         }
 
-        window.toggleWaProviderFields = function() {
+        window.toggleWaProviderFields = function () {
             const provider = document.getElementById('waProvider')?.value || 'green-api';
             const standardFields = document.getElementById('waStandardFields');
             const customFields = document.getElementById('waCustomFields');
@@ -1392,20 +1858,20 @@
             }
         };
 
-        window.openWhatsAppModal = function() {
+        window.openWhatsAppModal = function () {
             updateWaUIFromConfig();
             const modal = document.getElementById('whatsappModal');
             if (modal) modal.style.display = 'flex';
         };
 
-        window.closeWhatsAppModal = function() {
+        window.closeWhatsAppModal = function () {
             const modal = document.getElementById('whatsappModal');
             if (modal) modal.style.display = 'none';
             const statusDiv = document.getElementById('waTestStatus');
             if (statusDiv) statusDiv.style.display = 'none';
         };
 
-        window.handleSaveWaConfig = async function(e) {
+        window.handleSaveWaConfig = async function (e) {
             e.preventDefault();
             const provider = document.getElementById('waProvider').value;
             const updated = {
@@ -1433,6 +1899,30 @@
             closeWhatsAppModal();
         };
 
+        function renderWhatsAppPhoneHtml(rawPhone) {
+            if (!rawPhone) return '<span style="color:var(--text-muted);">N/A</span>';
+            const cleanDigits = String(rawPhone).replace(/[^0-9]/g, '');
+            if (!cleanDigits) return safe(rawPhone);
+
+            let waDigits = cleanDigits;
+            if (waDigits.startsWith('01')) waDigits = '88' + waDigits;
+            else if (waDigits.startsWith('+8801')) waDigits = waDigits.substring(1);
+
+            const waLink = `https://wa.me/${waDigits}`;
+
+            return `
+                <div style="display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <a href="${waLink}" target="_blank" rel="noopener" title="হোয়াটসঅ্যাপে চ্যাট করুন (${safe(rawPhone)})" 
+                       style="color:#4ADE80; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:13.5px; background:rgba(34,197,94,0.12); padding:5px 11px; border-radius:6px; border:1px solid rgba(34,197,94,0.35); box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:all 0.2s ease;">
+                        <i class="fa-brands fa-whatsapp" style="font-size:16px; color:#22C55E;"></i> ${safe(rawPhone)}
+                    </a>
+                    <a href="tel:${safe(rawPhone)}" title="সরাসরি কল করুন" style="color:var(--text-muted);font-size:12px;text-decoration:none;padding:4px 6px;border-radius:4px;background:rgba(255,255,255,0.05);display:inline-flex;align-items:center;gap:4px;">
+                        <i class="fa-solid fa-phone" style="font-size:11px;"></i> Call
+                    </a>
+                </div>
+            `;
+        }
+
         function formatWhatsAppMessage(tuition, docId) {
             const origin = window.location.origin;
             const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
@@ -1450,6 +1940,18 @@
             const gender = tuition.studentGender ? ` (${tuition.studentGender} Student)` : '';
             const notes = tuition.specialNotes ? `\n📝 *শর্ত / নোট:* ${tuition.specialNotes}` : '';
 
+            // Calculate commission with exact Taka amount
+            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            const commVal = tuition.commission || tuition.commissionPolicy || '50%';
+            let commText = commVal;
+            const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
+            if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
+                const commTaka = Math.round(salaryNum * (commPercent / 100));
+                commText = `${commPercent}% (${commTaka.toLocaleString('bn-BD')} টাকা)`;
+            } else if (commVal === '0%') {
+                commText = 'কোনো কমিশন নেই (০%)';
+            }
+
             return `📢 *নতুন টিউশন অফার! (Job ID: #${jobId})*
 ━━━━━━━━━━━━━━━━━━━━
 🎓 *শ্রেণী:* ${cls} (${cat})
@@ -1458,7 +1960,8 @@
 📅 *দিন:* ${days}
 ⏰ *সময়:* ${time}
 💰 *বেতন:* ${sal}
-👥 *পছন্দের টিউটর:* ${pref}${gender}${notes}
+💵 *মিডিয়া কমিশন:* ${commText}
+👥 *টিউটর:* ${pref}${gender}${notes}
 ━━━━━━━━━━━━━━━━━━━━
 👉 *বিস্তারিত দেখতে ও আবেদন করতে ক্লিক করুন:*
 ${detailsUrl}`;
@@ -1477,7 +1980,7 @@ ${detailsUrl}`;
                     let host = waConfig.apiHost || 'https://api.green-api.com';
                     host = host.replace(/\/+$/, '');
                     const url = `${host}/waInstance${waConfig.instanceId}/sendMessage/${waConfig.apiToken}`;
-                    
+
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1517,7 +2020,11 @@ ${detailsUrl}`;
                     if (!waConfig.webhookUrl) {
                         return { success: false, error: 'Custom Webhook URL প্রদান করুন।' };
                     }
-                    const response = await fetch(waConfig.webhookUrl, {
+                    let targetUrl = waConfig.webhookUrl.trim();
+                    if (!targetUrl.includes('/send') && !targetUrl.includes('/api/')) {
+                        targetUrl = targetUrl.replace(/\/+$/, '') + '/send-message';
+                    }
+                    const response = await fetch(targetUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1525,10 +2032,11 @@ ${detailsUrl}`;
                             message: messageText
                         })
                     });
+                    const resData = await response.json().catch(() => ({}));
                     if (!response.ok) {
-                        throw new Error(`Webhook ত্রুটি (${response.status})`);
+                        throw new Error(resData.error || resData.message || `Webhook ত্রুটি (${response.status})`);
                     }
-                    return { success: true };
+                    return { success: true, data: resData };
                 }
 
                 return { success: false, error: 'অজানা প্রোভাইডার সিলেক্ট করা হয়েছে।' };
@@ -1538,7 +2046,7 @@ ${detailsUrl}`;
             }
         }
 
-        window.handleTestWaMessage = async function() {
+        window.handleTestWaMessage = async function () {
             const statusDiv = document.getElementById('waTestStatus');
             if (!statusDiv) return;
 
@@ -1562,7 +2070,7 @@ ${detailsUrl}`;
             const origConfig = waConfig;
             waConfig = tempConfig;
 
-            const testMsg = `🔔 *টেস্ট নোটিফিকেশন - JTS Tuition Portal*\n━━━━━━━━━━━━━━━━━━━━\n✅ এটি একটি সফল অটোমেশন টেস্ট মেসেজ!\n⏰ সময়: ${new Date().toLocaleTimeString('bn-BD')}`;
+            const testMsg = `🔔 *টেস্ট নোটিফিকেশন - TSBD (Tuition Service BD)*\n━━━━━━━━━━━━━━━━━━━━\n✅ এটি একটি সফল অটোমেশন টেস্ট মেসেজ!\n⏰ সময়: ${new Date().toLocaleTimeString('bn-BD')}`;
             const result = await sendWhatsAppGroupMessage(testMsg);
             waConfig = origConfig;
 
@@ -1575,7 +2083,7 @@ ${detailsUrl}`;
             }
         };
 
-        window.shareToWhatsApp = async function(tuitionId) {
+        window.shareToWhatsApp = async function (tuitionId) {
             const tuition = allTuitions.find(t => t.id === tuitionId);
             if (!tuition) {
                 alert("টিউশন তথ্য পাওয়া যায়নি!");
@@ -1585,8 +2093,8 @@ ${detailsUrl}`;
             const formattedMsg = formatWhatsAppMessage(tuition, tuitionId);
 
             const isConfigured = (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
-                                 (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
-                                 (waConfig.provider === 'custom' && waConfig.webhookUrl);
+                (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                (waConfig.provider === 'custom' && waConfig.webhookUrl);
 
             if (isConfigured) {
                 if (confirm("আপনি কি কনফিগার করা হোয়াটসঅ্যাপ গ্রুপে এই টিউশনটি অটো-পোস্ট করতে চান?")) {
@@ -1614,8 +2122,8 @@ ${detailsUrl}`;
         const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
         const tsbdClose = document.getElementById("tsbdClose");
 
-        function tsbdOpenDrawer(){if(tsbdDrawer){tsbdDrawer.classList.add("open");tsbdOverlay.classList.add("open");tsbdDrawer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}}
-        function tsbdCloseDrawer(){if(tsbdDrawer){tsbdDrawer.classList.remove("open");tsbdOverlay.classList.remove("open");tsbdDrawer.setAttribute("aria-hidden","true");document.body.style.overflow=""}}
+        function tsbdOpenDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.add("open"); tsbdOverlay.classList.add("open"); tsbdDrawer.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden" } }
+        function tsbdCloseDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.remove("open"); tsbdOverlay.classList.remove("open"); tsbdDrawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = "" } }
         tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
         tsbdClose?.addEventListener("click", tsbdCloseDrawer);
         tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
@@ -1644,7 +2152,7 @@ ${detailsUrl}`;
             }
         });
 
-        function tsbdSetUser(user){
+        function tsbdSetUser(user) {
             const desktopUser = document.getElementById("tsbdDesktopUser");
             const mobileUser = document.getElementById("tsbdMobileUser");
             const desktopAvatar = document.getElementById("tsbdDesktopAvatar");
@@ -1652,6 +2160,8 @@ ${detailsUrl}`;
             const mobileName = document.getElementById("tsbdMobileName");
             const loginLink = document.getElementById("loginLink");
             const loginLinkMobile = document.getElementById("loginLinkMobile");
+            const tutorRegLink = document.getElementById("tutorRegLink");
+            const tutorRegLinkMobile = document.getElementById("tutorRegLinkMobile");
             const adminDashboardLink = document.getElementById("adminDashboardLink");
             const adminDashboardLinkMobile = document.getElementById("adminDashboardLinkMobile");
 
@@ -1659,22 +2169,26 @@ ${detailsUrl}`;
             if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
             if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
 
-            if(user){
-                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName||user.email||'Admin')}&background=6366F1&color=fff`;
-                if(desktopAvatar) desktopAvatar.src = photo;
-                if(mobileAvatar) mobileAvatar.src = photo;
-                if(mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
-                if(desktopUser) desktopUser.style.display = "inline-flex";
-                if(mobileUser) mobileUser.style.display = "block";
-                if(loginLink) loginLink.style.display = "none";
-                if(loginLinkMobile) loginLinkMobile.style.display = "none";
+            if (user) {
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || 'Admin')}&background=6366F1&color=fff`;
+                if (desktopAvatar) desktopAvatar.src = photo;
+                if (mobileAvatar) mobileAvatar.src = photo;
+                if (mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
+                if (desktopUser) desktopUser.style.display = "inline-flex";
+                if (mobileUser) mobileUser.style.display = "block";
+                if (loginLink) loginLink.style.display = "none";
+                if (loginLinkMobile) loginLinkMobile.style.display = "none";
+                if (tutorRegLink) tutorRegLink.style.display = "none";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
             } else {
-                if(desktopUser) desktopUser.style.display = "none";
-                if(mobileUser) mobileUser.style.display = "none";
-                if(desktopDropdown) desktopDropdown.classList.remove('show');
-                if(mobileDropdown) mobileDropdown.classList.remove('show');
-                if(loginLink) loginLink.style.display = "inline-flex";
-                if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if (desktopUser) desktopUser.style.display = "none";
+                if (mobileUser) mobileUser.style.display = "none";
+                if (desktopDropdown) desktopDropdown.classList.remove('show');
+                if (mobileDropdown) mobileDropdown.classList.remove('show');
+                if (loginLink) loginLink.style.display = "inline-flex";
+                if (loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if (tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
             }
         }
 
@@ -1710,7 +2224,7 @@ ${detailsUrl}`;
             }
         }
 
-        async function tsbdLogout(){
+        async function tsbdLogout() {
             try {
                 if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
                 if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
@@ -1723,7 +2237,7 @@ ${detailsUrl}`;
                 sessionStorage.removeItem("tutorSession");
                 tsbdCloseDrawer();
                 window.location.reload();
-            } catch(e) {
+            } catch (e) {
                 console.error("Logout error:", e);
                 alert("Logout failed. Please try again.");
             }
@@ -1732,11 +2246,11 @@ ${detailsUrl}`;
         document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
 
         // === Tab Switching Logic (Global) ===
-        window.switchTab = function(tabName) {
+        window.switchTab = function (tabName) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            if(tabName === 'post') {
+
+            if (tabName === 'post') {
                 document.getElementById('section-post').classList.add('active');
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
             } else {
@@ -1780,7 +2294,7 @@ ${detailsUrl}`;
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-password').value;
             const btn = document.getElementById('login-btn');
-            
+
             btn.innerText = 'লগইন হচ্ছে...';
             loginError.style.display = 'none';
 
@@ -1795,8 +2309,8 @@ ${detailsUrl}`;
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (error) {
                 console.error("Login attempt error:", error);
-                if (ALLOWED_ADMIN_EMAILS.includes(email.toLowerCase()) && 
-                   (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential')) {
+                if (ALLOWED_ADMIN_EMAILS.includes(email.toLowerCase()) &&
+                    (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential')) {
                     try {
                         await createUserWithEmailAndPassword(auth, email, pass);
                         btn.innerText = 'লগইন করুন';
@@ -1973,7 +2487,7 @@ ${detailsUrl}`;
             if (document.getElementById('count-assigned')) document.getElementById('count-assigned').innerText = countAssigned;
         }
 
-        window.setTuitionFilter = function(filterKey, btnElement) {
+        window.setTuitionFilter = function (filterKey, btnElement) {
             currentFilter = filterKey;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
@@ -2120,7 +2634,7 @@ ${detailsUrl}`;
         // ==========================================
         // Modal Handlers (Edit & Tracking)
         // ==========================================
-        window.openEditModal = function(tuitionId) {
+        window.openEditModal = function (tuitionId) {
             const item = allTuitions.find(t => t.id === tuitionId);
             if (!item) return;
 
@@ -2139,7 +2653,7 @@ ${detailsUrl}`;
 
             const tracking = item.tracking || {};
             document.getElementById('editQueueAction').value = tracking.queueAction || item.queueAction || '';
-            
+
             const actDate = tracking.actionDate || item.actionDate || '';
             if (window.actionDatePicker) {
                 window.actionDatePicker.setDate(actDate || null, true);
@@ -2186,13 +2700,13 @@ ${detailsUrl}`;
         }
         setTimeout(initDatePickers, 100);
 
-        window.closeEditModal = function() {
+        window.closeEditModal = function () {
             const modal = document.getElementById('editModal');
             modal.style.display = 'none';
             document.body.style.overflow = '';
         }
 
-        window.handleModalUpdate = async function(event) {
+        window.handleModalUpdate = async function (event) {
             event.preventDefault();
             const tuitionId = document.getElementById('editDocId').value;
             if (!tuitionId) return;
@@ -2229,14 +2743,14 @@ ${detailsUrl}`;
             }
         }
 
-        window.handleDeleteFromModal = async function() {
+        window.handleDeleteFromModal = async function () {
             const tuitionId = document.getElementById('editDocId').value;
             if (!tuitionId) return;
             handleDeleteTuition(tuitionId);
             closeEditModal();
         }
 
-        window.handleDeleteTuition = async function(tuitionId) {
+        window.handleDeleteTuition = async function (tuitionId) {
             if (!confirm("আপনি কি নিশ্চিতভাবে এই টিউশনটি মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।")) return;
             try {
                 await deleteDoc(doc(db, "tuitions", tuitionId));
@@ -2307,8 +2821,8 @@ ${detailsUrl}`;
                 // WhatsApp Automation Trigger
                 if (shouldAutoPostWA) {
                     const isConfigured = (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
-                                         (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
-                                         (waConfig.provider === 'custom' && waConfig.webhookUrl);
+                        (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken && waConfig.groupId) ||
+                        (waConfig.provider === 'custom' && waConfig.webhookUrl);
 
                     if (isConfigured) {
                         btn.innerText = 'হোয়াটসঅ্যাপে পাঠানো হচ্ছে...';
@@ -2330,8 +2844,8 @@ ${detailsUrl}`;
                     successMsg.style.color = 'var(--success)';
                 }
 
-                setTimeout(() => { 
-                    successMsg.style.display = 'none'; 
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
                     successMsg.style.color = 'var(--success)';
                     successMsg.innerHTML = '✅ সফলভাবে পোস্ট হয়েছে!';
                 }, 6000);
@@ -2346,7 +2860,7 @@ ${detailsUrl}`;
         // ==========================================
         // Expand Card: Show complete tuition + tutor/application data
         // ==========================================
-        window.toggleExpand = async function(tuitionId) {
+        window.toggleExpand = async function (tuitionId) {
             const detailsDiv = document.getElementById(`details-${tuitionId}`);
             if (!detailsDiv) return;
 
@@ -2386,7 +2900,7 @@ ${detailsUrl}`;
                         <tr><th>Media Commission</th><td>${safe(tuitionData.commission || '50%')}</td></tr>
                         <tr><th>Location</th><td>${safe(tuitionData.location)}</td></tr>
                         <tr><th>No. of Students</th><td>${safe(tuitionData.noOfStudents)}</td></tr>
-                        <tr><th>Guardian Phone</th><td>${safe(tuitionData.guardianPhone)}</td></tr>
+                        <tr><th>Guardian Phone</th><td>${renderWhatsAppPhoneHtml(tuitionData.guardianPhone, 'অভিভাবক', `Job ID #${tuitionData.jobId}`)}</td></tr>
                         <tr><th>Special Notes</th><td>${safe(tuitionData.specialNotes)}</td></tr>
                         <tr><th>Status</th><td>${safe(tuitionData.status)}</td></tr>
                     </table>
@@ -2405,7 +2919,7 @@ ${detailsUrl}`;
                                     <tr><th>Name</th><td>${safe(tData.name)}</td></tr>
                                     <tr><th>Institution</th><td>${safe(tData.institution || tData.institute)}</td></tr>
                                     <tr><th>Email</th><td>${safe(tData.email)}</td></tr>
-                                    <tr><th>Phone</th><td>${safe(tData.phone)}</td></tr>
+                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`)}</td></tr>
                                     <tr><th>Address</th><td>${safe(tData.address)}</td></tr>
                                     <tr><th>Gender</th><td>${safe(tData.gender)}</td></tr>
                                     <tr><th>Experience</th><td>${safe(tData.experience)}</td></tr>
@@ -2441,7 +2955,7 @@ ${detailsUrl}`;
                                     <tr><th>Name</th><td>${safe(ad.tutorName || ad.name)}</td></tr>
                                     <tr><th>Institution</th><td>${safe(ad.institute || ad.institution)}</td></tr>
                                     <tr><th>Email</th><td>${safe(ad.email)}</td></tr>
-                                    <tr><th>Phone</th><td><a href="tel:${safe(ad.phone || ad.tutorPhone)}" style="color:#38BDF8;font-weight:700;">${safe(ad.phone || ad.tutorPhone)}</a></td></tr>
+                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(ad.phone || ad.tutorPhone, ad.tutorName || ad.name, `Job ID #${tuitionData.jobId} আবেদন`)}</td></tr>
                                     <tr><th>Address</th><td>${safe(ad.address)}</td></tr>
                                     <tr><th>Gender</th><td>${safe(ad.gender)}</td></tr>
                                     <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy)}</td></tr>
@@ -2474,9 +2988,9 @@ ${detailsUrl}`;
         }
 
         // Action: Next Tutor
-        window.nextTutor = async function(tuitionId, currentTutorUid) {
-            if(!confirm('আপনি কি নিশ্চিত? বর্তমান টিউটরকে সরিয়ে ওয়েটলিস্ট থেকে পরের জনকে দায়িত্ব দেওয়া হবে।')) return;
-            
+        window.nextTutor = async function (tuitionId, currentTutorUid) {
+            if (!confirm('আপনি কি নিশ্চিত? বর্তমান টিউটরকে সরিয়ে ওয়েটলিস্ট থেকে পরের জনকে দায়িত্ব দেওয়া হবে।')) return;
+
             try {
                 const tuitionRef = doc(db, 'tuitions', tuitionId);
                 const tuitionSnap = await getDoc(tuitionRef);
@@ -2487,7 +3001,7 @@ ${detailsUrl}`;
                 const applicantsSnap = await getDocs(appQuery);
 
                 let nextTutorUid = null;
-                
+
                 applicantsSnap.forEach(docSnap => {
                     const applicant = docSnap.data();
                     const applicantUid = applicant.uid;
@@ -2521,8 +3035,8 @@ ${detailsUrl}`;
         }
 
         // Action: Close Tuition
-        window.closeTuition = async function(tuitionId) {
-            if(!confirm('এই টিউশনটি কি সম্পূর্ণ বন্ধ করে দিতে চান?')) return;
+        window.closeTuition = async function (tuitionId) {
+            if (!confirm('এই টিউশনটি কি সম্পূর্ণ বন্ধ করে দিতে চান?')) return;
             try {
                 await updateDoc(doc(db, 'tuitions', tuitionId), {
                     status: 'closed'
@@ -2536,4 +3050,5 @@ ${detailsUrl}`;
         }
     </script>
 </body>
+
 </html>

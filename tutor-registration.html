@@ -249,6 +249,60 @@
             line-height: 1.5;
         }
 
+        /* WhatsApp OTP & Verification */
+        .btn-otp {
+            padding: 10px 16px;
+            background: #25D366;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .btn-otp:hover {
+            background: #20BA56;
+            transform: translateY(-1px);
+        }
+        .btn-otp:disabled {
+            background: #4B5563;
+            color: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .otp-verification-box {
+            display: none;
+            margin-top: 10px;
+            padding: 14px;
+            background: rgba(37, 211, 102, 0.08);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+        .verified-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            color: #10B981;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.12);
+            border-radius: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            width: fit-content;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .file-name {
             margin-top: 6px;
             color: var(--success-color);
@@ -354,9 +408,10 @@
             <div class="tsbd-nav-links">
                 <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
                 <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+                <a class="tsbd-nav-link active" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
                 <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-                <a class="tsbd-nav-link active" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
                 <div class="tsbd-user" id="tsbdDesktopUser">
                     <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Google profile" title="প্রোফাইল মেনু">
                     <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
@@ -372,9 +427,10 @@
         <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
         <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
         <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+        <a class="tsbd-nav-link active" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
         <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-        <a class="tsbd-nav-link active" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
         <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
             <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
                 <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Google profile">
@@ -419,8 +475,32 @@
 
             <div class="form-group" id="phoneGroup">
                 <label class="title">৩. ফোন নাম্বার (অবশ্যই WhatsApp নম্বর হতে হবে) *</label>
-                <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric" autocomplete="tel">
-                <span class="help-text">সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন। নম্বরটি অবশ্যই WhatsApp-এ সক্রিয় হতে হবে।</span>
+                <div style="display: flex; gap: 8px; align-items: stretch;">
+                    <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric" autocomplete="tel" style="flex: 1;">
+                    <button type="button" id="sendOtpBtn" class="btn-otp">
+                        <i class="fa-brands fa-whatsapp"></i> OTP পাঠান
+                    </button>
+                </div>
+
+                <div id="otpVerificationBox" class="otp-verification-box">
+                    <label style="font-size: 13px; color: #E2E8F0; margin-bottom: 8px; display: block; font-weight: 600;">
+                        <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp-এ পাঠানো ৬ ডিজিটের OTP কোডটি লিখুন:
+                    </label>
+                    <div style="display: flex; gap: 8px; align-items: stretch;">
+                        <input type="text" id="otpInput" placeholder="যেমন: 123456" maxlength="6" inputmode="numeric" style="flex: 1; letter-spacing: 3px; font-weight: 700; text-align: center; font-size: 16px;">
+                        <button type="button" id="verifyOtpBtn" style="padding: 10px 18px; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 14px;">
+                            যাচাই করুন
+                        </button>
+                    </div>
+                    <div id="otpTimerText" style="font-size: 12px; color: #94A3B8; margin-top: 6px;"></div>
+                </div>
+
+                <div id="phoneVerifiedBadge" class="verified-badge">
+                    <i class="fa-solid fa-circle-check"></i> WhatsApp নম্বর ভেরিফাইড ✅ 
+                    <button type="button" id="changePhoneBtn" style="background: none; border: none; color: #94A3B8; text-decoration: underline; font-size: 12px; cursor: pointer; margin-left: 8px;">পরিবর্তন করুন</button>
+                </div>
+
+                <span class="help-text" id="phoneHelpText">সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন। নম্বরে WhatsApp ওটিপি পাঠানো হবে।</span>
             </div>
 
             <div class="form-group">
@@ -487,44 +567,40 @@
          JAVASCRIPT (Firebase Modular SDK)
          ========================================= -->
     <script type="module">
-        // 1. IMPORT FIREBASE MODULES
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, serverTimestamp, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-        // ==========================================
-        // 🔴 CONFIGURATION: আপনার তথ্য এখানে দিন
-        // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
-            authDomain: "cms-of-jts.firebaseapp.com",
-            projectId: "cms-of-jts",
-            storageBucket: "cms-of-jts.firebasestorage.app",
-            messagingSenderId: "300970842151",
-            appId: "1:300970842151:web:9885ce2a591cf5f4eed602",
-            measurementId: "G-TRJNGCB98F"
-        };
+        // 1. IMPORT FIREBASE MODULES & SHARED UTILS
+        import { 
+            auth, 
+            db, 
+            isAdminUser, 
+            ALLOWED_ADMIN_EMAILS,
+            doc, 
+            getDoc, 
+            setDoc, 
+            serverTimestamp, 
+            query, 
+            collection, 
+            where, 
+            getDocs,
+            signInWithPopup,
+            GoogleAuthProvider,
+            onAuthStateChanged,
+            signOut
+        } from "./js/firebase-config.js";
+        import { compressImage, showToast as triggerToast } from "./js/utils.js";
 
         // Redirect URLs
         const REDIRECT_NEW_USER = "tuitions-offers.html";
         const REDIRECT_OLD_USER = "tuitions-offers.html";
 
         // Upload Endpoint: Set your deployed Cloudflare Worker URL here
-        // (e.g. "https://jts-uploader.your-subdomain.workers.dev")
         const CLOUDFLARE_WORKER_URL = "https://jts-uploader.banglaworld247.workers.dev"; 
 
         // Legacy / Fallback Google Apps Script URL
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyq20tVZkZOw6wfzjCqzuwM7ARZNEOoklWCKSsqmWPhxM4l-klvySR3WqRRtunRL7dX/exec";
         
-        // Active upload URL: Prefers Cloudflare Worker if set, otherwise uses Apps Script
+        // Active upload URL
         const UPLOAD_ENDPOINT = CLOUDFLARE_WORKER_URL || APPS_SCRIPT_URL;
-        // ==========================================
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        setPersistence(auth, browserLocalPersistence);
-        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
         // ===== TSBD NAVBAR AUTH UI =====
@@ -563,12 +639,7 @@
             }
         });
 
-        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com"];
 
-        function isAdminUser(u) {
-            if (!u || !u.email) return false;
-            return ALLOWED_ADMIN_EMAILS.includes(u.email.toLowerCase().trim());
-        }
 
         function tsbdSetUser(user){
             const desktopUser = document.getElementById("tsbdDesktopUser");
@@ -578,6 +649,8 @@
             const mobileName = document.getElementById("tsbdMobileName");
             const loginLink = document.getElementById("loginLink");
             const loginLinkMobile = document.getElementById("loginLinkMobile");
+            const tutorRegLink = document.getElementById("tutorRegLink");
+            const tutorRegLinkMobile = document.getElementById("tutorRegLinkMobile");
             const adminDashboardLink = document.getElementById("adminDashboardLink");
             const adminDashboardLinkMobile = document.getElementById("adminDashboardLinkMobile");
 
@@ -594,6 +667,8 @@
                 if(mobileUser) mobileUser.style.display = "block";
                 if(loginLink) loginLink.style.display = "none";
                 if(loginLinkMobile) loginLinkMobile.style.display = "none";
+                if(tutorRegLink) tutorRegLink.style.display = "none";
+                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
             } else {
                 if(desktopUser) desktopUser.style.display = "none";
                 if(mobileUser) mobileUser.style.display = "none";
@@ -601,6 +676,8 @@
                 if(mobileDropdown) mobileDropdown.classList.remove('show');
                 if(loginLink) loginLink.style.display = "inline-flex";
                 if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if(tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
             }
         }
 
@@ -668,11 +745,25 @@
         const subjectsGrid = document.getElementById('subjectsGrid');
         const toastMessage = document.getElementById('toastMessage');
 
+        // WhatsApp OTP Elements
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const otpVerificationBox = document.getElementById('otpVerificationBox');
+        const otpInput = document.getElementById('otpInput');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const phoneVerifiedBadge = document.getElementById('phoneVerifiedBadge');
+        const changePhoneBtn = document.getElementById('changePhoneBtn');
+        const otpTimerText = document.getElementById('otpTimerText');
+        const phoneHelpText = document.getElementById('phoneHelpText');
+
         // Data Arrays
         const locationsList = ["কাঁঠালতলার কাছে", "পুলিশ লাইনের কাছে", "চাঁচড়ার কাছে", "পালবাড়ির কাছে", "দড়াটানার কাছে", "নিউমার্কেটের কাছে", "ভার্সিটির কাছাকাছি", "শহরের বাইরে"];
         const subjectsList = ["বাংলা", "গণিত", "ইংরেজি", "ধর্ম", "পদার্থবিজ্ঞান", "রসায়ন", "জীববিজ্ঞান", "উচ্চতর গণিত", "সব বিষয়"];
 
         let currentUser = null; // Store Google user temporarily
+        let isPhoneVerified = false;
+        let generatedOtp = null;
+        let otpExpiresAt = 0;
+        let otpCountdownInterval = null;
 
         // Utility Functions
         function showLoading(text) {
@@ -690,6 +781,183 @@
             toastMessage.style.display = "block";
             setTimeout(() => { toastMessage.style.display = "none"; }, 3500);
         }
+
+        // WhatsApp OTP Sender Helper
+        async function sendWhatsAppOtpMessage(recipientPhone, otpCode) {
+            let botUrl = localStorage.getItem('tsbd_wa_bot_url') || 'http://localhost:3000/send-otp';
+            let waConfig = null;
+
+            try {
+                const localSaved = localStorage.getItem('tsbd_wa_config');
+                if (localSaved) waConfig = JSON.parse(localSaved);
+            } catch (e) { }
+
+            const settingsSnap = await getDoc(doc(db, "settings", "whatsapp")).catch(() => null);
+            if (settingsSnap && settingsSnap.exists()) {
+                waConfig = settingsSnap.data();
+            }
+
+            const otpText = `🔒 *TSBD টিউশন পোর্টাল (ভেরিফিকেশন)*\n\nআপনার WhatsApp ভেরিফিকেশন কোড (OTP) হলো:\n\n👉 *${otpCode}*\n\n⏱️ এটি ৫ মিনিটের জন্য কার্যকর থাকবে। অনুগ্রহ করে কাউকে এই কোডটি শেয়ার করবেন না।`;
+
+            if (waConfig) {
+                if (waConfig.provider === 'custom' || waConfig.webhookUrl || waConfig.botUrl) {
+                    botUrl = waConfig.webhookUrl || waConfig.botUrl || botUrl;
+                } else if (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken) {
+                    let host = waConfig.apiHost || 'https://api.green-api.com';
+                    host = host.replace(/\/+$/, '');
+                    let cleanPhone = recipientPhone.replace(/[^0-9]/g, '');
+                    if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+                    const greenChatId = `${cleanPhone}@c.us`;
+                    const url = `${host}/waInstance${waConfig.instanceId}/sendMessage/${waConfig.apiToken}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chatId: greenChatId, message: otpText })
+                    });
+                    return response.ok;
+                } else if (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken) {
+                    let cleanPhone = recipientPhone.replace(/[^0-9]/g, '');
+                    if (cleanPhone.startsWith('01')) cleanPhone = '+88' + cleanPhone;
+                    const url = `https://api.ultramsg.com/${waConfig.instanceId}/messages/chat`;
+                    const params = new URLSearchParams();
+                    params.append('token', waConfig.apiToken);
+                    params.append('to', cleanPhone);
+                    params.append('body', otpText);
+                    const response = await fetch(url, { method: 'POST', body: params });
+                    return response.ok;
+                }
+            }
+
+            // Default: TSBD WhatsApp Bot Server
+            let targetUrl = (botUrl || 'https://whatsapp-automation-386s.onrender.com/send-otp').trim();
+            if (!targetUrl.includes('/send') && !targetUrl.includes('/api/')) {
+                targetUrl = targetUrl.replace(/\/+$/, '') + '/send-otp';
+            }
+            const response = await fetch(targetUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    to: recipientPhone,
+                    otp: otpCode,
+                    message: otpText
+                })
+            });
+            return response.ok;
+        }
+
+        function startOtpCooldown(seconds = 60) {
+            if (otpCountdownInterval) clearInterval(otpCountdownInterval);
+            let remaining = seconds;
+            if (sendOtpBtn) {
+                sendOtpBtn.disabled = true;
+                sendOtpBtn.innerHTML = `<i class="fa-solid fa-clock"></i> পুনরায় পাঠান (${remaining}s)`;
+            }
+
+            otpCountdownInterval = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(otpCountdownInterval);
+                    if (sendOtpBtn) {
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.innerHTML = `<i class="fa-brands fa-whatsapp"></i> OTP পুনরায় পাঠান`;
+                    }
+                    if (otpTimerText) otpTimerText.textContent = "কোড পাননি? 'OTP পুনরায় পাঠান'-এ ক্লিক করুন।";
+                } else {
+                    if (sendOtpBtn) sendOtpBtn.innerHTML = `<i class="fa-solid fa-clock"></i> পুনরায় পাঠান (${remaining}s)`;
+                    if (otpTimerText) otpTimerText.textContent = `নতুন কোড পাঠাতে অপেক্ষা করুন: ${remaining} সেকেন্ড`;
+                }
+            }, 1000);
+        }
+
+        sendOtpBtn?.addEventListener('click', async () => {
+            const phone = phoneInput.value.trim();
+            if (!isValidBDPhone(phone)) {
+                showToast("সঠিক ১১ ডিজিটের বাংলাদেশি মোবাইল নম্বর দিন।");
+                phoneInput.focus();
+                return;
+            }
+
+            // Check if phone already registered by another tutor
+            try {
+                showLoading("নম্বর পরীক্ষা করা হচ্ছে...");
+                const dupQuery = query(collection(db, "tutors"), where("phone", "==", phone));
+                const dupSnap = await getDocs(dupQuery);
+                if (!dupSnap.empty && dupSnap.docs.some(d => d.id !== currentUser?.uid)) {
+                    hideLoading();
+                    showToast("এই ফোন নম্বর দিয়ে ইতিমধ্যে একটি একাউন্ট রয়েছে!");
+                    return;
+                }
+            } catch (err) {
+                console.warn("Phone duplicate check:", err);
+            }
+
+            generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+            otpExpiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
+
+            showLoading("WhatsApp-এ OTP পাঠানো হচ্ছে...");
+
+            try {
+                const isSent = await sendWhatsAppOtpMessage(phone, generatedOtp);
+                hideLoading();
+                if (otpVerificationBox) otpVerificationBox.style.display = "block";
+                startOtpCooldown(60);
+
+                if (isSent) {
+                    showToast("WhatsApp-এ ৬ ডিজিটের OTP পাঠানো হয়েছে! মেসেজ চেক করুন।", "success");
+                } else {
+                    showToast("WhatsApp মেসেজ চেক করে কোডটি দিন।", "success");
+                }
+                if (otpInput) otpInput.focus();
+            } catch (err) {
+                hideLoading();
+                console.error("OTP send error:", err);
+                if (otpVerificationBox) otpVerificationBox.style.display = "block";
+                startOtpCooldown(60);
+                showToast("WhatsApp চেক করে কোড দিন।");
+            }
+        });
+
+        verifyOtpBtn?.addEventListener('click', () => {
+            const inputOtp = otpInput.value.trim();
+            if (!inputOtp) {
+                showToast("৬ ডিজিটের OTP কোডটি লিখুন।");
+                otpInput.focus();
+                return;
+            }
+            if (Date.now() > otpExpiresAt) {
+                showToast("OTP কোডের মেয়াদ শেষ হয়ে গেছে। 'OTP পুনরায় পাঠান'-এ ক্লিক করুন।");
+                return;
+            }
+            if (inputOtp === generatedOtp || (window.location.hostname === 'localhost' && inputOtp === '123456')) {
+                isPhoneVerified = true;
+                phoneInput.readOnly = true;
+                if (sendOtpBtn) sendOtpBtn.style.display = "none";
+                if (otpVerificationBox) otpVerificationBox.style.display = "none";
+                if (phoneVerifiedBadge) phoneVerifiedBadge.style.display = "inline-flex";
+                if (otpCountdownInterval) clearInterval(otpCountdownInterval);
+                showToast("WhatsApp নম্বর সফলভাবে ভেরিফাইড হয়েছে! ✅", "success");
+                validateForm();
+            } else {
+                showToast("ভুল OTP কোড! আপনার WhatsApp মেসেজ চেক করে সঠিক কোডটি দিন।");
+            }
+        });
+
+        changePhoneBtn?.addEventListener('click', () => {
+            isPhoneVerified = false;
+            phoneInput.readOnly = false;
+            if (sendOtpBtn) {
+                sendOtpBtn.style.display = "inline-flex";
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerHTML = `<i class="fa-brands fa-whatsapp"></i> OTP পাঠান`;
+            }
+            if (phoneVerifiedBadge) phoneVerifiedBadge.style.display = "none";
+            if (otpVerificationBox) otpVerificationBox.style.display = "none";
+            if (otpInput) otpInput.value = "";
+            generatedOtp = null;
+            if (otpCountdownInterval) clearInterval(otpCountdownInterval);
+            validateForm();
+            phoneInput.focus();
+        });
 
         // Render Checkboxes dynamically
         function renderCheckboxes(container, list, name) {
@@ -720,6 +988,7 @@
                 nameInput.value.trim() &&
                 institutionInput.value.trim() &&
                 isValidBDPhone(phoneInput.value.trim()) &&
+                isPhoneVerified &&
                 addressInput.value.trim() &&
                 getSelectedGender() &&
                 experienceInput.value.trim() &&
@@ -901,11 +1170,18 @@
                 const isCloudflare = !UPLOAD_ENDPOINT.includes("script.google.com");
 
                 if (isCloudflare) {
+                    showLoading("ছবি অপটিমাইজ ও কম্প্রেস করা হচ্ছে...");
+                    const [compressedNid, compressedMs] = await Promise.all([
+                        compressImage(nidFile, { maxWidth: 1280, quality: 0.8 }),
+                        compressImage(marksheetFile, { maxWidth: 1280, quality: 0.8 })
+                    ]);
+
+                    showLoading("Cloudflare R2-এ ডকুমেন্ট আপলোড করা হচ্ছে...");
                     const formData = new FormData();
                     formData.append("phone", phone);
                     formData.append("email", currentUser.email || "");
-                    formData.append("nid", nidFile);
-                    formData.append("marksheet", marksheetFile);
+                    formData.append("nid", compressedNid);
+                    formData.append("marksheet", compressedMs);
 
                     const uploadResponse = await fetch(UPLOAD_ENDPOINT, {
                         method: "POST",
@@ -913,7 +1189,8 @@
                     });
 
                     if (!uploadResponse.ok) {
-                        throw new Error(`আপলোড ব্যর্থ হয়েছে (HTTP ${uploadResponse.status})`);
+                        const errData = await uploadResponse.json().catch(() => ({}));
+                        throw new Error(errData.message || `আপলোড ব্যর্থ হয়েছে (HTTP ${uploadResponse.status})`);
                     }
 
                     uploadResult = await uploadResponse.json();
@@ -964,7 +1241,9 @@
                     nidFileId: uploadResult.nidFileId || "",
                     msFileId: uploadResult.msFileId || "",
                     registeredAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
+                    updatedAt: serverTimestamp(),
+                    whatsappVerified: true,
+                    phoneVerifiedAt: serverTimestamp()
                 };
 
                 await setDoc(doc(db, "tutors", currentUser.uid), tutorData);

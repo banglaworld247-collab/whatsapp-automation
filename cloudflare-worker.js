@@ -1,19 +1,22 @@
 /**
- * Cloudflare Worker for JTS Tutor Image & Document Uploads (Cloudflare R2)
+ * Cloudflare Worker for TSBD Tutor Image & Document Uploads (Cloudflare R2)
  * 
- * Setup Instructions in Cloudflare Dashboard:
- * 1. Go to Cloudflare Dashboard -> R2 -> Create a Bucket (e.g. "jts-uploads").
- * 2. Go to Workers & Pages -> Create Application -> Create Worker (e.g. "jts-uploader").
- * 3. In the Worker settings -> Settings -> Variables -> R2 Bucket Bindings:
- *    - Variable Name: R2_BUCKET (or MY_BUCKET)
- *    - R2 Bucket: select "jts-uploads"
- * 4. (Optional) In Settings -> Variables -> Environment Variables:
- *    - PUBLIC_URL_PREFIX: (e.g. "https://pub-xxxx.r2.dev" or your custom domain, if public bucket is enabled).
- *      If not provided, the worker automatically serves files via its own URL: https://<worker-url>/file/<key>
- * 5. Paste this entire code into the Worker editor and click "Deploy".
- * 6. Copy your Worker URL (e.g. "https://jts-uploader.<your-subdomain>.workers.dev") 
- *    and paste it in CLOUDFLARE_UPLOAD_URL in `tutor-registration.html` and `tuition-details.html`.
+ * Features:
+ * - Direct stream upload to Cloudflare R2
+ * - File size restriction (Max 10MB)
+ * - Allowed MIME types (JPEG, PNG, WEBP, PDF)
+ * - Path & filename sanitization
+ * - Public direct file serving with immutable caching
  */
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 Megabytes
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/jpg",
+  "application/pdf"
+];
 
 export default {
   async fetch(request, env, ctx) {
@@ -24,7 +27,7 @@ export default {
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, X-Api-Key",
       "Access-Control-Max-Age": "86400",
     };
 
@@ -79,8 +82,8 @@ export default {
         // Case A: Multipart Form Data (Fast binary upload)
         if (contentType.includes("multipart/form-data")) {
           const formData = await request.formData();
-          phone = (formData.get("phone") || "general").toString().trim();
-          email = (formData.get("email") || "").toString().trim();
+          phone = sanitizeFileName((formData.get("phone") || "general").toString().trim());
+          email = sanitizeFileName((formData.get("email") || "").toString().trim());
 
           const nidFile = formData.get("nid");
           const marksheetFile = formData.get("marksheet");
@@ -90,11 +93,12 @@ export default {
 
           // Upload NID
           if (nidFile && typeof nidFile === "object" && nidFile.name) {
+            validateFile(nidFile);
             const ext = getExtension(nidFile.name, nidFile.type);
             const key = `tutors/${phone}/nid_${timestamp}.${ext}`;
             await bucket.put(key, nidFile.stream(), {
               httpMetadata: { contentType: nidFile.type || "application/octet-stream" },
-              customMetadata: { phone, email, originalName: nidFile.name }
+              customMetadata: { phone, email, originalName: sanitizeFileName(nidFile.name) }
             });
             uploadedNidUrl = `${publicPrefix}/${key}`;
             results.push({ field: "nid", key, url: uploadedNidUrl });
@@ -102,11 +106,12 @@ export default {
 
           // Upload Marksheet
           if (marksheetFile && typeof marksheetFile === "object" && marksheetFile.name) {
+            validateFile(marksheetFile);
             const ext = getExtension(marksheetFile.name, marksheetFile.type);
             const key = `tutors/${phone}/marksheet_${timestamp}.${ext}`;
             await bucket.put(key, marksheetFile.stream(), {
               httpMetadata: { contentType: marksheetFile.type || "application/octet-stream" },
-              customMetadata: { phone, email, originalName: marksheetFile.name }
+              customMetadata: { phone, email, originalName: sanitizeFileName(marksheetFile.name) }
             });
             uploadedMsUrl = `${publicPrefix}/${key}`;
             results.push({ field: "marksheet", key, url: uploadedMsUrl });
@@ -114,11 +119,12 @@ export default {
 
           // Upload generic single file (if applicable)
           if (singleFile && typeof singleFile === "object" && singleFile.name) {
+            validateFile(singleFile);
             const ext = getExtension(singleFile.name, singleFile.type);
             const key = `uploads/${phone}/${timestamp}_${sanitizeFileName(singleFile.name)}`;
             await bucket.put(key, singleFile.stream(), {
               httpMetadata: { contentType: singleFile.type || "application/octet-stream" },
-              customMetadata: { phone, email, originalName: singleFile.name }
+              customMetadata: { phone, email, originalName: sanitizeFileName(singleFile.name) }
             });
             const singleUrl = `${publicPrefix}/${key}`;
             results.push({ field: "file", key, url: singleUrl });
@@ -127,19 +133,21 @@ export default {
         // Case B: JSON Payload (with Base64 files)
         else {
           const body = await request.json();
-          phone = (body.phone || "general").toString().trim();
-          email = (body.email || "").toString().trim();
+          phone = sanitizeFileName((body.phone || "general").toString().trim());
+          email = sanitizeFileName((body.email || "").toString().trim());
           const timestamp = Date.now();
 
           // NID Base64
           if (body.nidBase64) {
             const mime = body.nidMime || "image/jpeg";
+            validateMime(mime);
             const ext = getExtension(body.nidName || "nid", mime);
             const key = `tutors/${phone}/nid_${timestamp}.${ext}`;
             const buffer = base64ToArrayBuffer(body.nidBase64);
+            if (buffer.byteLength > MAX_FILE_SIZE) throw new Error("NID file size exceeds 10MB limit.");
             await bucket.put(key, buffer, {
               httpMetadata: { contentType: mime },
-              customMetadata: { phone, email, originalName: body.nidName || "nid" }
+              customMetadata: { phone, email, originalName: sanitizeFileName(body.nidName || "nid") }
             });
             uploadedNidUrl = `${publicPrefix}/${key}`;
             results.push({ field: "nid", key, url: uploadedNidUrl });
@@ -148,12 +156,14 @@ export default {
           // Marksheet Base64
           if (body.msBase64) {
             const mime = body.msMime || "image/jpeg";
+            validateMime(mime);
             const ext = getExtension(body.msName || "marksheet", mime);
             const key = `tutors/${phone}/marksheet_${timestamp}.${ext}`;
             const buffer = base64ToArrayBuffer(body.msBase64);
+            if (buffer.byteLength > MAX_FILE_SIZE) throw new Error("Marksheet file size exceeds 10MB limit.");
             await bucket.put(key, buffer, {
               httpMetadata: { contentType: mime },
-              customMetadata: { phone, email, originalName: body.msName || "marksheet" }
+              customMetadata: { phone, email, originalName: sanitizeFileName(body.msName || "marksheet") }
             });
             uploadedMsUrl = `${publicPrefix}/${key}`;
             results.push({ field: "marksheet", key, url: uploadedMsUrl });
@@ -181,7 +191,7 @@ export default {
             message: err.message || "Upload to Cloudflare R2 failed."
           }),
           {
-            status: 500,
+            status: 400,
             headers: { ...corsHeaders, "Content-Type": "application/json" }
           }
         );
@@ -189,7 +199,7 @@ export default {
     }
 
     return new Response(
-      JSON.stringify({ status: "ok", service: "JTS Cloudflare R2 Uploader" }),
+      JSON.stringify({ status: "ok", service: "TSBD Cloudflare R2 Uploader (Secure v2)" }),
       {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -198,7 +208,22 @@ export default {
   }
 };
 
-// Helpers
+// Helper Validation
+function validateFile(file) {
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error(`File "${file.name}" exceeds maximum allowed size of 10MB.`);
+  }
+  if (file.type && !ALLOWED_MIME_TYPES.includes(file.type.toLowerCase())) {
+    throw new Error(`Unsupported file type: ${file.type}. Allowed types: JPEG, PNG, WebP, PDF.`);
+  }
+}
+
+function validateMime(mime) {
+  if (!ALLOWED_MIME_TYPES.includes(mime.toLowerCase())) {
+    throw new Error(`Unsupported file type: ${mime}. Allowed types: JPEG, PNG, WebP, PDF.`);
+  }
+}
+
 function getExtension(fileName = "", mimeType = "") {
   if (fileName.includes(".")) {
     const ext = fileName.split(".").pop().toLowerCase();
@@ -211,7 +236,7 @@ function getExtension(fileName = "", mimeType = "") {
 }
 
 function sanitizeFileName(name = "") {
-  return name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  return name.replace(/[^a-zA-Z0-9._-]/g, "_").substring(0, 80);
 }
 
 function base64ToArrayBuffer(base64) {

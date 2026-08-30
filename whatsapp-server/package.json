@@ -1,7 +1,7 @@
 {
-  "name": "jts-whatsapp-bot",
+  "name": "tsbd-whatsapp-bot",
   "version": "1.0.0",
-  "description": "Free 24/7 WhatsApp Automation Server for JTS Tuition Portal",
+  "description": "Free 24/7 WhatsApp Automation Server for TSBD (Tuition Service BD)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -22,8 +22,8 @@
     "whatsapp",
     "baileys",
     "automation",
-    "jts"
+    "tsbd"
   ],
-  "author": "JTS Tuition",
+  "author": "Tuition Service BD (TSBD)",
   "license": "ISC"
 }

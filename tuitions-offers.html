@@ -85,15 +85,92 @@
         }
 
         .status-badge {
-            background-color: var(--success-bg);
             color: white;
             font-size: 12px;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 10px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
             letter-spacing: 0.5px;
+        }
+
+        .status-available {
+            background-color: #10B981;
+        }
+
+        .status-partial {
+            background-color: #F59E0B;
+        }
+
+        .status-full {
+            background-color: #EF4444;
+        }
+
+        /* Pagination Styles */
+        .pagination-container {
+            max-width: 1200px;
+            margin: 35px auto 60px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .pagination-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-btn {
+            background-color: var(--card-bg);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 40px;
+            justify-content: center;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.35);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #F3F4F6;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .job-meta {
@@ -265,7 +342,8 @@
             <div class="tsbd-nav-links">
                 <a class="tsbd-nav-link active" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
                 <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+                <a class="tsbd-nav-link" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
                 <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
                 <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
                 <div class="tsbd-user" id="tsbdDesktopUser">
@@ -283,7 +361,8 @@
         <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
         <a class="tsbd-nav-link active" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
         <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+        <a class="tsbd-nav-link" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
         <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
         <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
         <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
@@ -302,26 +381,27 @@
     
     <div id="loading-message">টিউশন লোড হচ্ছে...</div>
     <div id="tuition-grid" class="tuition-grid" style="display: none;"></div>
+    
+    <!-- Pagination UI Container -->
+    <div id="pagination-container" class="pagination-container" style="display: none;">
+        <div class="pagination-info" id="pagination-info"></div>
+        <nav class="pagination-nav" id="pagination-nav"></nav>
+    </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        // === আপনার ফায়ারবেস কনফিগ এখানে বসান ===
-        const firebaseConfig = {
-            apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
-            authDomain: "cms-of-jts.firebaseapp.com",
-            projectId: "cms-of-jts",
-            storageBucket: "cms-of-jts.firebasestorage.app",
-            messagingSenderId: "300970842151",
-            appId: "1:300970842151:web:9885ce2a591cf5f4eed602",
-            measurementId: "G-TRJNGCB98F"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        setPersistence(auth, browserLocalPersistence);
+        import { 
+            auth, 
+            db, 
+            isAdminUser, 
+            collection, 
+            query, 
+            where, 
+            orderBy, 
+            onSnapshot, 
+            onAuthStateChanged, 
+            signOut 
+        } from "./js/firebase-config.js";
+        import { showToast, formatDate, formatSalary, toBnDigits, isFemaleGender, isMaleGender, escapeHtml } from "./js/utils.js";
 
         // ===== TSBD NAVBAR AUTH UI =====
         const tsbdDrawer = document.getElementById("tsbdDrawer");
@@ -359,13 +439,6 @@
             }
         });
 
-        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com"];
-
-        function isAdminUser(u) {
-            if (!u || !u.email) return false;
-            return ALLOWED_ADMIN_EMAILS.includes(u.email.toLowerCase().trim());
-        }
-
         function tsbdSetUser(user){
             const desktopUser = document.getElementById('tsbdDesktopUser');
             const mobileUser = document.getElementById('tsbdMobileUser');
@@ -374,6 +447,8 @@
             const mobileName = document.getElementById('tsbdMobileName');
             const loginLink = document.getElementById('loginLink');
             const loginLinkMobile = document.getElementById('loginLinkMobile');
+            const tutorRegLink = document.getElementById('tutorRegLink');
+            const tutorRegLinkMobile = document.getElementById('tutorRegLinkMobile');
             const adminDashboardLink = document.getElementById('adminDashboardLink');
             const adminDashboardLinkMobile = document.getElementById('adminDashboardLinkMobile');
 
@@ -390,6 +465,8 @@
                 if(mobileUser) mobileUser.style.display = "block";
                 if(loginLink) loginLink.style.display = "none";
                 if(loginLinkMobile) loginLinkMobile.style.display = "none";
+                if(tutorRegLink) tutorRegLink.style.display = "none";
+                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
             } else {
                 if(desktopUser) desktopUser.style.display = "none";
                 if(mobileUser) mobileUser.style.display = "none";
@@ -397,6 +474,8 @@
                 if(mobileDropdown) mobileDropdown.classList.remove('show');
                 if(loginLink) loginLink.style.display = "inline-flex";
                 if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if(tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
             }
         }
 
@@ -442,21 +521,30 @@
             }
         });
 
-        const db = getFirestore(app);
-
+        // ==========================================
+        // TUITIONS FEED & 12-POST PAGINATION SYSTEM
+        // ==========================================
         const gridContainer = document.getElementById('tuition-grid');
         const loadingMessage = document.getElementById('loading-message');
+        const paginationContainer = document.getElementById('pagination-container');
+        const paginationInfo = document.getElementById('pagination-info');
+        const paginationNav = document.getElementById('pagination-nav');
+
+        const POSTS_PER_PAGE = 12; // 3 x 4 Grid
+        let currentPage = 1;
+        let allTuitionDocs = [];
 
         const tuitionsRef = collection(db, "tuitions");
-        const q = query(tuitionsRef, where("status", "==", "open"), orderBy("createdAt", "desc"));
+        const allOpenQuery = query(
+            tuitionsRef, 
+            orderBy("createdAt", "desc")
+        );
 
-        onSnapshot(q, (snapshot) => {
-            loadingMessage.style.display = 'none';
-            gridContainer.style.display = 'grid';
-            gridContainer.innerHTML = '';
-
-            if (snapshot.empty) {
+        function renderPage() {
+            if (allTuitionDocs.length === 0) {
+                loadingMessage.style.display = 'none';
                 gridContainer.style.display = 'block';
+                paginationContainer.style.display = 'none';
                 gridContainer.innerHTML = `
                     <div class="empty-state">
                         <div style="font-size:40px; margin-bottom:10px;">📋</div>
@@ -466,11 +554,24 @@
                 return;
             }
 
-            snapshot.forEach((docSnap) => {
+            loadingMessage.style.display = 'none';
+            gridContainer.style.display = 'grid';
+            gridContainer.innerHTML = '';
+
+            const totalPosts = allTuitionDocs.length;
+            const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+            const endIndex = Math.min(startIndex + POSTS_PER_PAGE, totalPosts);
+            const currentSlice = allTuitionDocs.slice(startIndex, endIndex);
+
+            currentSlice.forEach((docSnap) => {
                 const data = docSnap.data();
                 const id = docSnap.id;
                 
-                // Fallbacks in case older posts are missing the newly added fields
                 const jobId = data.jobId || "N/A";
                 const postedDate = data.postedDate || "Recently";
                 const tuitionType = data.tuitionType || "home tuition";
@@ -478,8 +579,35 @@
                 const preferredTutor = data.preferredTutor || "Any";
                 const noOfStudents = data.noOfStudents || "1";
                 
-                // Generate Dynamic Title from Class, Subject, and Note if available
-                const titleText = data.specialNotes ? data.specialNotes : `${data.className} এর শিক্ষার্থীর জন্য ${data.studentGender} শিক্ষক প্রয়োজন ${data.subject} পড়াতে হবে`;
+                let prefTutorDisplay = escapeHtml(preferredTutor);
+                let tutorPrefText = "";
+                if (isFemaleGender(preferredTutor)) {
+                    tutorPrefText = "মহিলা ";
+                    prefTutorDisplay = `<span style="color:#EC4899;font-weight:700;"><i class="fa-solid fa-venus"></i> ${escapeHtml(preferredTutor)} (মহিলা শিক্ষিকা আবেদন করতে পারবেন)</span>`;
+                } else if (isMaleGender(preferredTutor)) {
+                    tutorPrefText = "পুরুষ ";
+                    prefTutorDisplay = `<span style="color:#3B82F6;font-weight:700;"><i class="fa-solid fa-mars"></i> ${escapeHtml(preferredTutor)} (পুরুষ শিক্ষক আবেদন করতে পারবেন)</span>`;
+                } else {
+                    prefTutorDisplay = `<span><i class="fa-solid fa-users"></i> ${escapeHtml(preferredTutor)} (উভয় আবেদন করতে পারবেন)</span>`;
+                }
+
+                const titleText = data.specialNotes ? data.specialNotes : `${data.className || 'শিক্ষার্থী'} এর জন্য একজন অভিজ্ঞ ${tutorPrefText}শিক্ষক প্রয়োজন (${data.subject || ''})`;
+
+                const applicantsCount = Number(data.applicantsCount || 0);
+                const isFull = applicantsCount >= 3 || data.status === 'closed' || data.status === 'assigned';
+
+                let badgeClass = 'status-available';
+                let badgeIcon = 'fa-circle-check';
+                let badgeText = 'AVAILABLE (০/৩)';
+                if (isFull) {
+                    badgeClass = 'status-full';
+                    badgeIcon = 'fa-circle-xmark';
+                    badgeText = 'FULL / UNAVAILABLE (৩/৩)';
+                } else if (applicantsCount > 0) {
+                    badgeClass = 'status-partial';
+                    badgeIcon = 'fa-user-clock';
+                    badgeText = `AVAILABLE (${toBnDigits(applicantsCount)}/৩)`;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'tuition-card';
@@ -492,7 +620,9 @@
                     </div>
                     
                     <br>
-                    <span class="status-badge">AVAILABLE</span>
+                    <span class="status-badge ${badgeClass}">
+                        <i class="fa-solid ${badgeIcon}"></i> ${badgeText}
+                    </span>
                     
                     <div class="job-meta">
                         Job Id : <strong>${jobId}</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Posted: <strong>${postedDate}</strong>
@@ -510,7 +640,7 @@
                             <i class="fa-solid fa-venus-mars info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Student Gender</span>
-                                <span class="info-value">${data.studentGender}</span>
+                                <span class="info-value">${data.studentGender || 'N/A'}</span>
                             </div>
                         </div>
                         <div class="info-block">
@@ -524,42 +654,42 @@
                             <i class="fa-solid fa-user-graduate info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Class</span>
-                                <span class="info-value">${data.className}</span>
+                                <span class="info-value">${data.className || 'N/A'}</span>
                             </div>
                         </div>
                         <div class="info-block">
                             <i class="fa-solid fa-money-bill-wave info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Salary</span>
-                                <span class="info-value">${data.salary}</span>
+                                <span class="info-value">${data.salary || 'Negotiable'}</span>
                             </div>
                         </div>
                         <div class="info-block">
                             <i class="fa-solid fa-chalkboard-user info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Preferred Tutor</span>
-                                <span class="info-value">${preferredTutor}</span>
+                                <span class="info-value">${prefTutorDisplay}</span>
                             </div>
                         </div>
                         <div class="info-block">
                             <i class="fa-regular fa-clock info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Tutoring Time</span>
-                                <span class="info-value">${data.time}</span>
+                                <span class="info-value">${data.time || 'N/A'}</span>
                             </div>
                         </div>
                         <div class="info-block">
                             <i class="fa-regular fa-calendar-alt info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Tutoring Days</span>
-                                <span class="info-value">${data.days}</span>
+                                <span class="info-value">${data.days || 'N/A'}</span>
                             </div>
                         </div>
                         <div class="info-block">
                             <i class="fa-solid fa-location-dot info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Location</span>
-                                <span class="info-value">${data.location}</span>
+                                <span class="info-value">${data.location || 'N/A'}</span>
                             </div>
                         </div>
                         <div class="info-block">
@@ -573,13 +703,15 @@
                             <i class="fa-solid fa-book info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Subjects</span>
-                                <span class="info-value">${data.subject}</span>
+                                <span class="info-value">${data.subject || 'N/A'}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-actions">
-                        <button class="btn btn-apply" onclick="viewDetails('${id}')">Apply</button>
+                        <button class="btn btn-apply" onclick="viewDetails('${id}')" style="${isFull ? 'background-color:#9CA3AF;' : ''}">
+                            ${isFull ? '<i class="fa-solid fa-lock"></i> Details (Full)' : '<i class="fa-solid fa-paper-plane"></i> Apply'}
+                        </button>
                         <button class="btn btn-share" onclick="shareJob('${id}')">
                             <i class="fa-solid fa-share-nodes"></i> Share
                         </button>
@@ -587,6 +719,53 @@
                 `;
                 gridContainer.appendChild(card);
             });
+
+            // Render Pagination Nav
+            if (totalPages > 1) {
+                paginationContainer.style.display = 'flex';
+                paginationInfo.innerText = `মোট ${toBnDigits(totalPosts)} টি টিউশনের মধ্যে ${toBnDigits(startIndex + 1)} - ${toBnDigits(endIndex)} টি দেখানো হচ্ছে (পৃষ্ঠা ${toBnDigits(currentPage)} / ${toBnDigits(totalPages)})`;
+
+                let navHtml = `
+                    <button type="button" class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
+                        <i class="fa-solid fa-chevron-left"></i> পূর্ববর্তী
+                    </button>
+                `;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        navHtml += `
+                            <button type="button" class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">
+                                ${toBnDigits(i)}
+                            </button>
+                        `;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        navHtml += `<span style="color:var(--text-muted);padding:0 4px;">...</span>`;
+                    }
+                }
+
+                navHtml += `
+                    <button type="button" class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
+                        পরবর্তী <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                `;
+
+                paginationNav.innerHTML = navHtml;
+            } else {
+                paginationContainer.style.display = 'none';
+            }
+        }
+
+        window.goToPage = function(pageNumber) {
+            currentPage = pageNumber;
+            renderPage();
+            const topEl = document.querySelector('.header-title') || gridContainer;
+            topEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        // Realtime listener
+        onSnapshot(allOpenQuery, (snapshot) => {
+            allTuitionDocs = snapshot.docs;
+            renderPage();
         }, (error) => {
             loadingMessage.innerHTML = `<span style="color: #EF4444;">দুঃখিত, ডেটা লোড করতে সমস্যা হয়েছে। রিফ্রেশ করুন।</span>`;
             console.error("Firestore Error:", error);
@@ -602,7 +781,7 @@
             const shareUrl = window.location.origin + `/tuition-details.html?id=` + tuitionId;
             if (navigator.share) {
                 navigator.share({
-                    title: 'টিউশন অফার',
+                    title: 'টিউশন অফার - TSBD (Tuition Service BD)',
                     text: 'এই টিউশন অফারটি দেখুন!',
                     url: shareUrl
                 }).catch(console.error);

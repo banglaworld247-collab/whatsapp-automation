@@ -675,33 +675,29 @@
             <div class="tsbd-nav-links">
                 <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
                 <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+                <a class="tsbd-nav-link" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
                 <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i
-                        class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
                 <div class="tsbd-user" id="tsbdDesktopUser">
                     <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Google profile" title="প্রোফাইল মেনু">
                     <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
-                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i
-                                class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
                     </div>
                 </div>
             </div>
-            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i
-                    class="fa-solid fa-bars"></i></button>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
         </div>
     </nav>
     <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
     <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
-        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span
-                    class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose"
-                type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
         <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
         <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার যোগ দিন</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+        <a class="tsbd-nav-link" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
         <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i
-                class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
         <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
             <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
                 <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Google profile">
@@ -746,70 +742,31 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import {
-            getFirestore, doc, getDoc, setDoc, runTransaction,
-            collection, addDoc, serverTimestamp, query, where, getDocs
-        } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
-            authDomain: "cms-of-jts.firebaseapp.com",
-            projectId: "cms-of-jts",
-            storageBucket: "cms-of-jts.firebasestorage.app",
-            messagingSenderId: "300970842151",
-            appId: "1:300970842151:web:9885ce2a591cf5f4eed602",
-            measurementId: "G-TRJNGCB98F"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        setPersistence(auth, browserLocalPersistence);
-        const db = getFirestore(app);
-
-        // ===== TSBD NAVBAR AUTH UI =====
-        const tsbdDrawer = document.getElementById("tsbdDrawer");
-        const tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
-        const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
-        const tsbdClose = document.getElementById("tsbdClose");
-
-        function tsbdOpenDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.add("open"); tsbdOverlay.classList.add("open"); tsbdDrawer.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden" } }
-        function tsbdCloseDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.remove("open"); tsbdOverlay.classList.remove("open"); tsbdDrawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = "" } }
-        tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
-        tsbdClose?.addEventListener("click", tsbdCloseDrawer);
-        tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
-
-        // Dropdown toggle elements
-        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
-        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
-        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
-        const mobileUserWrap = document.getElementById('tsbdMobileUser');
-        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
-
-        desktopAvatar?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            desktopDropdown?.classList.toggle('show');
-        });
-
-        mobileUserToggle?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileUserWrap?.classList.toggle('open');
-            mobileDropdown?.classList.toggle('show');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
-                desktopDropdown.classList.remove('show');
-            }
-        });
-
-        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com"];
-
-        function isAdminUser(u) {
-            if (!u || !u.email) return false;
-            return ALLOWED_ADMIN_EMAILS.includes(u.email.toLowerCase().trim());
-        }
+        import { 
+            auth, 
+            db, 
+            isAdminUser, 
+            ALLOWED_ADMIN_EMAILS,
+            doc, 
+            getDoc, 
+            setDoc, 
+            collection, 
+            addDoc, 
+            serverTimestamp, 
+            query, 
+            where, 
+            getDocs,
+            onAuthStateChanged,
+            signOut,
+            runTransaction
+        } from "./js/firebase-config.js";
+        import { 
+            toBnDigits, 
+            isFemaleGender, 
+            isMaleGender, 
+            validateGenderMatch,
+            escapeHtml
+        } from "./js/utils.js";
 
         function tsbdSetUser(user) {
             const desktopUser = document.getElementById("tsbdDesktopUser");
@@ -819,6 +776,8 @@
             const mobileName = document.getElementById("tsbdMobileName");
             const loginLink = document.getElementById("loginLink");
             const loginLinkMobile = document.getElementById("loginLinkMobile");
+            const tutorRegLink = document.getElementById("tutorRegLink");
+            const tutorRegLinkMobile = document.getElementById("tutorRegLinkMobile");
             const adminDashboardLink = document.getElementById("adminDashboardLink");
             const adminDashboardLinkMobile = document.getElementById("adminDashboardLinkMobile");
 
@@ -835,6 +794,8 @@
                 if (mobileUser) mobileUser.style.display = "block";
                 if (loginLink) loginLink.style.display = "none";
                 if (loginLinkMobile) loginLinkMobile.style.display = "none";
+                if (tutorRegLink) tutorRegLink.style.display = "none";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
             } else {
                 if (desktopUser) desktopUser.style.display = "none";
                 if (mobileUser) mobileUser.style.display = "none";
@@ -842,6 +803,8 @@
                 if (mobileDropdown) mobileDropdown.classList.remove('show');
                 if (loginLink) loginLink.style.display = "inline-flex";
                 if (loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if (tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
             }
         }
 
@@ -1016,60 +979,109 @@
             return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
         }
 
-        function escapeHtml(value) {
-            return String(value ?? "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
         wireProfileLookup();
 
         let currentTuitionData = null;
 
-        function formatTutorSuccessWhatsAppMessage(tuition, tutorPhone, guardianPhone) {
+        function formatTutorTuitionDetailsWhatsAppMessage(tuition, tutorPhone, guardianPhone) {
             const jobId = tuition.jobId || 'N/A';
             const cls = tuition.className || tuition.class || 'N/A';
+            const cat = tuition.category || 'Bangla Medium';
             const sub = tuition.subject || tuition.subjects || 'N/A';
             const loc = tuition.location || 'N/A';
             const sal = tuition.salary || 'N/A';
             const days = tuition.days || 'N/A';
             const time = tuition.time || 'N/A';
+            const studentGender = tuition.studentGender || 'N/A';
+
+            // Calculate commission with exact Taka
+            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            const commVal = tuition.commission || tuition.commissionPolicy || '50%';
+            let commText = commVal;
+            const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
+            if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
+                const commTaka = Math.round(salaryNum * (commPercent / 100));
+                commText = `${commPercent}% (${commTaka.toLocaleString('bn-BD')} টাকা)`;
+            } else if (commVal === '0%') {
+                commText = 'কোনো কমিশন নেই (০%)';
+            }
 
             return `🎉 *অভিনন্দন! আপনি সফলভাবে ১ম আবেদনকারী হিসেবে নির্বাচিত হয়েছেন।*
 
-📋 *টিউশনের বিবরণ:*
+📋 *Tuition Details / টিউশনের বিবরণ:*
 ━━━━━━━━━━━━━━━━━━━━
 🆔 *Job ID:* #${jobId}
-🎓 *শ্রেণী:* ${cls}
+🎓 *শ্রেণী:* ${cls} (${cat})
 📚 *বিষয়:* ${sub}
 📍 *লোকেশন:* ${loc}
 💰 *বেতন:* ${sal}
-📅 *দিন:* ${days} (${time})
+💵 *মিডিয়া কমিশন:* ${commText}
+📅 *দিন:* ${days}
+⏰ *সময়:* ${time}
+👥 *শিক্ষার্থীর ধরণ:* ${studentGender}
 
 📞 *অভিভাবকের মোবাইল নম্বর:* ${guardianPhone}
 ━━━━━━━━━━━━━━━━━━━━
-💡 *জরুরী পরামর্শ:*
-"গার্ডিয়ানের সাথে এখুনি কথা বলে নিন। আমাদের অভিজ্ঞতা বলে, গার্ডিয়ানের সাথে যতদ্রুত যোগাযোগ করবেন টিউশন কনফর্মের চান্স তত বৃদ্ধি পাবে।"
-
-- *JTS Tuition Portal*`;
+- *TSBD (Tuition Service BD)*`;
         }
 
-        async function sendAutoWhatsAppToTutor(tutorPhone, messageText) {
+        function formatTutorAdviceWhatsAppMessage() {
+            return `এখুনি অবিভাবকের সাথে কথা বলে নিন। আমাদেের অভিজ্ঞতা বলে, আপনি যত দ্রুত অবিভাবকের সাথে কথা বলবেন; আপনার টিউশন পাওয়ার সম্ভাবনা তত বৃদ্ধি পাবে।`;
+        }
+
+        async function sendSingleWhatsAppMessage(tutorPhone, messageText) {
             try {
                 let botUrl = localStorage.getItem('tsbd_wa_bot_url') || 'http://localhost:3000/send-message';
-                
+                let waConfig = null;
+
+                try {
+                    const localSaved = localStorage.getItem('tsbd_wa_config');
+                    if (localSaved) waConfig = JSON.parse(localSaved);
+                } catch (e) { }
+
                 // Fetch settings from Firestore if available
                 const settingsSnap = await getDoc(doc(db, "settings", "whatsapp")).catch(() => null);
                 if (settingsSnap && settingsSnap.exists()) {
-                    const cfg = settingsSnap.data();
-                    if (cfg.webhookUrl) botUrl = cfg.webhookUrl;
-                    else if (cfg.botUrl) botUrl = cfg.botUrl;
+                    waConfig = settingsSnap.data();
                 }
 
-                const response = await fetch(botUrl, {
+                if (waConfig) {
+                    if (waConfig.provider === 'custom' || waConfig.webhookUrl || waConfig.botUrl) {
+                        botUrl = waConfig.webhookUrl || waConfig.botUrl || botUrl;
+                    } else if (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken) {
+                        let host = waConfig.apiHost || 'https://api.green-api.com';
+                        host = host.replace(/\/+$/, '');
+                        let cleanPhone = tutorPhone.replace(/[^0-9]/g, '');
+                        if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+                        const greenChatId = `${cleanPhone}@c.us`;
+                        const url = `${host}/waInstance${waConfig.instanceId}/sendMessage/${waConfig.apiToken}`;
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ chatId: greenChatId, message: messageText })
+                        });
+                        const resData = await response.json().catch(() => ({}));
+                        return { success: response.ok, data: resData };
+                    } else if (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken) {
+                        let cleanPhone = tutorPhone.replace(/[^0-9]/g, '');
+                        if (cleanPhone.startsWith('01')) cleanPhone = '+88' + cleanPhone;
+                        const url = `https://api.ultramsg.com/${waConfig.instanceId}/messages/chat`;
+                        const params = new URLSearchParams();
+                        params.append('token', waConfig.apiToken);
+                        params.append('to', cleanPhone);
+                        params.append('body', messageText);
+                        const response = await fetch(url, { method: 'POST', body: params });
+                        const resData = await response.json().catch(() => ({}));
+                        return { success: response.ok, data: resData };
+                    }
+                }
+
+                // Render.com Bot Server or Custom Webhook POST /send-message
+                let targetUrl = (botUrl || 'https://whatsapp-automation-386s.onrender.com/send-message').trim();
+                if (!targetUrl.includes('/send') && !targetUrl.includes('/api/')) {
+                    targetUrl = targetUrl.replace(/\/+$/, '') + '/send-message';
+                }
+                const response = await fetch(targetUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1084,6 +1096,24 @@
                 console.warn("Auto WhatsApp send notice:", err.message);
                 return { success: false, error: err.message };
             }
+        }
+
+        async function sendAutoWhatsAppToTutor(tutorPhone, tuition, guardianPhone) {
+            const msg1 = formatTutorTuitionDetailsWhatsAppMessage(tuition, tutorPhone, guardianPhone);
+            const msg2 = formatTutorAdviceWhatsAppMessage();
+
+            // 1. Send Message 1: Tuition Details
+            const res1 = await sendSingleWhatsAppMessage(tutorPhone, msg1);
+            console.log("Msg 1 (Tuition Details) sent:", res1);
+
+            // 2. Wait 1200ms delay to guarantee sequential delivery in WhatsApp chat
+            await new Promise(resolve => setTimeout(resolve, 1200));
+
+            // 3. Send Message 2: Advice message
+            const res2 = await sendSingleWhatsAppMessage(tutorPhone, msg2);
+            console.log("Msg 2 (Advice) sent:", res2);
+
+            return { res1, res2 };
         }
 
         if (!tuitionId) {
@@ -1116,6 +1146,7 @@
             const subject = data.subject || "N/A";
             const location = data.location || "N/A";
             const salary = data.salary || "N/A";
+            const rawCommission = data.commission || data.commissionPolicy || '50%';
             const days = data.days || "N/A";
             const time = data.time || "N/A";
             const studentGender = data.studentGender || "N/A";
@@ -1125,6 +1156,17 @@
             const preferredTutor = data.preferredTutor || "any";
             const noOfStudents = data.noOfStudents || "1";
 
+            const salaryAmount = parseInt(String(salary).replace(/\D/g, ""), 10);
+            const commPercent = parseInt(String(rawCommission).replace(/\D/g, ""), 10);
+            let commissionDisplay = rawCommission;
+            let commissionTaka = 0;
+            if (!Number.isNaN(salaryAmount) && salaryAmount > 0 && !Number.isNaN(commPercent) && commPercent > 0) {
+                commissionTaka = Math.round(salaryAmount * (commPercent / 100));
+                commissionDisplay = `${commPercent}% (${commissionTaka.toLocaleString('bn-BD')} টাকা)`;
+            } else if (rawCommission === '0%') {
+                commissionDisplay = '০% (কোনো কমিশন নেই)';
+            }
+
             const createdAtObj = data.createdAt && typeof data.createdAt.toDate === "function"
                 ? data.createdAt.toDate()
                 : null;
@@ -1133,21 +1175,42 @@
             const postedDateStr = data.postedDate || formatDate(createdAtObj);
 
             let tutorPrefText = "";
-            if (String(preferredTutor).toLowerCase() === "male") tutorPrefText = "ছেলে ";
-            else if (String(preferredTutor).toLowerCase() === "female") tutorPrefText = "মেয়ে ";
+            let prefBadgeHtml = escapeHtml(preferredTutor);
+            if (isFemaleGender(preferredTutor)) {
+                tutorPrefText = "মহিলা ";
+                prefBadgeHtml = `<span style="color:#EC4899;font-weight:700;"><i class="fa-solid fa-venus"></i> ${escapeHtml(preferredTutor)} (মহিলা শিক্ষিকা আবেদন করতে পারবেন)</span>`;
+            } else if (isMaleGender(preferredTutor)) {
+                tutorPrefText = "পুরুষ ";
+                prefBadgeHtml = `<span style="color:#3B82F6;font-weight:700;"><i class="fa-solid fa-mars"></i> ${escapeHtml(preferredTutor)} (পুরুষ শিক্ষক আবেদন করতে পারবেন)</span>`;
+            } else {
+                prefBadgeHtml = `<span><i class="fa-solid fa-users"></i> ${escapeHtml(preferredTutor)} (উভয় আবেদন করতে পারবেন)</span>`;
+            }
 
             const dynamicTitle =
                 data.specialNotes ||
                 `${className} শ্রেণির শিক্ষার্থীর জন্য একজন অভিজ্ঞ ${tutorPrefText}শিক্ষক প্রয়োজন ${subject}(${days}) পড়াতে হবে`;
 
-            const badgeText = isFull ? "FULL" : "SELECTED";
-            const badgeColor = isFull ? "var(--warning)" : "var(--success)";
+            let badgeText = 'AVAILABLE (০/৩)';
+            let badgeColor = '#10B981';
+            let badgeIcon = 'fa-circle-check';
+
+            if (isFull) {
+                badgeText = 'FULL / UNAVAILABLE (৩/৩)';
+                badgeColor = '#EF4444';
+                badgeIcon = 'fa-circle-xmark';
+            } else if (applicantsCount > 0) {
+                badgeText = `AVAILABLE (${toBnDigits(applicantsCount)}/৩)`;
+                badgeColor = '#F59E0B';
+                badgeIcon = 'fa-user-clock';
+            }
 
             let htmlContent = `
             <div class="tuition-card">
                 <h3 class="tuition-title">${escapeHtml(dynamicTitle)}</h3>
                 <div class="time-ago"><i class="fa-regular fa-clock"></i> ${escapeHtml(timeAgoStr)}</div>
-                <br><span class="status-badge" style="background-color:${badgeColor};">${badgeText}</span>
+                <br><span class="status-badge" style="background-color:${badgeColor};display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;">
+                    <i class="fa-solid ${badgeIcon}"></i> ${badgeText}
+                </span>
                 <div class="job-meta">Job Id : <strong>${escapeHtml(jobId)}</strong> &nbsp;&nbsp;|&nbsp;&nbsp;
                     Posted: <strong>${escapeHtml(postedDateStr)}</strong>
                 </div>
@@ -1158,12 +1221,19 @@
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-layer-group icon"></i> Category</div><div class="value-row">${escapeHtml(category)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-user-graduate icon"></i> Class</div><div class="value-row">${escapeHtml(className)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-money-bill-wave icon"></i> Salary</div><div class="value-row">${escapeHtml(salary)}</div></div>
-                    <div class="grid-item"><div class="label-row"><i class="fa-solid fa-chalkboard-user icon"></i> Preferred Tutor</div><div class="value-row">${escapeHtml(preferredTutor)}</div></div>
+                    <div class="grid-item"><div class="label-row"><i class="fa-solid fa-percent icon"></i> Media Commission</div><div class="value-row" style="color:var(--success);font-weight:700;">${escapeHtml(commissionDisplay)}</div></div>
+                    <div class="grid-item"><div class="label-row"><i class="fa-solid fa-chalkboard-user icon"></i> Preferred Tutor</div><div class="value-row">${prefBadgeHtml}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-regular fa-clock icon"></i> Tutoring Time</div><div class="value-row">${escapeHtml(time)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-regular fa-calendar-days icon"></i> Tutoring Days</div><div class="value-row">${escapeHtml(days)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-location-dot icon"></i> Location</div><div class="value-row">${escapeHtml(location)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-user-group icon"></i> No. of Students</div><div class="value-row">${escapeHtml(noOfStudents)}</div></div>
                     <div class="grid-item full-width"><div class="label-row"><i class="fa-solid fa-book icon"></i> Subjects</div><div class="value-row">${escapeHtml(subject)}</div></div>
+                    <div class="grid-item full-width" style="background: rgba(99,102,241,0.06); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.18); margin-top: 4px;">
+                        <div class="label-row"><i class="fa-solid fa-users-viewfinder icon"></i> আবেদনের বর্তমান স্থিতি</div>
+                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isFull ? '#EF4444' : (applicantsCount > 0 ? '#D97706' : '#059669')};">
+                            ${isFull ? '🔴 সর্বোচ্চ ৩ জন আবেদন করেছেন (আবেদন গ্রহণ বন্ধ)' : `🟢 ৩ জনের মধ্যে ${toBnDigits(applicantsCount)} জন আবেদন করেছেন (${toBnDigits(3 - applicantsCount)} টি আসন খালি আছে)`}
+                        </div>
+                    </div>
                 </div>
         `;
 
@@ -1182,32 +1252,56 @@
 
             detailsContainer.innerHTML = htmlContent;
 
-            const salaryAmount = parseInt(String(salary).replace(/\D/g, ""), 10);
-            let commission30Text = "টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে ৩০% কমিশন দিব";
-            let commission40Text = "১মাস টিউশন করার পর ৪০% কমিশন দিব";
-
-            if (!Number.isNaN(salaryAmount) && salaryAmount > 0) {
-                commission30Text = `টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে ৩০% বা (${Math.round(salaryAmount * 0.30)} টাকা) কমিশন দিব`;
-                commission40Text = `১মাস টিউশন করার পর ৪০% বা (${Math.round(salaryAmount * 0.40)} টাকা) কমিশন দিব`;
-            }
-
             const commissionBox = document.getElementById("commission-options");
             if (commissionBox) {
-                commissionBox.innerHTML = `
-                <label style="display:block;margin-bottom:10px;">
-                    <input type="radio" name="commission" value="${escapeHtml(commission30Text)}" required>
-                    ${escapeHtml(commission30Text)}
-                </label>
-                <label style="display:block;">
-                    <input type="radio" name="commission" value="${escapeHtml(commission40Text)}">
-                    ${escapeHtml(commission40Text)}
-                </label>
-            `;
+                if (rawCommission === '0%') {
+                    const optText = "এই টিউশনের জন্য কোনো মিডিয়া কমিশন প্রযোজ্য নয় (০%)";
+                    commissionBox.innerHTML = `
+                        <label style="display:block;margin-bottom:10px;color:#34D399;font-weight:600;">
+                            <input type="radio" name="commission" value="${escapeHtml(optText)}" checked required>
+                            ✅ ${escapeHtml(optText)}
+                        </label>
+                    `;
+                } else if (!Number.isNaN(commPercent) && commPercent > 0) {
+                    const opt1TakaStr = commissionTaka > 0 ? ` বা (${commissionTaka.toLocaleString('bn-BD')} টাকা)` : '';
+                    const opt2Taka = salaryAmount > 0 ? Math.round(salaryAmount * 0.60) : 0;
+                    const opt2TakaStr = opt2Taka > 0 ? ` বা (${opt2Taka.toLocaleString('bn-BD')} টাকা)` : '';
+
+                    const opt1Text = `টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে নির্ধারিত ${commPercent}%${opt1TakaStr} মিডিয়া কমিশন প্রদান করব`;
+                    const opt2Text = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৬০%${opt2TakaStr} মিডিয়া কমিশন পরিশোধ করব`;
+                    commissionBox.innerHTML = `
+                        <label style="display:block;margin-bottom:10px;">
+                            <input type="radio" name="commission" value="${escapeHtml(opt1Text)}" checked required>
+                            ${escapeHtml(opt1Text)}
+                        </label>
+                        <label style="display:block;">
+                            <input type="radio" name="commission" value="${escapeHtml(opt2Text)}">
+                            ${escapeHtml(opt2Text)}
+                        </label>
+                    `;
+                } else {
+                    let commission1Text = "টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে ৫০% কমিশন দিব";
+                    let commission2Text = "১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৬০% মিডিয়া কমিশন পরিশোধ করব";
+                    if (!Number.isNaN(salaryAmount) && salaryAmount > 0) {
+                        commission1Text = `টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে ৫০% বা (${Math.round(salaryAmount * 0.50).toLocaleString('bn-BD')} টাকা) কমিশন দিব`;
+                        commission2Text = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৬০% বা (${Math.round(salaryAmount * 0.60).toLocaleString('bn-BD')} টাকা) মিডিয়া কমিশন পরিশোধ করব`;
+                    }
+                    commissionBox.innerHTML = `
+                        <label style="display:block;margin-bottom:10px;">
+                            <input type="radio" name="commission" value="${escapeHtml(commission1Text)}" checked required>
+                            ${escapeHtml(commission1Text)}
+                        </label>
+                        <label style="display:block;">
+                            <input type="radio" name="commission" value="${escapeHtml(commission2Text)}">
+                            ${escapeHtml(commission2Text)}
+                        </label>
+                    `;
+                }
             }
 
             const applyBtn = document.getElementById("show-form-btn");
             if (applyBtn) {
-                applyBtn.addEventListener("click", () => {
+                applyBtn.addEventListener("click", async () => {
                     const phone = String(
                         localStorage.getItem("tutorPhone") ||
                         sessionStorage.getItem("tutorPhone") || ""
@@ -1218,6 +1312,32 @@
                         alert("প্রথমে টিউটর হিসেবে রেজিস্ট্রেশন/লগইন করুন। তারপর টিউশনে আবেদন করুন।");
                         window.location.href = "tutor-registration.html";
                         return;
+                    }
+
+                    if (ADMIN_PHONES.includes(phone)) {
+                        alert("অ্যাডমিন নাম্বার দিয়ে আবেদন করা যাবে না!");
+                        return;
+                    }
+
+                    // Pre-check tutor gender against preferred tutor requirement
+                    try {
+                        let tutorSnap = await getDoc(doc(db, "tutors", phone));
+                        if (!tutorSnap.exists()) {
+                            const tutorQuery = query(collection(db, "tutors"), where("phone", "==", phone));
+                            const tutorResults = await getDocs(tutorQuery);
+                            if (!tutorResults.empty) tutorSnap = tutorResults.docs[0];
+                        }
+
+                        if (tutorSnap && tutorSnap.exists()) {
+                            const tutorData = tutorSnap.data();
+                            const matchResult = validateGenderMatch(tutorData.gender, preferredTutor);
+                            if (!matchResult.allowed) {
+                                alert(matchResult.message);
+                                return;
+                            }
+                        }
+                    } catch (chkErr) {
+                        console.warn("Pre-check gender match notice:", chkErr);
                     }
 
                     document.getElementById("application-form-section").style.display = "block";
@@ -1386,6 +1506,13 @@
                     throw new Error("আপনার NID/Birth Certificate ও Marksheet প্রোফাইলে পাওয়া যায়নি। আগে টিউটর রেজিস্ট্রেশন সম্পূর্ণ করুন।");
                 }
 
+                // Strict Gender Matching Check: male tutor cannot apply for female preferred tuition
+                const prefTutorRequirement = currentTuitionData?.preferredTutor || "";
+                const genderMatch = validateGenderMatch(gender, prefTutorRequirement);
+                if (!genderMatch.allowed) {
+                    throw new Error(genderMatch.message);
+                }
+
                 const tuitionRef = doc(db, "tuitions", tuitionId);
                 const applicationsRef = collection(db, "applications");
 
@@ -1470,20 +1597,20 @@
                 // Auto WhatsApp Message to 1st Applicant (Selected Tutor)
                 if (result.finalStatus === "Selected") {
                     const guardianPhoneNum = (currentTuitionData?.guardianPhone || "N/A");
-                    const formattedWaMsg = formatTutorSuccessWhatsAppMessage(currentTuitionData || {}, phone, guardianPhoneNum);
+                    const detailsMsg = formatTutorTuitionDetailsWhatsAppMessage(currentTuitionData || {}, phone, guardianPhoneNum);
+                    const adviceMsg = formatTutorAdviceWhatsAppMessage();
 
-                    // 1. Trigger background WhatsApp Bot API
-                    sendAutoWhatsAppToTutor(phone, formattedWaMsg).then(res => {
-                        if (res.success) {
-                            console.log("✅ Auto WhatsApp sent to tutor:", phone);
-                        }
+                    // 1. Trigger background WhatsApp Bot API (Msg 1: Tuition details -> Msg 2: Advice)
+                    sendAutoWhatsAppToTutor(phone, currentTuitionData || {}, guardianPhoneNum).then(res => {
+                        console.log("✅ Auto WhatsApp sequential messages triggered:", res);
                     }).catch(err => {
                         console.warn("Auto WA notice:", err);
                     });
 
                     // 2. Add 1-Click WhatsApp Save Button for tutor convenience
                     const cleanPhone = phone.replace(/[^0-9]/g, '');
-                    const waDirectUrl = `https://api.whatsapp.com/send?phone=88${cleanPhone}&text=${encodeURIComponent(formattedWaMsg)}`;
+                    const combinedFullMsg = `${detailsMsg}\n\n💡 *পরামর্শ:*\n${adviceMsg}`;
+                    const waDirectUrl = `https://api.whatsapp.com/send?phone=88${cleanPhone}&text=${encodeURIComponent(combinedFullMsg)}`;
                     resultBox.innerHTML += `
                         <div style="margin-top: 18px; padding-top: 16px; border-top: 1px dashed rgba(255,255,255,0.2); text-align: center;">
                             <a href="${waDirectUrl}" target="_blank" rel="noopener" style="background:#22C55E; color:#FFFFFF; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:8px; text-decoration:none; font-weight:700; font-size:14px; box-shadow:0 4px 14px rgba(34,197,94,0.4); transition:all 0.2s ease;">

@@ -1,4 +1,4 @@
-# 🤖 JTS WhatsApp Automation Server (100% Free Forever)
+# 🤖 TSBD WhatsApp Automation Server (100% Free Forever)
 
 এই সার্ভারটি ব্যবহার করে আপনি প্রতি মাসে **আনলিমিটেড টিউটর এবং হোয়াটসঅ্যাপ গ্রুপে** সম্পূর্ণ বিনামূল্যে (০ টাকা খরচে) অটোমেটিক মেসেজ পাঠাতে পারবেন।
 
@@ -41,7 +41,7 @@ Render.com-এ এটি ফ্রিতে ২৪/৭ ব্যাকগ্র�
    - **Start Command**: `node server.js`
    - **Instance Type**: `Free`
 6. **Create Web Service** বাটনে ক্লিক করুন।
-7. ডিপ্লয় শেষ হলে Render আপনাকে একটি লাইভ URL দেবে (যেমন: `https://jts-whatsapp-bot.onrender.com`)।
+7. ডিপ্লয় শেষ হলে Render আপনাকে একটি লাইভ URL দেবে (যেমন: `https://tsbd-whatsapp-bot.onrender.com`)।
 8. সেই URL ব্রাউজারে ওপেন করে কিউআর কোড স্ক্যান করে কানেক্ট করে নিন।
 
 ---
@@ -49,7 +49,7 @@ Render.com-এ এটি ফ্রিতে ২৪/৭ ব্যাকগ্র�
 ## 🔗 ৩. ওয়েবসাইটে যুক্ত করার নিয়ম
 
 Render থেকে পাওয়া URL-এর সাথে `/send-message` যোগ করে:
-`https://jts-whatsapp-bot.onrender.com/send-message`
+`https://tsbd-whatsapp-bot.onrender.com/send-message`
 
 এটি আপনার **`admin-dashboard.html`**-এর **"হোয়াটসঅ্যাপ অটোমেশন > Custom Webhook"** ফিল্ডে বসিয়ে সেভ করুন।
 এরপর:
