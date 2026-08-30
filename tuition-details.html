@@ -925,25 +925,6 @@
             tsbdSetUser({ photoURL: cachedPhoto, displayName: cachedName, email: cachedEmail });
         }
 
-        async function tsbdLogout() {
-            try {
-                await signOut(auth);
-                localStorage.removeItem("tutorPhotoURL");
-                localStorage.removeItem("tutorDisplayName");
-                localStorage.removeItem("userEmail");
-                localStorage.removeItem("tutorPhone");
-                sessionStorage.removeItem("tutorPhone");
-                sessionStorage.removeItem("tutorSession");
-                tsbdCloseDrawer();
-                window.location.reload();
-            } catch (e) {
-                console.error("Logout error:", e);
-                alert("Logout failed. Please try again.");
-            }
-        }
-        document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
-        document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || '';
