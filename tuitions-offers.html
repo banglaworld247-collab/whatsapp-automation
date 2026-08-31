@@ -661,6 +661,7 @@
                 const applicantsCount = Number(data.applicantsCount || 0);
                 const isClosed = data.status === 'closed';
                 const isAssigned = data.status === 'assigned';
+                const isFull = isClosed || isAssigned;
 
                 let badgeClass = 'status-available';
                 let badgeIcon = 'fa-circle-check';
@@ -779,8 +780,8 @@
                     </div>
 
                     <div class="card-actions">
-                        <button class="btn btn-apply" onclick="viewDetails('${id}')" style="${isFull ? 'background-color:#9CA3AF;' : ''}">
-                            ${isFull ? '<i class="fa-solid fa-lock"></i> Details (Full)' : '<i class="fa-solid fa-paper-plane"></i> Apply'}
+                        <button class="btn btn-apply" onclick="viewDetails('${id}')" style="${isFull ? 'background-color:#64748B;' : ''}">
+                            ${isClosed ? '<i class="fa-solid fa-lock"></i> Closed' : (isAssigned ? '<i class="fa-solid fa-user-check"></i> Assigned' : '<i class="fa-solid fa-paper-plane"></i> Apply')}
                         </button>
                         <button class="btn btn-share" onclick="shareJob('${id}')">
                             <i class="fa-solid fa-share-nodes"></i> Share

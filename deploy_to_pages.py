@@ -11,6 +11,14 @@ import sys
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
+if os.path.exists('.env'):
+    with open('.env', 'r', encoding='utf-8') as ef:
+        for line in ef:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                k, v = line.split('=', 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
 ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "4b0e902f8ef98676a08cbcce5328ccb3")
 API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 PROJECT = "tsbd"
