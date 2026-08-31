@@ -11,8 +11,8 @@ import sys
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-ACCOUNT_ID = "4b0e902f8ef98676a08cbcce5328ccb3"
-API_TOKEN = "cfat_zrjVDIlms8HUQKqa6w6AffgF6Hn0X6hnx3Ot19EHd531fc3f"
+ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "4b0e902f8ef98676a08cbcce5328ccb3")
+API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 PROJECT = "tsbd"
 
 def main():

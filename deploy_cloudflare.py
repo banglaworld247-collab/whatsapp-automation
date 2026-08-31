@@ -1,7 +1,7 @@
 import json, urllib.request, urllib.error, os, sys
 
-ACCOUNT_ID  = "4b0e902f8ef98676a08cbcce5328ccb3"
-API_TOKEN   = "cfat_zrjVDIlms8HUQKqa6w6AffgF6Hn0X6hnx3Ot19EHd531fc3f"
+ACCOUNT_ID  = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "4b0e902f8ef98676a08cbcce5328ccb3")
+API_TOKEN   = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 WORKER_NAME = "jts-uploader"
 BUCKET_NAME = "jts-uploads"
 BASE        = "https://api.cloudflare.com/client/v4"
