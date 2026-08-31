@@ -659,19 +659,24 @@
                 const titleText = data.specialNotes ? data.specialNotes : `${data.className || 'শিক্ষার্থী'} এর জন্য একজন অভিজ্ঞ ${tutorPrefText}শিক্ষক প্রয়োজন (${data.subject || ''})`;
 
                 const applicantsCount = Number(data.applicantsCount || 0);
-                const isFull = applicantsCount >= 3 || data.status === 'closed' || data.status === 'assigned';
+                const isClosed = data.status === 'closed';
+                const isAssigned = data.status === 'assigned';
 
                 let badgeClass = 'status-available';
                 let badgeIcon = 'fa-circle-check';
-                let badgeText = 'AVAILABLE (০/৩)';
-                if (isFull) {
+                let badgeText = 'AVAILABLE (নতুন)';
+                if (isClosed) {
                     badgeClass = 'status-full';
                     badgeIcon = 'fa-circle-xmark';
-                    badgeText = 'FULL / UNAVAILABLE (৩/৩)';
+                    badgeText = 'CLOSED (আবেদন বন্ধ)';
+                } else if (isAssigned) {
+                    badgeClass = 'status-full';
+                    badgeIcon = 'fa-user-check';
+                    badgeText = 'ASSIGNED (টিউটর নির্ধারিত)';
                 } else if (applicantsCount > 0) {
                     badgeClass = 'status-partial';
-                    badgeIcon = 'fa-user-clock';
-                    badgeText = `AVAILABLE (${toBnDigits(applicantsCount)}/৩)`;
+                    badgeIcon = 'fa-users';
+                    badgeText = `AVAILABLE (${toBnDigits(applicantsCount)} জন আবেদনকারী)`;
                 }
 
                 const card = document.createElement('div');

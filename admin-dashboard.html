@@ -2377,6 +2377,116 @@ ${detailsUrl}`;
             }
         }
 
+        function formatTutorRecruitmentWhatsAppMessage(tuition, tutorPhone, guardianPhone, tutorName) {
+            const jobId = tuition.jobId || 'N/A';
+            const cls = tuition.className || tuition.class || 'N/A';
+            const cat = tuition.category || 'Bangla Medium';
+            const sub = tuition.subject || tuition.subjects || 'N/A';
+            const loc = tuition.location || 'N/A';
+            const sal = tuition.salary || 'আলোচনা সাপেক্ষে';
+            const days = tuition.days || '৩ দিন / সপ্তাহ';
+            const time = tuition.time || 'সন্ধ্যা';
+            const studentGender = tuition.studentGender || 'N/A';
+            const notes = tuition.specialNotes ? `\n📝 *বিশেষ নোট:* ${tuition.specialNotes}` : '';
+
+            // Calculate commission with exact Taka amount
+            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            const commVal = tuition.commission || tuition.commissionPolicy || '50%';
+            let commText = commVal;
+            const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
+            if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
+                const commTaka = Math.round(salaryNum * (commPercent / 100));
+                commText = `${commPercent}% (${commTaka.toLocaleString('bn-BD')} টাকা)`;
+            } else if (commVal === '0%') {
+                commText = 'কোনো কমিশন নেই (০%)';
+            }
+
+            return `🎉 *অভিনন্দন ${tutorName ? tutorName : 'শিক্ষক'}! আপনাকে TSBD এর মাধ্যমে এই টিউশনের জন্য নির্বাচিত করা হয়েছে।*
+
+📋 *Tuition Details / টিউশনের বিবরণ:*
+━━━━━━━━━━━━━━━━━━━━
+🆔 *Job ID:* #${jobId}
+🎓 *শ্রেণী:* ${cls} (${cat})
+📚 *বিষয়:* ${sub}
+📍 *লোকেশন:* ${loc}
+💰 *বেতন:* ${sal}
+💵 *মিডিয়া কমিশন:* ${commText}
+📅 *দিন:* ${days}
+⏰ *সময়:* ${time}
+👥 *শিক্ষার্থী:* ${studentGender}${notes}
+
+📞 *অভিভাবকের মোবাইল নম্বর:* ${guardianPhone}
+━━━━━━━━━━━━━━━━━━━━
+💡 *জরুরী পরামর্শ:* এখুনি অভিভাবকের সাথে কথা বলে নিন। আমাদের অভিজ্ঞতা বলে, আপনি যত দ্রুত অভিভাবকের সাথে কথা বলবেন; আপনার টিউশন পাওয়ার সম্ভাবনা তত বৃদ্ধি পাবে।
+
+- *TSBD (Tuition Service BD)*`;
+        }
+
+        async function sendSingleWhatsAppMessage(tutorPhone, messageText) {
+            if (!tutorPhone) return { success: false, error: 'ফোন নম্বর দেওয়া হয়নি' };
+
+            let cleanPhone = String(tutorPhone).replace(/[^0-9]/g, '');
+            if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+            else if (cleanPhone.startsWith('+8801')) cleanPhone = cleanPhone.substring(1);
+
+            try {
+                let botUrl = localStorage.getItem('tsbd_wa_bot_url') || 'https://whatsapp-automation-386s.onrender.com/send-message';
+                let waConf = waConfig;
+                if (!waConf) {
+                    try {
+                        const localSaved = localStorage.getItem('tsbd_wa_config');
+                        if (localSaved) waConf = JSON.parse(localSaved);
+                    } catch (e) { }
+                }
+
+                if (waConf) {
+                    if (waConf.provider === 'green-api' && waConf.instanceId && waConf.apiToken) {
+                        let host = waConf.apiHost || 'https://api.green-api.com';
+                        host = host.replace(/\/+$/, '');
+                        const greenChatId = `${cleanPhone}@c.us`;
+                        const url = `${host}/waInstance${waConf.instanceId}/sendMessage/${waConf.apiToken}`;
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ chatId: greenChatId, message: messageText })
+                        });
+                        const resData = await response.json().catch(() => ({}));
+                        return { success: response.ok, data: resData };
+                    } else if (waConf.provider === 'ultramsg' && waConf.instanceId && waConf.apiToken) {
+                        const url = `https://api.ultramsg.com/${waConf.instanceId}/messages/chat`;
+                        const params = new URLSearchParams();
+                        params.append('token', waConf.apiToken);
+                        params.append('to', '+' + cleanPhone);
+                        params.append('body', messageText);
+                        const response = await fetch(url, { method: 'POST', body: params });
+                        const resData = await response.json().catch(() => ({}));
+                        return { success: response.ok, data: resData };
+                    } else if (waConf.provider === 'custom' && waConf.webhookUrl) {
+                        botUrl = waConf.webhookUrl;
+                    }
+                }
+
+                // Custom Webhook or Render/Local Bot
+                let targetUrl = (botUrl || 'https://whatsapp-automation-386s.onrender.com/send-message').trim();
+                if (!targetUrl.includes('/send') && !targetUrl.includes('/api/')) {
+                    targetUrl = targetUrl.replace(/\/+$/, '') + '/send-message';
+                }
+                const response = await fetch(targetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: cleanPhone,
+                        message: messageText
+                    })
+                });
+                const resData = await response.json().catch(() => ({}));
+                return { success: response.ok, data: resData };
+            } catch (err) {
+                console.warn("WhatsApp single message dispatch notice:", err.message);
+                return { success: false, error: err.message };
+            }
+        }
+
         window.handleTestWaMessage = async function () {
             const statusDiv = document.getElementById('waTestStatus');
             if (!statusDiv) return;
@@ -3284,49 +3394,104 @@ ${detailsUrl}`;
                 }
 
                 // Applications query
-                const appQuery = query(
-                    collection(db, "applications"),
-                    where("tuitionId", "==", tuitionId)
-                );
-                const appSnaps = await getDocs(appQuery);
+                let appSnaps;
+                try {
+                    const appQuery = query(
+                        collection(db, "applications"),
+                        where("tuitionId", "==", tuitionId),
+                        orderBy("appliedAt", "desc")
+                    );
+                    appSnaps = await getDocs(appQuery);
+                } catch (qErr) {
+                    const fallbackQuery = query(
+                        collection(db, "applications"),
+                        where("tuitionId", "==", tuitionId)
+                    );
+                    appSnaps = await getDocs(fallbackQuery);
+                }
 
-                html += `<h4 style="color:var(--accent);margin:20px 0 10px;"><i class="fa-solid fa-users"></i> আবেদনকারীদের সম্পূর্ণ তথ্য (${appSnaps.size} জন)</h4>`;
+                html += `<h4 style="color:var(--accent);margin:24px 0 12px;display:flex;align-items:center;justify-content:space-between;">
+                    <span><i class="fa-solid fa-users"></i> আবেদনকারীদের তালিকা (${appSnaps.size} জন)</span>
+                    <span style="font-size:12px;color:var(--text-muted);font-weight:normal;">আবেদনকারীর পাশে থাকা বাটনে ক্লিক করে নিয়োগ দিন</span>
+                </h4>`;
 
                 if (appSnaps.empty) {
-                    html += `<div class="applicant-detail" style="color:var(--text-muted)">এখনও কেউ আবেদন করেনি।</div>`;
+                    html += `<div class="applicant-detail" style="color:var(--text-muted);text-align:center;padding:24px;">এই টিউশনের জন্য এখনও কোনো শিক্ষক আবেদন করেননি।</div>`;
                 } else {
                     appSnaps.forEach((appDoc, index) => {
                         const ad = appDoc.data();
+                        const tutorName = ad.tutorName || ad.name || 'শিক্ষক';
+                        const tutorPhone = ad.phone || ad.tutorPhone || '';
+                        const tutorUid = ad.uid || ad.tutorUid || '';
+                        const isThisTutorAssigned = (tuitionData.assignedTutor && (tuitionData.assignedTutor === tutorUid || tuitionData.assignedTutor === appDoc.id)) || ad.status === 'Selected';
+                        const appStatus = ad.status || 'Pending';
+
+                        let statusBadgeHtml = '';
+                        if (isThisTutorAssigned || appStatus === 'Selected') {
+                            statusBadgeHtml = `<span style="background:rgba(34,197,94,0.2);color:#4ADE80;border:1px solid rgba(34,197,94,0.4);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa-solid fa-circle-check"></i> নির্বাচিত (Selected)</span>`;
+                        } else if (appStatus === 'Rejected') {
+                            statusBadgeHtml = `<span style="background:rgba(239,68,68,0.2);color:#F87171;border:1px solid rgba(239,68,68,0.4);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> বাতিল (Rejected)</span>`;
+                        } else if (appStatus === 'Waiting List') {
+                            statusBadgeHtml = `<span style="background:rgba(148,163,184,0.2);color:#CBD5E1;border:1px solid rgba(148,163,184,0.4);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa-solid fa-clock"></i> অপেক্ষমান (Waiting List)</span>`;
+                        } else {
+                            statusBadgeHtml = `<span style="background:rgba(245,158,11,0.2);color:#FBBF24;border:1px solid rgba(245,158,11,0.4);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa-solid fa-hourglass-half"></i> অপেক্ষমান (Pending)</span>`;
+                        }
+
+                        const escapedName = String(tutorName).replace(/'/g, "\\'");
+                        const escapedPhone = String(tutorPhone).replace(/'/g, "\\'");
+
                         html += `
-                            <div class="applicant-detail">
-                                <h5>আবেদনকারী #${index + 1} - ${safe(ad.tutorName || ad.name)}</h5>
+                            <div class="applicant-detail" style="border-left: 4px solid ${isThisTutorAssigned ? '#22C55E' : '#3B82F6'}; margin-bottom:16px; background: ${isThisTutorAssigned ? 'rgba(34,197,94,0.06)' : 'rgba(30,41,59,0.7)'}; border-radius:8px; padding:16px; border: 1px solid ${isThisTutorAssigned ? 'rgba(34,197,94,0.3)' : 'rgba(255,255,255,0.08)'};">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                                    <h5 style="margin:0;font-size:16px;color:#F8FAFC;">
+                                        <i class="fa-solid fa-user-tie" style="color:var(--accent);"></i> আবেদনকারী #${index + 1}: <strong>${safe(tutorName)}</strong>
+                                    </h5>
+                                    <div>${statusBadgeHtml}</div>
+                                </div>
+
                                 <table class="data-table">
                                     <tr><th>Application ID</th><td>${safe(appDoc.id)}</td></tr>
-                                    <tr><th>UID</th><td>${safe(ad.uid)}</td></tr>
-                                    <tr><th>Name</th><td>${safe(ad.tutorName || ad.name)}</td></tr>
+                                    <tr><th>UID</th><td>${safe(tutorUid)}</td></tr>
+                                    <tr><th>Name</th><td><strong>${safe(tutorName)}</strong></td></tr>
                                     <tr><th>Institution</th><td>${safe(ad.institute || ad.institution)}</td></tr>
                                     <tr><th>Email</th><td>${safe(ad.email)}</td></tr>
-                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(ad.phone || ad.tutorPhone, ad.tutorName || ad.name, `Job ID #${tuitionData.jobId} আবেদন`)}</td></tr>
+                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`)}</td></tr>
                                     <tr><th>Address</th><td>${safe(ad.address)}</td></tr>
                                     <tr><th>Gender</th><td>${safe(ad.gender)}</td></tr>
                                     <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy)}</td></tr>
-                                    <tr><th>Status</th><td>${safe(ad.status)}</td></tr>
+                                    <tr><th>Status</th><td>${safe(ad.status || 'Pending')}</td></tr>
                                     <tr><th>NID / Birth Certificate</th><td>${fileLink(ad.nidFileUrl || ad.nidUrl, 'View Document')}</td></tr>
                                     <tr><th>SSC/HSC Marksheet</th><td>${fileLink(ad.marksheetFileUrl || ad.msUrl, 'View Document')}</td></tr>
                                 </table>
+
+                                <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                                    ${isThisTutorAssigned ? `
+                                        <button type="button" class="btn-primary" onclick="resendRecruitWhatsApp('${tuitionId}', '${escapedPhone}', '${escapedName}')" style="background:#059669;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 2px 8px rgba(5,150,105,0.35);">
+                                            <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> পুনরায় কনফার্মেশন WA মেসেজ পাঠান
+                                        </button>
+                                        <button type="button" class="btn-warning" onclick="unassignTutor('${tuitionId}')" style="padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                                            <i class="fa-solid fa-user-minus"></i> নিয়োগ বাতিল করে টিউশন ওপেন করুন
+                                        </button>
+                                    ` : `
+                                        <button type="button" class="btn-primary" onclick="recruitApplicant('${tuitionId}', '${appDoc.id}', '${tutorUid}', '${escapedPhone}', '${escapedName}')" style="background:linear-gradient(135deg, #2563EB, #1D4ED8);color:#FFF;padding:8px 18px;border-radius:6px;font-size:13.5px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;box-shadow:0 3px 10px rgba(37,99,235,0.4);transition:all 0.2s ease;">
+                                            <i class="fa-solid fa-user-check"></i> এই টিউটরকে নিয়োগ দিন ও অটো WA পাঠান
+                                        </button>
+                                    `}
+                                </div>
                             </div>
                         `;
                     });
                 }
 
-                html += `<div class="action-buttons">`;
+                html += `<div class="action-buttons" style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);">`;
                 if (tuitionData.status !== 'closed') {
                     if (tuitionData.assignedTutor) {
-                        html += `<button class="btn-warning" onclick="nextTutor('${tuitionId}', '${String(tuitionData.assignedTutor).replace(/'/g, "\\'")}')"><i class="fa-solid fa-forward"></i> এই টিউটর ব্যর্থ, পরেরজনকে দাও</button>`;
+                        html += `<button class="btn-warning" onclick="nextTutor('${tuitionId}', '${String(tuitionData.assignedTutor).replace(/'/g, "\\'")}')"><i class="fa-solid fa-forward"></i> ওয়েটলিস্ট থেকে পরের জনকে দায়িত্ব দিন</button>`;
                     }
                     html += `<button class="btn-danger" onclick="closeTuition('${tuitionId}')"><i class="fa-solid fa-ban"></i> টিউশন বন্ধ করুন</button>`;
                 } else {
                     html += `<p style="color:var(--danger)">এই টিউশনটি বন্ধ করা হয়েছে।</p>`;
+                    html += `<button class="btn-primary" onclick="reopenTuition('${tuitionId}')" style="background:#10B981;"><i class="fa-solid fa-rotate-left"></i> পুনরায় টিউশনটি চালু করুন</button>`;
                 }
                 html += `</div>`;
 
@@ -3337,6 +3502,142 @@ ${detailsUrl}`;
                 console.error(error);
             }
         }
+
+        // Action: Recruit specific applicant & auto send WhatsApp
+        window.recruitApplicant = async function (tuitionId, appId, tutorUid, tutorPhone, tutorName) {
+            const safeName = tutorName || 'এই শিক্ষক';
+            if (!confirm(`আপনি কি নিশ্চিত যে "${safeName}"-কে এই টিউশনে চূড়ান্ত নিয়োগ দিতে চান?\n\nনিয়োগ দিলে তার হোয়াটসঅ্যাপে অভিভাবকের নম্বরসহ কনফার্মেশন মেসেজ স্বয়ংক্রিয়ভাবে চলে যাবে।`)) {
+                return;
+            }
+
+            try {
+                const tuitionRef = doc(db, 'tuitions', tuitionId);
+                const tuitionSnap = await getDoc(tuitionRef);
+                if (!tuitionSnap.exists()) throw new Error("টিউশনটি পাওয়া যায়নি!");
+                const tuitionData = tuitionSnap.data();
+
+                const guardianPhone = tuitionData.guardianPhone || 'N/A';
+
+                // 1. Update tuition doc
+                await updateDoc(tuitionRef, {
+                    assignedTutor: tutorUid || appId,
+                    assignedTutorName: safeName,
+                    assignedTutorPhone: tutorPhone || '',
+                    status: 'assigned',
+                    assignedAt: serverTimestamp()
+                });
+
+                // 2. Update selected application
+                if (appId) {
+                    await updateDoc(doc(db, 'applications', appId), {
+                        status: 'Selected',
+                        selectedAt: serverTimestamp()
+                    }).catch(e => console.warn("App status update notice:", e));
+                }
+
+                // 3. Automatically send WhatsApp message to the recruited tutor
+                const messageText = formatTutorRecruitmentWhatsAppMessage(tuitionData, tutorPhone, guardianPhone, safeName);
+                let waSuccess = false;
+                if (tutorPhone) {
+                    const sendRes = await sendSingleWhatsAppMessage(tutorPhone, messageText);
+                    waSuccess = sendRes && sendRes.success;
+                }
+
+                // 4. Construct direct WhatsApp link as fallback
+                let cleanPhone = String(tutorPhone || '').replace(/[^0-9]/g, '');
+                if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+                const waDirectUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
+
+                let alertMsg = `✅ "${safeName}"-কে সফলভাবে টিউশনে নিয়োগ দেওয়া হয়েছে!\n\nটিউশনের স্ট্যাটাস "Assigned" হয়েছে।`;
+                if (waSuccess) {
+                    alertMsg += `\n\n📲 টিউটরের হোয়াটসঅ্যাপে স্বয়ংক্রিয় মেসেজ পাঠানো হয়েছে!`;
+                } else {
+                    alertMsg += `\n\n⚠️ অটোমেটিক হোয়াটসঅ্যাপ বট কানেক্ট না থাকলে নিচের লিঙ্কে ক্লিক করে সরাসরি হোয়াটসঅ্যাপে পাঠিয়ে দিন।`;
+                }
+
+                alert(alertMsg);
+
+                if (!waSuccess && cleanPhone) {
+                    window.open(waDirectUrl, '_blank');
+                }
+
+                toggleExpand(tuitionId);
+                setTimeout(() => toggleExpand(tuitionId), 150);
+
+            } catch (err) {
+                alert('নিয়োগ করতে সমস্যা হয়েছে: ' + err.message);
+                console.error("Recruit applicant error:", err);
+            }
+        };
+
+        // Action: Resend recruitment WhatsApp message
+        window.resendRecruitWhatsApp = async function (tuitionId, tutorPhone, tutorName) {
+            try {
+                const tuitionRef = doc(db, 'tuitions', tuitionId);
+                const tuitionSnap = await getDoc(tuitionRef);
+                if (!tuitionSnap.exists()) throw new Error("টিউশন তথ্য পাওয়া যায়নি!");
+                const tuitionData = tuitionSnap.data();
+
+                const guardianPhone = tuitionData.guardianPhone || 'N/A';
+                const messageText = formatTutorRecruitmentWhatsAppMessage(tuitionData, tutorPhone, guardianPhone, tutorName);
+
+                const res = await sendSingleWhatsAppMessage(tutorPhone, messageText);
+                let cleanPhone = String(tutorPhone || '').replace(/[^0-9]/g, '');
+                if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+                const waDirectUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
+
+                if (res && res.success) {
+                    alert(`✅ "${tutorName || 'টিউটর'}" এর হোয়াটসঅ্যাপে কনফার্মেশন মেসেজ পাঠানো হয়েছে!`);
+                } else {
+                    if (confirm("অটোমেটিক মেসেজ পাঠানো সম্ভব হয়নি। আপনি কি ম্যানুয়ালি হোয়াটসঅ্যাপ চ্যাট ওপেন করতে চান?")) {
+                        window.open(waDirectUrl, '_blank');
+                    }
+                }
+            } catch (err) {
+                alert('মেসেজ পাঠাতে সমস্যা: ' + err.message);
+            }
+        };
+
+        // Action: Unassign current tutor and reopen tuition
+        window.unassignTutor = async function (tuitionId) {
+            if (!confirm('আপনি কি বর্তমান শিক্ষককে বাতিল করে টিউশনটি পুনরায় Open করতে চান?')) return;
+            try {
+                const tuitionRef = doc(db, 'tuitions', tuitionId);
+                const tuitionSnap = await getDoc(tuitionRef);
+                const tuitionData = tuitionSnap.data();
+                const previousTutors = tuitionData.previousTutors || [];
+                const currentTutor = tuitionData.assignedTutor;
+
+                await updateDoc(tuitionRef, {
+                    assignedTutor: null,
+                    assignedTutorName: null,
+                    assignedTutorPhone: null,
+                    status: 'open',
+                    previousTutors: currentTutor ? arrayUnion(currentTutor) : previousTutors
+                });
+
+                alert('শিক্ষক নিয়োগ বাতিল করা হয়েছে এবং টিউশনটি "Open" করা হয়েছে!');
+                toggleExpand(tuitionId);
+                setTimeout(() => toggleExpand(tuitionId), 150);
+            } catch (err) {
+                alert('এরর: ' + err.message);
+            }
+        };
+
+        // Action: Reopen tuition
+        window.reopenTuition = async function (tuitionId) {
+            if (!confirm('আপনি কি এই টিউশনটি পুনরায় চালু করতে চান?')) return;
+            try {
+                await updateDoc(doc(db, 'tuitions', tuitionId), {
+                    status: 'open'
+                });
+                alert('টিউশনটি পুনরায় চালু করা হয়েছে!');
+                toggleExpand(tuitionId);
+                setTimeout(() => toggleExpand(tuitionId), 150);
+            } catch (err) {
+                alert('এরর: ' + err.message);
+            }
+        };
 
         // Action: Next Tutor
         window.nextTutor = async function (tuitionId, currentTutorUid) {

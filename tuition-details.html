@@ -1230,7 +1230,9 @@
             const data = docSnap.data();
             currentTuitionData = data;
             const applicantsCount = Number(data.applicantsCount || 0);
-            const isFull = applicantsCount >= 3;
+            const isClosed = data.status === 'closed';
+            const isAssigned = data.status === 'assigned';
+            const isUnavailable = isClosed || isAssigned;
 
             const className = data.className || "N/A";
             const subject = data.subject || "N/A";
@@ -1280,18 +1282,22 @@
                 data.specialNotes ||
                 `${className} শ্রেণির শিক্ষার্থীর জন্য একজন অভিজ্ঞ ${tutorPrefText}শিক্ষক প্রয়োজন ${subject}(${days}) পড়াতে হবে`;
 
-            let badgeText = 'AVAILABLE (০/৩)';
+            let badgeText = 'AVAILABLE (নতুন)';
             let badgeColor = '#10B981';
             let badgeIcon = 'fa-circle-check';
 
-            if (isFull) {
-                badgeText = 'FULL / UNAVAILABLE (৩/৩)';
+            if (isClosed) {
+                badgeText = 'CLOSED (আবেদন গ্রহণ বন্ধ)';
                 badgeColor = '#EF4444';
                 badgeIcon = 'fa-circle-xmark';
+            } else if (isAssigned) {
+                badgeText = 'ASSIGNED (টিউটর নির্ধারিত)';
+                badgeColor = '#6366F1';
+                badgeIcon = 'fa-user-check';
             } else if (applicantsCount > 0) {
-                badgeText = `AVAILABLE (${toBnDigits(applicantsCount)}/৩)`;
+                badgeText = `AVAILABLE (${toBnDigits(applicantsCount)} জন আবেদন করেছেন)`;
                 badgeColor = '#F59E0B';
-                badgeIcon = 'fa-user-clock';
+                badgeIcon = 'fa-users';
             }
 
             let htmlContent = `
@@ -1320,17 +1326,19 @@
                     <div class="grid-item full-width"><div class="label-row"><i class="fa-solid fa-book icon"></i> Subjects</div><div class="value-row">${escapeHtml(subject)}</div></div>
                     <div class="grid-item full-width" style="background: rgba(99,102,241,0.06); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.18); margin-top: 4px;">
                         <div class="label-row"><i class="fa-solid fa-users-viewfinder icon"></i> আবেদনের বর্তমান স্থিতি</div>
-                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isFull ? '#EF4444' : (applicantsCount > 0 ? '#D97706' : '#059669')};">
-                            ${isFull ? '🔴 সর্বোচ্চ ৩ জন আবেদন করেছেন (আবেদন গ্রহণ বন্ধ)' : `🟢 ৩ জনের মধ্যে ${toBnDigits(applicantsCount)} জন আবেদন করেছেন (${toBnDigits(3 - applicantsCount)} টি আসন খালি আছে)`}
+                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isClosed ? '#EF4444' : (isAssigned ? '#6366F1' : (applicantsCount > 0 ? '#059669' : '#3B82F6'))};">
+                            ${isClosed ? '🔴 টিউশনটি বন্ধ করা হয়েছে (নতুন আবেদন গ্রহণ বন্ধ)' : (isAssigned ? '🔵 এই টিউশনে ইতিমধ্যে শিক্ষক চূড়ান্ত করা হয়েছে' : (applicantsCount > 0 ? `🟢 মোট ${toBnDigits(applicantsCount)} জন শিক্ষক আবেদন করেছেন (আবেদন উন্মুক্ত)` : '🟢 আবেদন গ্রহণ চলছে (উন্মুক্ত)'))}
                         </div>
                     </div>
                 </div>
         `;
 
-            if (isFull) {
-                htmlContent += `<div class="error-message">দুঃখিত, এই টিউশনের জন্য সর্বোচ্চ সংখ্যক (৩ জন) আবেদন জমা পড়ে গেছে।</div></div>`;
+            if (isClosed) {
+                htmlContent += `<div class="error-message">দুঃখিত, এই টিউশনটির আবেদন গ্রহণ বন্ধ রয়েছে।</div></div>`;
+            } else if (isAssigned) {
+                htmlContent += `<div class="error-message" style="background:rgba(99,102,241,0.1);color:#818CF8;border-color:rgba(99,102,241,0.3);">এই টিউশনে শিক্ষক নিয়োগ সম্পন্ন হয়েছে।</div></div>`;
             } else if (hasAppliedLocally) {
-                htmlContent += `<div class="already-applied-msg">আপনি ইতিমধ্যে এই টিউশনের জন্য আবেদন করেছেন।</div></div>`;
+                htmlContent += `<div class="already-applied-msg">আপনি ইতিমধ্যে এই টিউশনের জন্য আবেদন করেছেন। অ্যাডমিনের পর্যালোচনার অপেক্ষায় আছে।</div></div>`;
             } else {
                 htmlContent += `
                 <div class="card-actions" id="action-buttons-div">
@@ -1618,38 +1626,25 @@
                     const tuitionDoc = await transaction.get(tuitionRef);
                     if (!tuitionDoc.exists()) throw new Error("টিউশনটি পাওয়া যায়নি!");
 
+                    const tStatus = tuitionDoc.data().status;
+                    if (tStatus === 'closed') throw new Error("Already Closed");
+                    if (tStatus === 'assigned') throw new Error("Already Assigned");
+
                     const currentCount = Number(tuitionDoc.data().applicantsCount || 0);
-                    if (currentCount >= 3) throw new Error("Already Full");
 
-                    const rank = currentCount;
-                    let statusMsg = "";
-                    let finalStatus = "";
-
-                    if (rank === 0) {
-                        finalStatus = "Selected";
-                        statusMsg = `
-                        <strong>অভিনন্দন! আপনি প্রথম আবেদনকারী।</strong><br><br>
-                        অভিভাবকের নাম্বার:
-                        <span style="font-size:24px;font-weight:bold;color:var(--text-main);display:block;margin:10px 0;">
-                            ${escapeHtml(tuitionDoc.data().guardianPhone || "N/A")}
-                        </span>
-                        দয়া করে দ্রুত অভিভাবকের সাথে যোগাযোগ করুন।
+                    const statusMsg = `
+                        <div style="text-align:center; padding:10px 0;">
+                            <i class="fa-solid fa-circle-check" style="color:#10B981; font-size:42px; margin-bottom:12px;"></i>
+                            <h3 style="color:#10B981; font-size:20px; margin-bottom:8px;">আপনার আবেদনটি সফলভাবে জমা হয়েছে!</h3>
+                            <p style="color:var(--text-main); font-size:14px; line-height:1.6; margin-bottom:12px;">
+                                ধন্যবাদ! আপনার আবেদনটি আমাদের অ্যাডমিন প্যানেলে সংরক্ষিত হয়েছে। অ্যাডমিন সকল আবেদন পর্যালোচনা করে চূড়ান্ত শিক্ষক নির্বাচন করবেন।
+                            </p>
+                            <div style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); border-radius:8px; padding:12px; color:#93C5FD; font-size:13.5px; text-align:left;">
+                                📌 <strong>পরবর্তী ধাপ:</strong> অ্যাডমিন আপনাকে নির্বাচন করলে আপনার দেওয়া মোবাইল নম্বরে হোয়াটসঅ্যাপে অভিভাবকের বিস্তারিত তথ্য স্বয়ংক্রিয়ভাবে পাঠিয়ে দেওয়া হবে।
+                            </div>
+                        </div>
                     `;
-                    } else if (rank === 1) {
-                        finalStatus = "Waiting List";
-                        statusMsg = `
-                        <strong>আপনার আবেদন গৃহীত হয়েছে।</strong><br><br>
-                        <span style="color:var(--warning);">You are in our waiting list at <strong>2nd</strong> position.</span><br>
-                        প্রথম শিক্ষক টিউশনটি না নিলে আপনাকে অভিভাবকের নাম্বারটি প্রদান করা হবে।
-                    `;
-                    } else {
-                        finalStatus = "Waiting List";
-                        statusMsg = `
-                        <strong>আপনার আবেদন গৃহীত হয়েছে।</strong><br><br>
-                        <span style="color:var(--warning);">You are in our waiting list at <strong>3rd</strong> position.</span><br>
-                        আগের শিক্ষক টিউশনটি না নিলে আপনাকে অভিভাবকের নাম্বারটি প্রদান করা হবে।
-                    `;
-                    }
+                    const finalStatus = "Pending";
 
                     transaction.update(tuitionRef, { applicantsCount: currentCount + 1 });
                     return { statusMsg, finalStatus };
@@ -1658,6 +1653,7 @@
                 await addDoc(applicationsRef, {
                     tuitionId,
                     uid: tutorSnap.id,
+                    tutorUid: tutorSnap.id,
                     tutorName,
                     institute,
                     email,
@@ -1670,7 +1666,7 @@
                     nidFileId,
                     marksheetFileId: msFileId,
                     appliedAt: serverTimestamp(),
-                    status: result.finalStatus
+                    status: "Pending"
                 });
 
                 localStorage.setItem(`applied_${tuitionId}`, "true");
@@ -1678,44 +1674,18 @@
 
                 const resultBox = document.getElementById("result-message");
                 resultBox.style.display = "block";
-                resultBox.className =
-                    result.finalStatus === "Selected"
-                        ? "result-box result-success"
-                        : "result-box result-waiting";
+                resultBox.className = "result-box result-waiting";
                 resultBox.innerHTML = result.statusMsg;
-
-                // Auto WhatsApp Message to 1st Applicant (Selected Tutor)
-                if (result.finalStatus === "Selected") {
-                    const guardianPhoneNum = (currentTuitionData?.guardianPhone || "N/A");
-                    const detailsMsg = formatTutorTuitionDetailsWhatsAppMessage(currentTuitionData || {}, phone, guardianPhoneNum);
-                    const adviceMsg = formatTutorAdviceWhatsAppMessage();
-
-                    // 1. Trigger background WhatsApp Bot API (Msg 1: Tuition details -> Msg 2: Advice)
-                    sendAutoWhatsAppToTutor(phone, currentTuitionData || {}, guardianPhoneNum).then(res => {
-                        console.log("✅ Auto WhatsApp sequential messages triggered:", res);
-                    }).catch(err => {
-                        console.warn("Auto WA notice:", err);
-                    });
-
-                    // 2. Add 1-Click WhatsApp Save Button for tutor convenience
-                    const cleanPhone = phone.replace(/[^0-9]/g, '');
-                    const combinedFullMsg = `${detailsMsg}\n\n💡 *পরামর্শ:*\n${adviceMsg}`;
-                    const waDirectUrl = `https://api.whatsapp.com/send?phone=88${cleanPhone}&text=${encodeURIComponent(combinedFullMsg)}`;
-                    resultBox.innerHTML += `
-                        <div style="margin-top: 18px; padding-top: 16px; border-top: 1px dashed rgba(255,255,255,0.2); text-align: center;">
-                            <a href="${waDirectUrl}" target="_blank" rel="noopener" style="background:#22C55E; color:#FFFFFF; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:8px; text-decoration:none; font-weight:700; font-size:14px; box-shadow:0 4px 14px rgba(34,197,94,0.4); transition:all 0.2s ease;">
-                                <i class="fa-brands fa-whatsapp" style="font-size:20px;"></i> হোয়াটসঅ্যাপে সম্পূর্ণ তথ্য সংরক্ষণ করুন
-                            </a>
-                        </div>
-                    `;
-                }
 
             } catch (error) {
                 console.error("Application error:", error);
                 const message = error instanceof Error ? error.message : String(error);
 
-                if (message === "Already Full") {
-                    alert("দুঃখিত, আবেদন করার সময়ের মধ্যেই ৩ জনের কোটা পূর্ণ হয়ে গেছে।");
+                if (message === "Already Closed") {
+                    alert("দুঃখিত, এই টিউশনটির আবেদন গ্রহণ বন্ধ হয়ে গেছে।");
+                    location.reload();
+                } else if (message === "Already Assigned") {
+                    alert("দুঃখিত, এই টিউশনে ইতিমধ্যে শিক্ষক চূড়ান্ত নিয়োগ দেওয়া হয়েছে।");
                     location.reload();
                 } else if (message === "Already Applied") {
                     alert("আপনি ইতিমধ্যে এই টিউশনের জন্য আবেদন করেছেন!");
