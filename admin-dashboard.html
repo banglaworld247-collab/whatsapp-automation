@@ -1910,32 +1910,34 @@
                 <h4 class="modal-sec-title">২. প্রোগ্রেস ও Next Day Plan</h4>
                 <div class="modal-grid">
                     <div class="form-group">
-                        <label>অ্যাকশন / Queue Status:</label>
-                        <select id="editQueueAction">
-                            <option value="">-- নির্বাচন করুন --</option>
-                            <option value="নাম্বার প্রদান করা হয়েছে">নাম্বার প্রদান করা হয়েছে</option>
-                            <option value="কথা বলেছে">কথা বলেছে</option>
-                            <option value="একদিন পড়াতে গেছে">একদিন পড়াতে গেছে</option>
-                            <option value="দুই দিন পড়াতে গেছে">দুই দিন পড়াতে গেছে</option>
-                            <option value="তিন দিন পড়াতে গেছে">তিন দিন পড়াতে গেছে</option>
-                            <option value="কমিশনের টাকা চাইতে হবে">কমিশনের টাকা চাইতে হবে</option>
-                            <option value="সফল হয়েছে">সফল হয়েছে</option>
-                            <option value="বাতিল হয়ে গেছে">বাতিল হয়ে গেছে</option>
-                        </select>
+                        <label>অ্যাকশন / Queue Status (কাস্টম টেক্সট লিখুন):</label>
+                        <input type="text" id="editQueueAction" list="queueActionList" placeholder="যেমন: নাম্বার দেওয়া হয়েছে, ডেমো ক্লাস চলছে...">
+                        <datalist id="queueActionList">
+                            <option value="নাম্বার প্রদান করা হয়েছে">
+                            <option value="কথা বলেছে">
+                            <option value="একদিন পড়াতে গেছে">
+                            <option value="দুই দিন পড়াতে গেছে">
+                            <option value="তিন দিন পড়াতে গেছে">
+                            <option value="কমিশনের টাকা চাইতে হবে">
+                            <option value="সম্পূর্ণ কমিশন পরিশোধিত হয়েছে">
+                            <option value="সফল হয়েছে">
+                            <option value="বাতিল হয়ে গেছে">
+                        </datalist>
                     </div>
                     <div class="form-group">
                         <label>অ্যাকশন তারিখ (Action Date):</label>
                         <input type="date" id="editActionDate">
                     </div>
                     <div class="form-group">
-                        <label>Next Day Plan Action:</label>
-                        <select id="editNextPlanAction">
-                            <option value="">-- নির্বাচন করুন --</option>
-                            <option value="কল দিয়ে আপডেট নিতে হবে">কল দিয়ে আপডেট নিতে হবে</option>
-                            <option value="ডেমো ক্লাসের খোঁজ নিতে হবে">ডেমো ক্লাসের খোঁজ নিতে হবে</option>
-                            <option value="কমিশনের টাকা সংগ্রহ করতে হবে">কমিশনের টাকা সংগ্রহ করতে হবে</option>
-                            <option value="নতুন টিউটর খুঁজতে হবে">নতুন টিউটর খুঁজতে হবে</option>
-                        </select>
+                        <label>Next Day Plan Action (কাস্টম টেক্সট লিখুন):</label>
+                        <input type="text" id="editNextPlanAction" list="nextPlanList" placeholder="যেমন: কল দিয়ে আপডেট নিতে হবে...">
+                        <datalist id="nextPlanList">
+                            <option value="কল দিয়ে আপডেট নিতে হবে">
+                            <option value="ডেমো ক্লাসের খোঁজ নিতে হবে">
+                            <option value="কমিশনের টাকা সংগ্রহ করতে হবে">
+                            <option value="অভিভাবকের মতামত নিতে হবে">
+                            <option value="নতুন টিউটর খুঁজতে হবে">
+                        </datalist>
                     </div>
                     <div class="form-group">
                         <label>Next Day Plan Date:</label>
@@ -1945,9 +1947,20 @@
 
                 <h4 class="modal-sec-title">৩. কমিশন পেমেন্ট ট্র্যাকিং</h4>
                 <div class="modal-grid">
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label>এখন পর্যন্ত পরিশোধিত কমিশন (৳):</label>
-                        <input type="number" id="editPaidAmount" min="0" placeholder="যেমনঃ ৫০০">
+                        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                            <input type="number" id="editPaidAmount" min="0" placeholder="যেমনঃ ২৫০০" style="flex:1;min-width:180px;">
+                            <button type="button" id="btnMarkFullPaid" onclick="markFullCommissionPaid()" style="background:#10B981;color:#fff;border:none;padding:10px 16px;border-radius:6px;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(16,185,129,0.3);transition:all 0.2s ease;">
+                                <i class="fa-solid fa-circle-check"></i> সম্পূর্ণ পরিশোধিত (100%)
+                            </button>
+                        </div>
+                        <div style="margin-top:8px;">
+                            <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;color:#34D399;font-weight:700;">
+                                <input type="checkbox" id="chkFullPaid" onchange="handleFullPaidCheckbox(this)" style="width:17px;height:17px;accent-color:#10B981;cursor:pointer;">
+                                সম্পূর্ণ কমিশন পরিশোধিত হয়েছে
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -2919,6 +2932,39 @@ ${detailsUrl}`;
             document.getElementById('totalSalaryVal').innerText = `৳ ${totalSalaryVolume.toLocaleString('bn-BD')}`;
         }
 
+        function isTuitionPaymentPending(item) {
+            const s = normStatus(item.status);
+            const q = normStatus(item.tracking?.queueAction || item.queueAction);
+            if (s === normStatus('closed') || q === normStatus('বাতিল হয়ে গেছে')) return false;
+
+            const salary = parseSalary(item.salary || item.offer?.salary);
+            const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+            const estCommissionAmount = Math.round((salary * commPercent) / 100);
+            const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+
+            // Stay in pending tab until payment is 100% complete
+            if (estCommissionAmount > 0) {
+                return paidAmount < estCommissionAmount;
+            }
+            return s !== normStatus('assigned') && q !== normStatus('সফল হয়েছে');
+        }
+
+        function isTuitionPaidOrCompleted(item) {
+            const s = normStatus(item.status);
+            const q = normStatus(item.tracking?.queueAction || item.queueAction);
+            if (s === normStatus('closed') || q === normStatus('বাতিল হয়ে গেছে')) return false;
+
+            const salary = parseSalary(item.salary || item.offer?.salary);
+            const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+            const estCommissionAmount = Math.round((salary * commPercent) / 100);
+            const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+
+            if (estCommissionAmount > 0) {
+                return paidAmount >= estCommissionAmount;
+            }
+            return s === normStatus('assigned') || q === normStatus('সফল হয়েছে');
+        }
+
         function updateTabCounts() {
             const today = getTodayString();
             const tomorrow = getTomorrowString();
@@ -2926,16 +2972,8 @@ ${detailsUrl}`;
             const countAll = allTuitions.length;
             const countToday = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today).length;
             const countTomorrow = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow).length;
-            const countPending = allTuitions.filter(item => {
-                const q = normStatus(item.tracking?.queueAction || item.queueAction);
-                const s = normStatus(item.status);
-                return s !== normStatus('assigned') && s !== normStatus('closed') && q !== normStatus('সফল হয়েছে') && q !== normStatus('বাতিল হয়ে গেছে');
-            }).length;
-            const countAssigned = allTuitions.filter(item => {
-                const q = normStatus(item.tracking?.queueAction || item.queueAction);
-                const s = normStatus(item.status);
-                return s === normStatus('assigned') || q === normStatus('সফল হয়েছে');
-            }).length;
+            const countPending = allTuitions.filter(isTuitionPaymentPending).length;
+            const countAssigned = allTuitions.filter(isTuitionPaidOrCompleted).length;
 
             if (document.getElementById('count-all')) document.getElementById('count-all').innerText = countAll;
             if (document.getElementById('count-today')) document.getElementById('count-today').innerText = countToday;
@@ -2965,17 +3003,9 @@ ${detailsUrl}`;
             } else if (currentFilter === 'tomorrow') {
                 filtered = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow);
             } else if (currentFilter === 'pending') {
-                filtered = allTuitions.filter(item => {
-                    const q = normStatus(item.tracking?.queueAction || item.queueAction);
-                    const s = normStatus(item.status);
-                    return s !== normStatus('assigned') && s !== normStatus('closed') && q !== normStatus('সফল হয়েছে') && q !== normStatus('বাতিল হয়ে গেছে');
-                });
+                filtered = allTuitions.filter(isTuitionPaymentPending);
             } else if (currentFilter === 'assigned') {
-                filtered = allTuitions.filter(item => {
-                    const q = normStatus(item.tracking?.queueAction || item.queueAction);
-                    const s = normStatus(item.status);
-                    return s === normStatus('assigned') || q === normStatus('সফল হয়েছে');
-                });
+                filtered = allTuitions.filter(isTuitionPaidOrCompleted);
             }
 
             if (filtered.length === 0) {
@@ -3126,12 +3156,38 @@ ${detailsUrl}`;
                 document.getElementById('editNextPlanDate').value = npDate;
             }
 
-            document.getElementById('editPaidAmount').value = tracking.paidAmount || item.paidAmount || 0;
+            const salary = parseSalary(item.salary || item.offer?.salary);
+            const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+            const estCommissionAmount = Math.round((salary * commPercent) / 100);
+            const paidAmount = Number(tracking.paidAmount || item.paidAmount || 0);
+
+            document.getElementById('editPaidAmount').value = paidAmount;
+            const chkFull = document.getElementById('chkFullPaid');
+            if (chkFull) {
+                chkFull.checked = (estCommissionAmount > 0 && paidAmount >= estCommissionAmount);
+            }
 
             const modal = document.getElementById('editModal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
+
+        window.markFullCommissionPaid = function() {
+            const salary = parseSalary(document.getElementById('editSalary')?.value);
+            const commVal = document.getElementById('editCommission')?.value || '50%';
+            const commPercent = parseCommissionPercent(commVal);
+            const fullAmount = Math.round((salary * commPercent) / 100);
+            const paidInput = document.getElementById('editPaidAmount');
+            if (paidInput) paidInput.value = fullAmount;
+            const chk = document.getElementById('chkFullPaid');
+            if (chk) chk.checked = true;
+        };
+
+        window.handleFullPaidCheckbox = function(chk) {
+            if (chk.checked) {
+                window.markFullCommissionPaid();
+            }
+        };
 
         // Initialize Flatpickr instances for professional date styling
         function initDatePickers() {
@@ -3369,29 +3425,107 @@ ${detailsUrl}`;
 
                 // Assigned tutor
                 if (tuitionData.assignedTutor) {
-                    const tutorSnap = await getDoc(doc(db, "tutors", tuitionData.assignedTutor));
-                    if (tutorSnap.exists()) {
-                        const tData = tutorSnap.data();
-                        html += `
-                            <div class="assigned-tutor-box">
-                                <strong style="color:var(--accent);font-size:15px;"><i class="fa-solid fa-user-check"></i> বর্তমানে দায়িত্বে থাকা টিউটর</strong>
-                                <table class="data-table" style="margin-top:8px;">
-                                    <tr><th>UID</th><td>${safe(tutorSnap.id)}</td></tr>
-                                    <tr><th>Name</th><td>${safe(tData.name)}</td></tr>
-                                    <tr><th>Institution</th><td>${safe(tData.institution || tData.institute)}</td></tr>
+                    let tData = null;
+                    let isRegistered = false;
+                    try {
+                        const tutorSnap = await getDoc(doc(db, "tutors", tuitionData.assignedTutor));
+                        if (tutorSnap.exists()) {
+                            tData = tutorSnap.data();
+                            isRegistered = true;
+                        }
+                    } catch (e) { }
+
+                    if (!tData) {
+                        tData = {
+                            name: tuitionData.assignedTutorName || 'কাস্টম টিউটর',
+                            phone: tuitionData.assignedTutorPhone || '',
+                            messenger: tuitionData.assignedTutorMessenger || '',
+                            institution: tuitionData.assignedTutorInstitute || 'N/A',
+                            email: 'N/A',
+                            address: 'N/A',
+                            gender: 'N/A'
+                        };
+                    }
+
+                    const msngrLinkVal = tData.messenger || tuitionData.assignedTutorMessenger || '';
+                    const msngrLinkHtml = msngrLinkVal ? `
+                        <a href="${safe(msngrLinkVal)}" target="_blank" rel="noopener" 
+                           style="color:#0084FF;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:rgba(0,132,255,0.12);padding:4px 10px;border-radius:6px;border:1px solid rgba(0,132,255,0.35);">
+                            <i class="fa-brands fa-facebook-messenger" style="font-size:15px;color:#0084FF;"></i> মেসেঞ্জার চ্যাট / প্রোফাইল ওপেন করুন
+                        </a>
+                    ` : '<span style="color:var(--text-muted);">প্রদান করা হয়নি</span>';
+
+                    html += `
+                        <div class="assigned-tutor-box" style="border: 1px solid rgba(34,197,94,0.4); background: rgba(34,197,94,0.06); border-radius:8px; padding:16px; margin: 16px 0;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                                <strong style="color:#34D399;font-size:15px;"><i class="fa-solid fa-user-check"></i> বর্তমানে দায়িত্বে থাকা টিউটর ${tuitionData.isCustomRecruit ? '(কাস্টম ডাটা)' : ''}</strong>
+                                <button type="button" class="btn-warning" onclick="unassignTutor('${tuitionId}')" style="padding:5px 12px;font-size:12px;border-radius:6px;cursor:pointer;">
+                                    <i class="fa-solid fa-user-minus"></i> নিয়োগ বাতিল করুন
+                                </button>
+                            </div>
+                            <table class="data-table" style="margin-top:10px;">
+                                <tr><th>Tutor Name</th><td><strong>${safe(tData.name)}</strong></td></tr>
+                                <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`)}</td></tr>
+                                <tr><th>Messenger</th><td>${msngrLinkHtml}</td></tr>
+                                <tr><th>Institution</th><td>${safe(tData.institution || tData.institute || 'N/A')}</td></tr>
+                                ${isRegistered ? `
+                                    <tr><th>UID</th><td>${safe(tuitionData.assignedTutor)}</td></tr>
                                     <tr><th>Email</th><td>${safe(tData.email)}</td></tr>
-                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`)}</td></tr>
                                     <tr><th>Address</th><td>${safe(tData.address)}</td></tr>
                                     <tr><th>Gender</th><td>${safe(tData.gender)}</td></tr>
                                     <tr><th>Experience</th><td>${safe(tData.experience)}</td></tr>
                                     <tr><th>Locations</th><td>${safe(Array.isArray(tData.locations) ? tData.locations.join(', ') : tData.locations)}</td></tr>
                                     <tr><th>Subjects</th><td>${safe(Array.isArray(tData.subjects) ? tData.subjects.join(', ') : tData.subjects)}</td></tr>
                                     <tr><th>Documents</th><td>${fileLink(tData.nidUrl || tData.nidFileUrl, 'NID/Birth Certificate')} ${fileLink(tData.msUrl || tData.marksheetFileUrl, 'Marksheet')}</td></tr>
-                                </table>
-                            </div>
-                        `;
-                    }
+                                ` : ''}
+                            </table>
+                        </div>
+                    `;
                 }
+
+                // Custom Recruit Section
+                html += `
+                    <div style="background:rgba(99,102,241,0.08);border:1px dashed rgba(99,102,241,0.35);border-radius:8px;padding:14px 16px;margin:18px 0;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleCustomRecruitBox('${tuitionId}')">
+                            <strong style="color:var(--accent);font-size:14px;display:flex;align-items:center;gap:8px;">
+                                <i class="fa-solid fa-user-plus"></i> কাস্টম / পূর্ববর্তী টিউটর নিয়োগ (Custom Recruit)
+                            </strong>
+                            <button type="button" class="btn-card-action" style="background:#4F46E5;color:#fff;padding:5px 12px;font-size:12px;border:none;border-radius:6px;cursor:pointer;">
+                                <i class="fa-solid fa-plus"></i> ফর্ম খুলুন / বন্ধ করুন
+                            </button>
+                        </div>
+                        <div id="customRecruitBox_${tuitionId}" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.1);">
+                            <form onsubmit="handleCustomRecruitSubmit(event, '${tuitionId}')">
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;">
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--text-muted);">টিউটরের নাম (Tutor Name)*:</label>
+                                        <input type="text" id="cr_name_${tuitionId}" required placeholder="যেমন: মো: শাকিল আহমেদ" style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 10px;border-radius:6px;width:100%;font-size:13px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--text-muted);">মোবাইল নম্বর (Phone Number)*:</label>
+                                        <input type="text" id="cr_phone_${tuitionId}" required placeholder="01XXXXXXXXX" style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 10px;border-radius:6px;width:100%;font-size:13px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--text-muted);">মেসেঞ্জার লিংক / প্রোফাইল লিংক (Messenger Link):</label>
+                                        <input type="text" id="cr_msngr_${tuitionId}" placeholder="যেমন: https://m.me/username বা প্রোফাইল লিংক" style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 10px;border-radius:6px;width:100%;font-size:13px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;font-weight:600;color:var(--text-muted);">প্রতিষ্ঠান / বিভাগ (Institute - ঐচ্ছিক):</label>
+                                        <input type="text" id="cr_inst_${tuitionId}" placeholder="যেমন: ঢাকা বিশ্ববিদ্যালয়" style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 10px;border-radius:6px;width:100%;font-size:13px;">
+                                    </div>
+                                </div>
+                                <div style="margin-top:14px;display:flex;gap:10px;align-items:center;">
+                                    <button type="submit" class="btn-primary" style="background:#10B981;font-size:13px;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;border:none;box-shadow:0 2px 8px rgba(16,185,129,0.35);">
+                                        <i class="fa-solid fa-check"></i> কাস্টম টিউটর হিসেবে নিয়োগ দিন ও সেভ করুন
+                                    </button>
+                                    <button type="button" onclick="toggleCustomRecruitBox('${tuitionId}')" style="background:transparent;color:var(--text-muted);border:1px solid rgba(255,255,255,0.2);padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer;">
+                                        বাতিল
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
 
                 // Applications query
                 let appSnaps;
@@ -3502,6 +3636,89 @@ ${detailsUrl}`;
                 console.error(error);
             }
         }
+
+        // Action: Toggle Custom Recruit Box
+        window.toggleCustomRecruitBox = function (tuitionId) {
+            const box = document.getElementById(`customRecruitBox_${tuitionId}`);
+            if (box) {
+                box.style.display = (box.style.display === 'none' || !box.style.display) ? 'block' : 'none';
+            }
+        };
+
+        // Action: Handle Custom Recruit Submission
+        window.handleCustomRecruitSubmit = async function (event, tuitionId) {
+            event.preventDefault();
+            const name = document.getElementById(`cr_name_${tuitionId}`)?.value.trim();
+            const phone = document.getElementById(`cr_phone_${tuitionId}`)?.value.trim();
+            const messenger = document.getElementById(`cr_msngr_${tuitionId}`)?.value.trim() || '';
+            const institute = document.getElementById(`cr_inst_${tuitionId}`)?.value.trim() || '';
+
+            if (!name || !phone) {
+                alert("টিউটরের নাম এবং মোবাইল নম্বর আবশ্যক!");
+                return;
+            }
+
+            try {
+                const tuitionRef = doc(db, 'tuitions', tuitionId);
+                const tuitionSnap = await getDoc(tuitionRef);
+                if (!tuitionSnap.exists()) throw new Error("টিউশন পাওয়া যায়নি!");
+                const tuitionData = tuitionSnap.data();
+
+                const customUid = 'custom_' + Date.now();
+
+                // 1. Update tuition doc in Firestore
+                await updateDoc(tuitionRef, {
+                    assignedTutor: customUid,
+                    assignedTutorName: name,
+                    assignedTutorPhone: phone,
+                    assignedTutorMessenger: messenger,
+                    assignedTutorInstitute: institute,
+                    isCustomRecruit: true,
+                    status: 'assigned',
+                    assignedAt: serverTimestamp()
+                });
+
+                // 2. Add application record for tracking and history
+                await addDoc(collection(db, 'applications'), {
+                    tuitionId,
+                    uid: customUid,
+                    tutorUid: customUid,
+                    tutorName: name,
+                    phone: phone,
+                    messengerLink: messenger,
+                    institute: institute || 'N/A',
+                    gender: 'N/A',
+                    commissionPolicy: tuitionData.commission || '50%',
+                    appliedAt: serverTimestamp(),
+                    status: 'Selected',
+                    isCustomRecruit: true
+                }).catch(e => console.warn("Custom app log note:", e));
+
+                // 3. Option to send WhatsApp message
+                const guardianPhone = tuitionData.guardianPhone || 'N/A';
+                const messageText = formatTutorRecruitmentWhatsAppMessage(tuitionData, phone, guardianPhone, name);
+                let cleanPhone = String(phone).replace(/[^0-9]/g, '');
+                if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+                const waDirectUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
+
+                if (confirm(`✅ "${name}"-কে সফলভাবে কাস্টম টিউটর হিসেবে নিয়োগ দেওয়া হয়েছে!\n\nআপনি কি এই শিক্ষকের হোয়াটসঅ্যাপে কনফার্মেশন ও অভিভাবকের নম্বর পাঠাতে চান?`)) {
+                    const sendRes = await sendSingleWhatsAppMessage(phone, messageText);
+                    if (sendRes && sendRes.success) {
+                        alert("📲 শিক্ষকের হোয়াটসঅ্যাপে স্বয়ংক্রিয় মেসেজ পৌঁছে গেছে!");
+                    } else {
+                        window.open(waDirectUrl, '_blank');
+                    }
+                }
+
+                // Refresh details
+                toggleExpand(tuitionId);
+                setTimeout(() => toggleExpand(tuitionId), 150);
+
+            } catch (err) {
+                alert("কাস্টম টিউটর নিয়োগ ব্যর্থ: " + err.message);
+                console.error("Custom recruit error:", err);
+            }
+        };
 
         // Action: Recruit specific applicant & auto send WhatsApp
         window.recruitApplicant = async function (tuitionId, appId, tutorUid, tutorPhone, tutorName) {
