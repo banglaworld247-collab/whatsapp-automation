@@ -3476,7 +3476,7 @@ ${detailsUrl}`;
                                     <tr><th>Experience</th><td>${safe(tData.experience)}</td></tr>
                                     <tr><th>Locations</th><td>${safe(Array.isArray(tData.locations) ? tData.locations.join(', ') : tData.locations)}</td></tr>
                                     <tr><th>Subjects</th><td>${safe(Array.isArray(tData.subjects) ? tData.subjects.join(', ') : tData.subjects)}</td></tr>
-                                    <tr><th>Documents</th><td>${fileLink(tData.nidUrl || tData.nidFileUrl, 'NID/Birth Certificate')} ${fileLink(tData.msUrl || tData.marksheetFileUrl, 'Marksheet')}</td></tr>
+                                    <tr><th>Documents</th><td>${fileLink(tData.nidUrl || tData.nidFileUrl, 'Student ID / NID')} ${fileLink(tData.msUrl || tData.marksheetFileUrl, 'Marksheet')}</td></tr>
                                 ` : ''}
                             </table>
                         </div>
@@ -3594,7 +3594,7 @@ ${detailsUrl}`;
                                     <tr><th>Gender</th><td>${safe(ad.gender)}</td></tr>
                                     <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy)}</td></tr>
                                     <tr><th>Status</th><td>${safe(ad.status || 'Pending')}</td></tr>
-                                    <tr><th>NID / Birth Certificate</th><td>${fileLink(ad.nidFileUrl || ad.nidUrl, 'View Document')}</td></tr>
+                                    <tr><th>Student ID / NID</th><td>${fileLink(ad.nidFileUrl || ad.nidUrl, 'View Document')}</td></tr>
                                     <tr><th>SSC/HSC Marksheet</th><td>${fileLink(ad.marksheetFileUrl || ad.msUrl, 'View Document')}</td></tr>
                                 </table>
 

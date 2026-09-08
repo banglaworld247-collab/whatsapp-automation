@@ -1,6 +1,109 @@
 /**
- * TSBD (Tuition Service BD) - Utility Functions
+ * TSBD (Tuition Service BD) - Central Utility & Dataset Module
  */
+
+// Comprehensive Bangladesh Location Dataset
+export const BD_LOCATIONS = {
+    "ঢাকা": {
+        "ঢাকা": ["ধানমন্ডি", "মিরপুর", "উত্তরা", "গুলশান", "বনানী", "মোহাম্মদপুর", "মতিঝিল", "বাড্ডা", "মালিবাগ", "যাত্রাবাড়ী", "লালমাটিয়া", "খিলগাঁও", "বসুন্ধরা আ/এ", "ক্যান্টনমেন্ট", "তেজগাঁও", "পল্টন", "কাফরুল", "শান্তিনগর", "শ্যামলী", "মোহাম্মদপুর", "বংশাল", "ওয়ারী", "যাত্রাবাড়ী", "কেরানীগঞ্জ", "সাভার"],
+        "গাজীপুর": ["গাজীপুর সদর", "টঙ্গী", "কালিয়াকৈর", "শ্রীপুর", "কাপাসিয়া"],
+        "নারায়ণগঞ্জ": ["নারায়ণগঞ্জ সদর", "সিদ্ধিরগঞ্জ", "ফতুল্লা", "সোনারগাঁও", "রূপগঞ্জ", "আড়াইহাজার"],
+        "টাঙ্গাইল": ["টাঙ্গাইল সদর", "মির্জাপুর", "মধুপুর", "কালিহাতী", "সখিপুর", "ঘাটাইল"],
+        "নরসিংদী": ["নরসিংদী সদর", "পলাশ", "শিবপুর", "বেলাব", "রায়পুরা", "মনোহরদী"],
+        "মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর", "শ্রীনগর", "সিরাজদিখান", "গজারিয়া", "লৌহজং", "টঙ্গীবাড়ী"],
+        "মানিকগঞ্জ": ["মানিকগঞ্জ সদর", "সিংগাইর", "সাটুরিয়া", "শিবালয়", "ঘিওর"],
+        "কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর", "ভৈরব", "বাজিতপুর", "করিমগঞ্জ", "কটিয়াদী"],
+        "ফরিদপুর": ["ফরিদপুর সদর", "বোয়ালমারী", "ভাঙ্গা", "মধুখালী", "নগরকান্দা"],
+        "গোপালগঞ্জ": ["গোপালগঞ্জ সদর", "কাটালীপাড়া", "কাশিয়ানী", "টুঙ্গিপাড়া", "মুকসুদপুর"],
+        "মাদারীপুর": ["মাদারীপুর সদর", "শিবচর", "কালকিনি", "রাজৈর"],
+        "শরীয়তপুর": ["শরীয়তপুর সদর", "জাজিরা", "নড়িয়া", "ডামুড্যা", "গোসাইরহাট"],
+        "রাজবাড়ী": ["রাজবাড়ী সদর", "পাংশা", "বালিয়াকান্দি", "গোয়ালন্দ", "কালুখালী"]
+    },
+    "চট্টগ্রাম": {
+        "চট্টগ্রাম": ["চট্টগ্রাম সদর", "পাঁচলাইশ", "খুলশী", "হালিশহর", "আগ্রাবাদ", "চান্দগাঁও", "কোতোয়ালী", "পাহাড়তলী", "বাকলিয়া", "পতেঙ্গা", "হাটহাজারী", "রাউজান", "সীতাকুণ্ড", "মিরসরাই", "পটিয়া"],
+        "কুমিল্লা": ["কুমিল্লা সদর", "সদর দক্ষিণ", "দাউদকান্দি", "চান্দিনা", "লাকসাম", "দেবীদ্বার", "বুড়িচং", "চৌদ্দগ্রাম", "ব্রাহ্মণপাড়া"],
+        "কক্সবাজার": ["কক্সবাজার সদর", "রামু", "উখিয়া", "টেকনাফ", "চকরিয়া", "মহেশখালী"],
+        "ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর", "আশুগঞ্জ", "নবীনগর", "সরাইল", "কসবা", "বাঞ্ছারামপুর"],
+        "নোয়াখালী": ["নোয়াখালী সদর", "বেগমগঞ্জ", "চাটখিল", "কোম্পানীগঞ্জ", "সেনবাগ", "সোনাইমুড়ী"],
+        "ফেনী": ["ফেনী সদর", "দাগনভূঞা", "সোনাগাজী", "ছাগলনাইয়া", "পরশুরাম", "ফুলগাজী"],
+        "চাঁদপুর": ["চাঁদপুর সদর", "হাজীগঞ্জ", "মতলব উত্তর", "মতলব দক্ষিণ", "ফরিদগঞ্জ", "শাহরাস্তি"]
+    },
+    "রাজশাহী": {
+        "রাজশাহী": ["বোয়ালিয়া", "মতিহার", "রাজপাড়া", "শাহ মখদুম", "কাটাখালী", "পবা", "গোদাগাড়ী", "বাগমারা", "পুঠিয়া"],
+        "বগুড়া": ["বগুড়া সদর", "শাজাহানপুর", "শেরপুর", "শিবগঞ্জ", "গাবতলী", "দুপচাঁচিয়া", "কাহালু"],
+        "পাবনা": ["পাবনা সদর", "ঈশ্বরদী", "সাঁথিয়া", "সুজানগর", "বেড়া", "চাটমোহর", "ফরিদপুর"],
+        "সিরাজগঞ্জ": ["সিরাজগঞ্জ সদর", "বেলকুচি", "শাহজাদপুর", "উল্লাপাড়া", "কামারখন্দ", "রায়গঞ্জ"]
+    },
+    "খুলনা": {
+        "খুলনা": ["সোনাডাঙ্গা", "খালিশপুর", "দৌলতপুর", "খান জাহান আলী", "খুলনা সদর", "রূপসা", "ডুমুরিয়া"],
+        "যশোর": ["যশোর সদর", "ঝিকরগাছা", "অভয়নগর", "মণিরামপুর", "কেশবপুর", "বাঘারপাড়া"],
+        "কুষ্টিয়া": ["কুষ্টিয়া সদর", "কুমারখালী", "মিরপুর", "ভেড়ামারা", "খোকসা", "দৌলতপুর"]
+    },
+    "সিলেট": {
+        "সিলেট": ["সিলেট সদর", "দক্ষিণ সুরমা", "কোতোয়ালী", "শাহপরাণ", "গোলাপগঞ্জ", "বিয়ানীবাজার", "বিশ্বনাথ"],
+        "মৌলভীবাজার": ["মৌলভীবাজার সদর", "শ্রীমঙ্গল", "কমলগঞ্জ", "কুলাউড়া", "বড়লেখা"],
+        "হবিগঞ্জ": ["হবিগঞ্জ সদর", "নবীগঞ্জ", "বাহুবল", "মাধবপুর", "চুনারুঘাট"],
+        "সুনামগঞ্জ": ["সুনামগঞ্জ সদর", "ছাতক", "জগন্নাথপুর", "দিরাই", "তাহিরপুর"]
+    },
+    "বরিশাল": {
+        "বরিশাল": ["বরিশাল সদর", "কোতোয়ালী", "বিমানবন্দর", "বাকেরগঞ্জ", "বাবুগঞ্জ", "উজিরপুর", "গৌরনদী"],
+        "পটুয়াখালী": ["পটুয়াখালী সদর", "বাউফল", "গলাচিপা", "কলাপাড়া", "দশমিনা"]
+    },
+    "রংপুর": {
+        "রংপুর": ["রংপুর সদর", "কোতোয়ালী", "পীরগঞ্জ", "বদরগঞ্জ", "মিঠাপুকুর", "কাউনিয়া", "গঙ্গাচড়া"],
+        "দিনাজপুর": ["দিনাজপুর সদর", "বীরগঞ্জ", "চিরিরবন্দর", "ফুলবাড়ী", "পার্বতীপুর", "বিরামপুর"]
+    },
+    "ময়মনসিংহ": {
+        "ময়মনসিংহ": ["ময়মনসিংহ সদর", "মুক্তাগাছা", "ত্রিশাল", "ভালুকা", "গফরগাঁও", "ফুলবাড়িয়া", "ঈশ্বরগঞ্জ"],
+        "জামালপুর": ["জামালপুর সদর", "সরিষাবাড়ী", "মেলান্দহ", "ইসলামপুর", "বকশীগঞ্জ", "দেওয়ানগঞ্জ"]
+    }
+};
+
+// Medium Options
+export const MEDIUM_OPTIONS = [
+    "Bangla Medium (বাংলা মাধ্যম)",
+    "English Version (ইংলিশ ভার্সন)",
+    "English Medium - Cambridge / Edexcel",
+    "Madrasah Medium (মাদ্রাসা মাধ্যম)",
+    "Admission Test (বিশ্ববিদ্যালয় ভর্তি প্রস্তুতি)",
+    "Medical Admission (মেডিকেল ভর্তি প্রস্তুতি)",
+    "Engineering Admission (বুয়েট/প্রকৌশল ভর্তি)",
+    "Spoken English / IELTS",
+    "Quran / Arabic Learning (কুরআন শিক্ষা)",
+    "Computer Programming / Coding"
+];
+
+// Classes / Grades
+export const CLASS_OPTIONS = [
+    "Class 1", "Class 2", "Class 3", "Class 4", "Class 5",
+    "Class 6", "Class 7", "Class 8 (JSC)", "Class 9 (SSC)", "Class 10 (SSC)",
+    "HSC 1st Year", "HSC 2nd Year", "A Level", "O Level",
+    "University Level", "Language / Professional"
+];
+
+// Top Bangladesh Universities for filtering
+export const TOP_UNIVERSITIES = [
+    "Bangladesh University of Engineering and Technology (BUET)",
+    "University of Dhaka (DU)",
+    "Dhaka Medical College (DMC) / Medical",
+    "Institute of Business Administration (IBA, DU)",
+    "Jahangirnagar University (JU)",
+    "Rajshahi University (RU)",
+    "Chittagong University (CU)",
+    "Shahjalal University of Science & Technology (SUST)",
+    "Khulna University of Engineering & Technology (KUET)",
+    "Chittagong University of Engineering & Technology (CUET)",
+    "Rajshahi University of Engineering & Technology (RUET)",
+    "Bangladesh Agricultural University (BAU)",
+    "Islamic University of Technology (IUT)",
+    "North South University (NSU)",
+    "BRAC University (BRACU)",
+    "Ahsanullah University of Science and Technology (AUST)",
+    "East West University (EWU)",
+    "Independent University, Bangladesh (IUB)",
+    "United International University (UIU)",
+    "National University (NU)"
+];
 
 // Escape HTML for XSS prevention
 export function escapeHtml(value) {
@@ -69,7 +172,31 @@ export function formatDate(timestamp, showTime = false) {
     return formatted;
 }
 
-// Normalize phone number for Bangladesh (e.g. 017... -> +88017...)
+// Time ago calculation in Bengali
+export function timeAgo(timestamp) {
+    if (!timestamp) return 'কিছুক্ষণ আগে';
+    let date;
+    if (timestamp.toDate && typeof timestamp.toDate === 'function') {
+        date = timestamp.toDate();
+    } else if (timestamp instanceof Date) {
+        date = timestamp;
+    } else if (typeof timestamp === 'number' || typeof timestamp === 'string') {
+        date = new Date(timestamp);
+    } else {
+        return 'কিছুক্ষণ আগে';
+    }
+
+    const now = new Date();
+    const diffSec = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffSec < 60) return 'এইমাত্র';
+    if (diffSec < 3600) return `${toBnDigits(Math.floor(diffSec / 60))} মিনিট আগে`;
+    if (diffSec < 86400) return `${toBnDigits(Math.floor(diffSec / 3600))} ঘণ্টা আগে`;
+    if (diffSec < 2592000) return `${toBnDigits(Math.floor(diffSec / 86400))} দিন আগে`;
+    return formatDate(date);
+}
+
+// Normalize phone number for Bangladesh
 export function normalizePhone(rawPhone) {
     if (!rawPhone) return '';
     let digits = toEnDigits(rawPhone).replace(/[^0-9]/g, '');
@@ -82,16 +209,10 @@ export function normalizePhone(rawPhone) {
     return digits;
 }
 
-/**
- * Client-Side Image Compressor
- * Resizes large camera photos and compresses them to lightweight WebP/JPEG format before uploading
- * @param {File} file 
- * @param {Object} options { maxWidth: 1200, maxHeight: 1200, quality: 0.8 }
- * @returns {Promise<File>} Compressed File object
- */
+// Client-Side Image Compressor
 export async function compressImage(file, options = {}) {
     if (!file || !file.type.startsWith('image/')) {
-        return file; // Return as-is if PDF or non-image
+        return file;
     }
 
     const { maxWidth = 1280, maxHeight = 1280, quality = 0.8 } = options;
@@ -121,7 +242,6 @@ export async function compressImage(file, options = {}) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
 
-                // Use WebP if supported, fallback to JPEG
                 const mimeType = 'image/webp';
                 canvas.toBlob((blob) => {
                     if (!blob) {
@@ -133,7 +253,6 @@ export async function compressImage(file, options = {}) {
                         type: mimeType,
                         lastModified: Date.now()
                     });
-                    console.log(`📸 Image compressed: ${(file.size / 1024).toFixed(1)}KB -> ${(compressedFile.size / 1024).toFixed(1)}KB`);
                     resolve(compressedFile);
                 }, mimeType, quality);
             };
@@ -143,9 +262,7 @@ export async function compressImage(file, options = {}) {
     });
 }
 
-/**
- * Toast Notification Popup Helper
- */
+// Toast Notification Popup Helper
 export function showToast(message, type = 'info', duration = 3500) {
     let container = document.getElementById('tsbdToastContainer');
     if (!container) {
@@ -189,7 +306,7 @@ export function showToast(message, type = 'info', duration = 3500) {
         transform: translateY(20px);
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         pointer-events: auto;
-        max-width: 360px;
+        max-width: 380px;
     `;
     toast.innerHTML = `<i class="fa-solid ${c.icon}" style="color:${c.bg};font-size:18px;"></i> <span>${message}</span>`;
 
@@ -207,10 +324,7 @@ export function showToast(message, type = 'info', duration = 3500) {
     }, duration);
 }
 
-/**
- * Check if a gender / preference string represents Female
- * Handles English ('female', 'woman') and Bengali ('মহিলা', 'মেয়ে', 'নারী', 'মহিলা শিক্ষিকা')
- */
+// Gender Matching Utilities
 export function isFemaleGender(genderStr) {
     if (!genderStr) return false;
     const s = String(genderStr).toLowerCase().trim();
@@ -218,10 +332,6 @@ export function isFemaleGender(genderStr) {
            s.includes('female') || s.includes('মহিলা') || s.includes('মেয়ে') || s.includes('নারী');
 }
 
-/**
- * Check if a gender / preference string represents Male
- * Handles English ('male', 'man') and Bengali ('পুরুষ', 'ছেলে', 'পুরুষ শিক্ষক')
- */
 export function isMaleGender(genderStr) {
     if (!genderStr) return false;
     const s = String(genderStr).toLowerCase().trim();
@@ -229,20 +339,10 @@ export function isMaleGender(genderStr) {
            s.includes('male') || s.includes('পুরুষ') || s.includes('ছেলে');
 }
 
-/**
- * Strict Gender Matching Validation for Tuition Applications:
- * Ensures male tutors cannot apply for female-preferred tuition,
- * and female tutors cannot apply for male-preferred tuition.
- *
- * @param {string} tutorGender - The applicant tutor's gender ('মহিলা', 'পুরুষ', 'female', 'male', etc.)
- * @param {string} preferredTutor - The tuition requirement ('Female', 'Male', 'Any', 'মহিলা', 'পুরুষ', etc.)
- * @returns {{ allowed: boolean, message: string }}
- */
 export function validateGenderMatch(tutorGender, preferredTutor) {
     const isPrefFemale = isFemaleGender(preferredTutor);
     const isPrefMale = isMaleGender(preferredTutor);
 
-    // If preferred tutor is 'Any' or not specified, anyone can apply
     if (!isPrefFemale && !isPrefMale) {
         return { allowed: true, message: "" };
     }
@@ -253,17 +353,58 @@ export function validateGenderMatch(tutorGender, preferredTutor) {
     if (isPrefFemale && isTutorMale) {
         return {
             allowed: false,
-            message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র মহিলা শিক্ষিকা আবেদন করতে পারবেন (Male tutor cannot apply for female preferred tuition)।"
+            message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র মহিলা শিক্ষিকা আবেদন করতে পারবেন।"
         };
     }
 
     if (isPrefMale && isTutorFemale) {
         return {
             allowed: false,
-            message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র পুরুষ শিক্ষক আবেদন করতে পারবেন (Female tutor cannot apply for male preferred tuition)।"
+            message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র পুরুষ শিক্ষক আবেদন করতে পারবেন।"
         };
     }
 
     return { allowed: true, message: "" };
 }
 
+// Helper to populate Division, District and Thana selects
+export function initLocationDropdowns(divSelectId, distSelectId, thanaSelectId) {
+    const divSelect = document.getElementById(divSelectId);
+    const distSelect = document.getElementById(distSelectId);
+    const thanaSelect = document.getElementById(thanaSelectId);
+
+    if (!divSelect || !distSelect || !thanaSelect) return;
+
+    // Populate Divisions
+    divSelect.innerHTML = '<option value="">সকল বিভাগ</option>';
+    Object.keys(BD_LOCATIONS).forEach(div => {
+        divSelect.innerHTML += `<option value="${div}">${div}</option>`;
+    });
+
+    distSelect.innerHTML = '<option value="">সকল জেলা</option>';
+    thanaSelect.innerHTML = '<option value="">সকল থানা / এলাকা</option>';
+
+    divSelect.addEventListener('change', () => {
+        const selectedDiv = divSelect.value;
+        distSelect.innerHTML = '<option value="">সকল জেলা</option>';
+        thanaSelect.innerHTML = '<option value="">সকল থানা / এলাকা</option>';
+
+        if (selectedDiv && BD_LOCATIONS[selectedDiv]) {
+            Object.keys(BD_LOCATIONS[selectedDiv]).forEach(dist => {
+                distSelect.innerHTML += `<option value="${dist}">${dist}</option>`;
+            });
+        }
+    });
+
+    distSelect.addEventListener('change', () => {
+        const selectedDiv = divSelect.value;
+        const selectedDist = distSelect.value;
+        thanaSelect.innerHTML = '<option value="">সকল থানা / এলাকা</option>';
+
+        if (selectedDiv && selectedDist && BD_LOCATIONS[selectedDiv] && BD_LOCATIONS[selectedDiv][selectedDist]) {
+            BD_LOCATIONS[selectedDiv][selectedDist].forEach(thana => {
+                thanaSelect.innerHTML += `<option value="${thana}">${thana}</option>`;
+            });
+        }
+    });
+}

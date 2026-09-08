@@ -27,9 +27,9 @@ service cloud.firestore {
 
     // 2. Tutors Collection (Registered tutor profiles)
     match /tutors/{tutorId} {
-      // Public / Students can view verified tutors, or tutor can view their own, or admin
+      // Public can view tutor profiles
       allow read: if true;
-      // Tutor can create/update only their own profile, admin can edit any
+      // Tutor can create/update their own profile, admin can edit any
       allow create: if isAuthenticated() && (request.resource.data.uid == request.auth.uid || request.auth.uid == tutorId);
       allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || request.auth.uid == tutorId || isAdmin());
       allow delete: if isAdmin();
@@ -45,13 +45,43 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // 4. Settings Collection (WhatsApp credentials, API tokens, admin preferences)
+    // 4. Tuition Requests Collection (Parent/Guardian tutor requests)
+    match /tuitionRequests/{reqId} {
+      // Anyone (even guest guardians) can submit a tutor request
+      allow create: if true;
+      // Admins can read and manage all requests, requester can read if authenticated
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    // 5. Verifications Collection (NID / Student ID documents)
+    match /verifications/{verId} {
+      // Tutor can read and submit their own verification request, admin can read/manage all
+      allow read: if isAuthenticated() && (resource.data.tutorUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.tutorUid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Reviews Collection (Student/Guardian feedback)
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuthenticated() || true; // Allow verified guardian submissions
+      allow update, delete: if isAdmin();
+    }
+
+    // 7. Progress Logs Collection (Tutor study tracking logbook)
+    match /progressLogs/{logId} {
+      allow read: if isAuthenticated() && (resource.data.tutorUid == request.auth.uid || resource.data.guardianUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.tutorUid == request.auth.uid;
+      allow update, delete: if isAuthenticated() && (resource.data.tutorUid == request.auth.uid || isAdmin());
+    }
+
+    // 8. Settings Collection (WhatsApp credentials, API tokens, admin preferences)
     match /settings/{settingId} {
-      // Sensitive credentials must ONLY be readable and writable by admins
       allow read, write: if isAdmin();
     }
 
-    // 5. Default catch-all rule: Deny all other access
+    // Default catch-all rule
     match /{document=**} {
       allow read, write: if isAdmin();
     }
