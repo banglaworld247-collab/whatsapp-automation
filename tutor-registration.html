@@ -486,12 +486,17 @@
             </div>
 
             <div class="form-group">
-                <label class="title">২. শিক্ষাপ্রতিষ্ঠান (Department) *</label>
-                <input type="text" id="institutionInput" placeholder="শিক্ষাপ্রতিষ্ঠান / Department">
+                <label class="title">২. শিক্ষাপ্রতিষ্ঠান *</label>
+                <input type="text" id="institutionInput" placeholder="যেমন: ঢাকা বিশ্ববিদ্যালয় / বুয়েট / জাতীয় বিশ্ববিদ্যালয়">
+            </div>
+
+            <div class="form-group">
+                <label class="title">৩. ডিপার্টমেন্ট *</label>
+                <input type="text" id="departmentInput" placeholder="যেমন: কম্পিউটার সায়েন্স / অর্থনীতি / ইংরেজি / পদার্থবিজ্ঞান">
             </div>
 
             <div class="form-group" id="phoneGroup">
-                <label class="title">৩. ফোন নাম্বার (অবশ্যই WhatsApp নম্বর হতে হবে) *</label>
+                <label class="title">৪. ফোন নাম্বার (অবশ্যই WhatsApp নম্বর হতে হবে) *</label>
                 <div style="display: flex; gap: 8px; align-items: stretch;">
                     <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric" autocomplete="tel" style="flex: 1;">
                     <button type="button" id="sendOtpBtn" class="btn-otp">
@@ -521,12 +526,12 @@
             </div>
 
             <div class="form-group">
-                <label class="title">৪. বর্তমান ঠিকানা *</label>
+                <label class="title">৫. বর্তমান ঠিকানা *</label>
                 <textarea id="addressInput" placeholder="বর্তমান ঠিকানা লিখুন"></textarea>
             </div>
 
             <div class="form-group">
-                <label class="title">৫. লিঙ্গ *</label>
+                <label class="title">৬. লিঙ্গ *</label>
                 <div class="checkbox-grid">
                     <label class="chip"><input type="radio" name="gender" value="পুরুষ"><span>পুরুষ</span></label>
                     <label class="chip"><input type="radio" name="gender" value="মহিলা"><span>মহিলা</span></label>
@@ -534,12 +539,12 @@
             </div>
 
             <div class="form-group">
-                <label class="title">৬. অভিজ্ঞতা *</label>
+                <label class="title">৭. অভিজ্ঞতা *</label>
                 <textarea id="experienceInput" placeholder="যেমন: ৩ বছর / অভিজ্ঞতা নেই / পূর্বের পড়ানোর অভিজ্ঞতা"></textarea>
             </div>
 
             <div class="form-group">
-                <label class="title">৭. যে বিষয় পড়াতে চান *</label>
+                <label class="title">৮. যে বিষয় পড়াতে চান *</label>
                 <div class="checkbox-grid" id="subjectsGrid"></div>
             </div>
 
@@ -549,21 +554,21 @@
             </div>
 
             <div class="form-group">
-                <label class="title">৮. Student ID Card / NID (ছবি/পিডিএফ) *</label>
+                <label class="title">৯. Student ID Card / NID (ছবি/পিডিএফ) *</label>
                 <input type="file" id="nidInput" accept="image/*,application/pdf">
                 <div class="file-name" id="nidFileName"></div>
                 <span class="help-text">সর্বোচ্চ ৮ MB।</span>
             </div>
 
             <div class="form-group">
-                <label class="title">৯. SSC/HSC Marksheet (ছবি/পিডিএফ) *</label>
+                <label class="title">১০. SSC/HSC Marksheet (ছবি/পিডিএফ) *</label>
                 <input type="file" id="marksheetInput" accept="image/*,application/pdf">
                 <div class="file-name" id="marksheetFileName"></div>
                 <span class="help-text">সর্বোচ্চ ৮ MB।</span>
             </div>
 
             <div class="form-group">
-                <label class="title">১০. Email (Google account থেকে automatic)</label>
+                <label class="title">১১. Email (Google account থেকে automatic)</label>
                 <input type="email" id="emailInput" readonly>
             </div>
 
@@ -750,6 +755,7 @@
         const saveProfileBtn = document.getElementById('saveProfileBtn');
         const nameInput = document.getElementById('nameInput');
         const institutionInput = document.getElementById('institutionInput');
+        const departmentInput = document.getElementById('departmentInput');
         const phoneInput = document.getElementById('phoneInput');
         const addressInput = document.getElementById('addressInput');
         const experienceInput = document.getElementById('experienceInput');
@@ -1004,6 +1010,7 @@
             const valid =
                 nameInput.value.trim() &&
                 institutionInput.value.trim() &&
+                departmentInput.value.trim() &&
                 isValidBDPhone(phoneInput.value.trim()) &&
                 isPhoneVerified &&
                 addressInput.value.trim() &&
@@ -1046,7 +1053,7 @@
         renderCheckboxes(subjectsGrid, subjectsList, "subject");
 
         [
-            nameInput, institutionInput, phoneInput, addressInput,
+            nameInput, institutionInput, departmentInput, phoneInput, addressInput,
             experienceInput, nidInput, marksheetInput
         ].forEach(el => el.addEventListener('input', validateForm));
 
@@ -1101,6 +1108,7 @@
                         hideLoading();
                         nameInput.value = data.name || user.displayName || "";
                         institutionInput.value = data.institution || "";
+                        departmentInput.value = data.department || "";
                         phoneInput.value = savedPhone;
                         addressInput.value = data.address || "";
                         experienceInput.value = data.experience || "";
@@ -1246,6 +1254,7 @@
                 const tutorData = {
                     name: nameInput.value.trim(),
                     institution: institutionInput.value.trim(),
+                    department: departmentInput.value.trim(),
                     email: currentUser.email || "",
                     phone,
                     address: addressInput.value.trim(),

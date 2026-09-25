@@ -19,8 +19,8 @@
         :root {
             --bg-color: #0A1A2F;
             --card-bg: #13233D;
-            --primary: #3B82F6;
-            --primary-hover: #2563EB;
+            --primary: #2563EB;
+            --primary-hover: #1D4ED8;
             --text-main: #F3F4F6;
             --text-muted: #9CA3AF;
             --border-color: #1E3A5F;
@@ -819,6 +819,7 @@
             isFemaleGender, 
             isMaleGender, 
             validateGenderMatch,
+            formatGenderDisplay,
             escapeHtml
         } from "./js/utils.js";
 
@@ -1231,8 +1232,24 @@
             currentTuitionData = data;
             const applicantsCount = Number(data.applicantsCount || 0);
             const isClosed = data.status === 'closed';
-            const isAssigned = data.status === 'assigned';
+            const isAssigned = data.status === 'assigned' || Boolean(data.assignedTutor);
             const isUnavailable = isClosed || isAssigned;
+
+            let appointedTutorName = data.assignedTutorName || '';
+            let appointedTutorInst = data.assignedTutorInstitute || '';
+
+            if (!appointedTutorName && data.assignedTutor) {
+                try {
+                    const tutorSnap = await getDoc(doc(db, "tutors", data.assignedTutor));
+                    if (tutorSnap.exists()) {
+                        const tData = tutorSnap.data();
+                        appointedTutorName = tData.name || '';
+                        appointedTutorInst = tData.institution || tData.institute || '';
+                    }
+                } catch (e) {
+                    console.warn("Could not fetch assigned tutor info:", e);
+                }
+            }
 
             const className = data.className || "N/A";
             const subject = data.subject || "N/A";
@@ -1267,15 +1284,15 @@
             const postedDateStr = data.postedDate || formatDate(createdAtObj);
 
             let tutorPrefText = "";
-            let prefBadgeHtml = escapeHtml(preferredTutor);
+            let prefBadgeHtml = "Any";
             if (isFemaleGender(preferredTutor)) {
                 tutorPrefText = "মহিলা ";
-                prefBadgeHtml = `<span style="color:#EC4899;font-weight:700;"><i class="fa-solid fa-venus"></i> ${escapeHtml(preferredTutor)} (মহিলা শিক্ষিকা আবেদন করতে পারবেন)</span>`;
+                prefBadgeHtml = `<span style="color:#EC4899;font-weight:700;"><i class="fa-solid fa-venus"></i> Female</span>`;
             } else if (isMaleGender(preferredTutor)) {
                 tutorPrefText = "পুরুষ ";
-                prefBadgeHtml = `<span style="color:#3B82F6;font-weight:700;"><i class="fa-solid fa-mars"></i> ${escapeHtml(preferredTutor)} (পুরুষ শিক্ষক আবেদন করতে পারবেন)</span>`;
+                prefBadgeHtml = `<span style="color:#3B82F6;font-weight:700;"><i class="fa-solid fa-mars"></i> Male</span>`;
             } else {
-                prefBadgeHtml = `<span><i class="fa-solid fa-users"></i> ${escapeHtml(preferredTutor)} (উভয় আবেদন করতে পারবেন)</span>`;
+                prefBadgeHtml = `<span><i class="fa-solid fa-users"></i> Any</span>`;
             }
 
             const dynamicTitle =
@@ -1291,8 +1308,8 @@
                 badgeColor = '#EF4444';
                 badgeIcon = 'fa-circle-xmark';
             } else if (isAssigned) {
-                badgeText = 'ASSIGNED (টিউটর নির্ধারিত)';
-                badgeColor = '#6366F1';
+                badgeText = appointedTutorName ? `ASSIGNED (শিক্ষক: ${appointedTutorName})` : 'ASSIGNED (টিউটর নির্ধারিত)';
+                badgeColor = '#2563EB';
                 badgeIcon = 'fa-user-check';
             } else if (applicantsCount > 0) {
                 badgeText = `AVAILABLE (${toBnDigits(applicantsCount)} জন আবেদন করেছেন)`;
@@ -1300,12 +1317,25 @@
                 badgeIcon = 'fa-users';
             }
 
+            let statusRowHtml = '';
+            if (isClosed) {
+                statusRowHtml = '🔴 টিউশনটি বন্ধ করা হয়েছে (নতুন আবেদন গ্রহণ বন্ধ)';
+            } else if (isAssigned) {
+                statusRowHtml = appointedTutorName 
+                    ? `🔵 শিক্ষক চূড়ান্ত নিয়োগ সম্পন্ন: <strong>${escapeHtml(appointedTutorName)}</strong>` 
+                    : '🔵 এই টিউশনে ইতিমধ্যে শিক্ষক চূড়ান্ত করা হয়েছে';
+            } else if (applicantsCount > 0) {
+                statusRowHtml = `🟢 মোট ${toBnDigits(applicantsCount)} জন শিক্ষক আবেদন করেছেন (আবেদন উন্মুক্ত)`;
+            } else {
+                statusRowHtml = '🟢 আবেদন গ্রহণ চলছে (উন্মুক্ত)';
+            }
+
             let htmlContent = `
             <div class="tuition-card">
                 <h3 class="tuition-title">${escapeHtml(dynamicTitle)}</h3>
                 <div class="time-ago"><i class="fa-regular fa-clock"></i> ${escapeHtml(timeAgoStr)}</div>
                 <br><span class="status-badge" style="background-color:${badgeColor};display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;">
-                    <i class="fa-solid ${badgeIcon}"></i> ${badgeText}
+                    <i class="fa-solid ${badgeIcon}"></i> ${escapeHtml(badgeText)}
                 </span>
                 <div class="job-meta">Job Id : <strong>${escapeHtml(jobId)}</strong> &nbsp;&nbsp;|&nbsp;&nbsp;
                     Posted: <strong>${escapeHtml(postedDateStr)}</strong>
@@ -1313,7 +1343,7 @@
 
                 <div class="details-grid">
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-puzzle-piece icon"></i> Tuition Type</div><div class="value-row">${escapeHtml(tuitionType)}</div></div>
-                    <div class="grid-item"><div class="label-row"><i class="fa-solid fa-venus-mars icon"></i> Student Gender</div><div class="value-row">${escapeHtml(studentGender)}</div></div>
+                    <div class="grid-item"><div class="label-row"><i class="fa-solid fa-venus-mars icon"></i> Student Gender</div><div class="value-row">${escapeHtml(formatGenderDisplay(studentGender))}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-layer-group icon"></i> Category</div><div class="value-row">${escapeHtml(category)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-user-graduate icon"></i> Class</div><div class="value-row">${escapeHtml(className)}</div></div>
                     <div class="grid-item"><div class="label-row"><i class="fa-solid fa-money-bill-wave icon"></i> Salary</div><div class="value-row">${escapeHtml(salary)}</div></div>
@@ -1326,8 +1356,8 @@
                     <div class="grid-item full-width"><div class="label-row"><i class="fa-solid fa-book icon"></i> Subjects</div><div class="value-row">${escapeHtml(subject)}</div></div>
                     <div class="grid-item full-width" style="background: rgba(99,102,241,0.06); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.18); margin-top: 4px;">
                         <div class="label-row"><i class="fa-solid fa-users-viewfinder icon"></i> আবেদনের বর্তমান স্থিতি</div>
-                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isClosed ? '#EF4444' : (isAssigned ? '#6366F1' : (applicantsCount > 0 ? '#059669' : '#3B82F6'))};">
-                            ${isClosed ? '🔴 টিউশনটি বন্ধ করা হয়েছে (নতুন আবেদন গ্রহণ বন্ধ)' : (isAssigned ? '🔵 এই টিউশনে ইতিমধ্যে শিক্ষক চূড়ান্ত করা হয়েছে' : (applicantsCount > 0 ? `🟢 মোট ${toBnDigits(applicantsCount)} জন শিক্ষক আবেদন করেছেন (আবেদন উন্মুক্ত)` : '🟢 আবেদন গ্রহণ চলছে (উন্মুক্ত)'))}
+                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isClosed ? '#EF4444' : (isAssigned ? '#60A5FA' : (applicantsCount > 0 ? '#059669' : '#3B82F6'))};">
+                            ${statusRowHtml}
                         </div>
                     </div>
                 </div>
@@ -1336,7 +1366,22 @@
             if (isClosed) {
                 htmlContent += `<div class="error-message">দুঃখিত, এই টিউশনটির আবেদন গ্রহণ বন্ধ রয়েছে।</div></div>`;
             } else if (isAssigned) {
-                htmlContent += `<div class="error-message" style="background:rgba(99,102,241,0.1);color:#818CF8;border-color:rgba(99,102,241,0.3);">এই টিউশনে শিক্ষক নিয়োগ সম্পন্ন হয়েছে।</div></div>`;
+                htmlContent += `
+                <div class="recruited-tutor-trust-box" style="background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(16,185,129,0.12)); border: 1.5px solid rgba(37,99,235,0.35); border-radius: 12px; padding: 20px; margin-top: 18px; text-align: center; box-shadow: 0 4px 18px rgba(0,0,0,0.25);">
+                    <div style="width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #2563EB, #1D4ED8); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <h4 style="color: #60A5FA; font-size: 18px; margin-bottom: 6px; font-weight: 700;">
+                        🎉 অভিনন্দন! এই টিউশনে শিক্ষক চূড়ান্ত নিয়োগ করা হয়েছে
+                    </h4>
+                    <p style="color: #F8FAFC; font-size: 15.5px; margin: 8px 0 4px;">
+                        নিযুক্ত শিক্ষক: <strong style="color: #34D399; font-size: 17px;">${escapeHtml(appointedTutorName || 'শিক্ষক')}</strong>
+                        ${appointedTutorInst ? `<span style="color:#94A3B8; font-size: 14px;"> — ${escapeHtml(appointedTutorInst)}</span>` : ''}
+                    </p>
+                    <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(37,99,235,0.18); color: #93C5FD; padding: 5px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; margin-top: 8px; border: 1px solid rgba(59,130,246,0.3);">
+                        <i class="fa-solid fa-shield-halved" style="color:#38BDF8;"></i> TSBD ভেরিফাইড শিক্ষক নিয়োগ
+                    </div>
+                </div></div>`;
             } else if (hasAppliedLocally) {
                 htmlContent += `<div class="already-applied-msg">আপনি ইতিমধ্যে এই টিউশনের জন্য আবেদন করেছেন। অ্যাডমিনের পর্যালোচনার অপেক্ষায় আছে।</div></div>`;
             } else {

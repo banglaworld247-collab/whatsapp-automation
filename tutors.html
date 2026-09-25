@@ -902,7 +902,8 @@
 
             currentSlice.forEach((tutor, idx) => {
                 const name = tutor.name || "অভিজ্ঞ শিক্ষক";
-                const institution = tutor.institution || "নামকরা বিশ্ববিদ্যালয়";
+                const baseInst = tutor.institution || "নামকরা বিশ্ববিদ্যালয়";
+                const institution = tutor.department ? `${baseInst} (${tutor.department})` : baseInst;
                 const isFemale = isFemaleGender(tutor.gender);
                 const genderLabel = isFemale ? 'মহিলা শিক্ষিকা' : 'পুরুষ শিক্ষক';
                 const genderTagClass = isFemale ? 'tag-female' : 'tag-male';
@@ -1013,7 +1014,8 @@
             if (!tutor) return;
 
             const name = tutor.name || "অভিজ্ঞ শিক্ষক";
-            const institution = tutor.institution || "নামকরা বিশ্ববিদ্যালয়";
+            const baseInst = tutor.institution || "নামকরা বিশ্ববিদ্যালয়";
+            const institution = tutor.department ? `${baseInst} (${tutor.department})` : baseInst;
             const isFemale = isFemaleGender(tutor.gender);
             const avatarUrl = tutor.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${isFemale ? 'F472B6' : '6366F1'}&color=fff&size=160`;
 

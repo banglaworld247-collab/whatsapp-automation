@@ -1680,10 +1680,9 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট
-                করুন</button>
-            <button class="tab-btn active" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও
-                আবেদনকারী</button>
+            <button class="tab-btn" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
+            <button class="tab-btn active" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
+            <button class="tab-btn" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></button>
         </div>
 
         <!-- Section 1: Post Tuition -->
@@ -1711,16 +1710,16 @@
                     <div class="form-group">
                         <label>Student Gender (ছাত্র/ছাত্রী)</label>
                         <select id="t-gender" required>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                             <option value="Any">Any</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Preferred Tutor</label>
                         <select id="t-preferred-tutor" required>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                             <option value="Any">Any</option>
                         </select>
                     </div>
@@ -1832,6 +1831,44 @@
                 <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ডাটা লোড হচ্ছে...</div>
             </div>
         </div>
+
+        <!-- Section 3: Registered Tutors List -->
+        <div id="section-tutors" class="section">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+                <h3 style="color:var(--accent);margin:0;display:flex;align-items:center;gap:8px;">
+                    <i class="fa-solid fa-chalkboard-user"></i> রেজিস্টার্ড টিউটরদের তালিকা 
+                    <span style="font-size:14px;color:var(--text-muted);font-weight:normal;">(মোট <span id="tutors-total-count">0</span> জন)</span>
+                </h3>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex:1;justify-content:flex-end;">
+                    <input type="text" id="tutorSearchInput" placeholder="নাম, ফোন, প্রতিষ্ঠান বা ডিপার্টমেন্ট দিয়ে খুঁজুন..." 
+                           style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 14px;border-radius:8px;font-size:13px;min-width:260px;max-width:380px;width:100%;"
+                           oninput="filterTutorsTable()">
+                    <button type="button" class="btn-card-action" onclick="loadRegisteredTutors(true)" 
+                            style="background:#3B82F6;color:#fff;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+                        <i class="fa-solid fa-rotate-right"></i> রিফ্রেশ
+                    </button>
+                </div>
+            </div>
+
+            <div class="tutors-table-wrapper" style="overflow-x:auto;background:rgba(30,41,59,0.7);border:1px solid var(--border-color);border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+                <table class="data-table" style="width:100%;border-collapse:collapse;margin:0;">
+                    <thead>
+                        <tr style="background:rgba(255,255,255,0.04);border-bottom:1px solid var(--border-color);text-align:left;">
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);width:50px;">#</th>
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);">Name</th>
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);">Institute</th>
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);">Department</th>
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);">Phone (WhatsApp)</th>
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);">Present Address</th>
+                            <th style="padding:12px 14px;font-size:13px;color:var(--text-muted);">Documents</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tutorsTableBody">
+                        <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> টিউটর লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Interactive Edit & CRM Modal -->
@@ -1870,8 +1907,8 @@
                     <div class="form-group">
                         <label>শিক্ষার্থী (Gender):</label>
                         <select id="editGender">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                             <option value="Any">Any</option>
                         </select>
                     </div>
@@ -2241,8 +2278,8 @@
             closeWhatsAppModal();
         };
 
-        function renderWhatsAppPhoneHtml(rawPhone) {
-            if (!rawPhone) return '<span style="color:var(--text-muted);">N/A</span>';
+        function renderWhatsAppPhoneHtml(rawPhone, name = 'শিক্ষক', context = '') {
+            if (!rawPhone) return '<span style="color:var(--text-muted);">প্রদান করা হয়নি</span>';
             const cleanDigits = String(rawPhone).replace(/[^0-9]/g, '');
             if (!cleanDigits) return safe(rawPhone);
 
@@ -2250,16 +2287,17 @@
             if (waDigits.startsWith('01')) waDigits = '88' + waDigits;
             else if (waDigits.startsWith('+8801')) waDigits = waDigits.substring(1);
 
-            const waLink = `https://wa.me/${waDigits}`;
+            const defaultMsg = `আসসালামু আলাইকুম ${name}, TSBD (Tuition Service BD) থেকে যোগাযোগ করা হচ্ছে। ${context ? `(${context})` : ''}`;
+            const waLink = `https://wa.me/${waDigits}?text=${encodeURIComponent(defaultMsg)}`;
 
             return `
-                <div style="display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
                     <a href="${waLink}" target="_blank" rel="noopener" title="হোয়াটসঅ্যাপে চ্যাট করুন (${safe(rawPhone)})" 
-                       style="color:#4ADE80; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:13.5px; background:rgba(34,197,94,0.12); padding:5px 11px; border-radius:6px; border:1px solid rgba(34,197,94,0.35); box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:all 0.2s ease;">
-                        <i class="fa-brands fa-whatsapp" style="font-size:16px; color:#22C55E;"></i> ${safe(rawPhone)}
+                       style="color:#4ADE80; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:13px; background:rgba(34,197,94,0.12); padding:4px 9px; border-radius:6px; border:1px solid rgba(34,197,94,0.35); box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:all 0.2s ease; white-space:nowrap;">
+                        <i class="fa-brands fa-whatsapp" style="font-size:15px; color:#22C55E;"></i> ${safe(rawPhone)}
                     </a>
-                    <a href="tel:${safe(rawPhone)}" title="সরাসরি কল করুন" style="color:var(--text-muted);font-size:12px;text-decoration:none;padding:4px 6px;border-radius:4px;background:rgba(255,255,255,0.05);display:inline-flex;align-items:center;gap:4px;">
-                        <i class="fa-solid fa-phone" style="font-size:11px;"></i> Call
+                    <a href="tel:${safe(rawPhone)}" title="সরাসরি কল করুন" style="color:var(--text-muted);font-size:11px;text-decoration:none;padding:3px 6px;border-radius:4px;background:rgba(255,255,255,0.05);display:inline-flex;align-items:center;gap:3px;">
+                        <i class="fa-solid fa-phone" style="font-size:10px;"></i> Call
                     </a>
                 </div>
             `;
@@ -2309,7 +2347,7 @@
 ${detailsUrl}`;
         }
 
-        const WA_OFFER_FOLLOWUP_MSG = "📌 টিউশনে আবেদন করার আগে ডিটেইলস/রিকোয়ারমেন্ট ভালোভাবে চেক করে নিন। আপনাদের সুবিধার্থে আবেদন করা সম্পূর্ণ ফ্রি রাখা হয়েছে, তাই ভেবেচিন্তে আবেদন করুন। সিলেক্ট হয়ে না গেলে অন্য একজন যোগ্য টিউটরের হক নষ্ট হয় — দয়া করে দায়িত্বশীল থাকুন।";
+        const WA_OFFER_FOLLOWUP_MSG = "📌 টিউশনে আবেদন করার আগে ডিটেইলস/রিকোয়ারমেন্ট ভালোভাবে চেক করে নিন। আপনাদের সুবিধার্থে আবেদন করা সম্পূর্ণ ফ্রি রাখা হয়েছে, তাই ভেবেচিন্তে আবেদন করুন। সিলেক্ট হয়ে,টিউশনে না গেলে অন্য একজন যোগ্য টিউটরের হক নষ্ট হয় — দয়া করে দায়িত্বশীল থাকুন।";
 
         async function sendWhatsAppGroupMessage(messageText) {
             if (!waConfig) {
@@ -2660,7 +2698,7 @@ ${detailsUrl}`;
         const listContainer = document.getElementById('tuition-cards-container');
 
         // === Authentication & Role Verification ===
-        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com"];
+        const ALLOWED_ADMIN_EMAILS = ["banglaworld247@gmail.com", "gdgourob32@gmail.com"];
 
         setPersistence(auth, browserLocalPersistence);
 
@@ -2708,12 +2746,18 @@ ${detailsUrl}`;
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
+            const tabButtons = document.querySelectorAll('.tab-btn');
+
             if (tabName === 'post') {
                 document.getElementById('section-post').classList.add('active');
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                if (tabButtons[0]) tabButtons[0].classList.add('active');
+            } else if (tabName === 'tutors') {
+                document.getElementById('section-tutors').classList.add('active');
+                if (tabButtons[2]) tabButtons[2].classList.add('active');
+                loadRegisteredTutors();
             } else {
                 document.getElementById('section-list').classList.add('active');
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                if (tabButtons[1]) tabButtons[1].classList.add('active');
             }
         }
 
@@ -2725,6 +2769,7 @@ ${detailsUrl}`;
                 dashboardContainer.style.display = 'block';
                 initWhatsAppConfig(); // Load WhatsApp remote config on verified admin auth
                 loadTuitions(); // Load data on verified admin login
+                loadRegisteredTutors(); // Load registered tutors count & data
             } else {
                 if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
                 if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
@@ -2864,6 +2909,120 @@ ${detailsUrl}`;
             return `<a class="file-link" href="${cleanUrl}" target="_blank" rel="noopener">${safe(label)}</a>`;
         };
 
+        function isFemaleGender(genderStr) {
+            if (!genderStr) return false;
+            const s = String(genderStr).toLowerCase().trim();
+            return s === 'female' || s === 'মহিলা' || s.includes('female') || s.includes('মহিলা');
+        }
+
+        // ==========================================
+        // Registered Tutors Data & Table Logic
+        // ==========================================
+        let allRegisteredTutors = [];
+
+        window.loadRegisteredTutors = function(force = false) {
+            const tbody = document.getElementById('tutorsTableBody');
+            if (!tbody) return;
+
+            if (allRegisteredTutors.length > 0 && !force) {
+                renderTutorsTable(allRegisteredTutors);
+                return;
+            }
+
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> টিউটরদের ডাটা লোড হচ্ছে...</td></tr>';
+
+            const q = query(collection(db, "tutors"), orderBy("registeredAt", "desc"));
+            getDocs(q).then(snap => {
+                allRegisteredTutors = [];
+                snap.forEach(d => {
+                    allRegisteredTutors.push({ id: d.id, ...d.data() });
+                });
+                updateTutorsCount(allRegisteredTutors.length);
+                renderTutorsTable(allRegisteredTutors);
+            }).catch(err => {
+                // Fallback query if index/orderBy isn't available
+                getDocs(collection(db, "tutors")).then(snap => {
+                    allRegisteredTutors = [];
+                    snap.forEach(d => {
+                        allRegisteredTutors.push({ id: d.id, ...d.data() });
+                    });
+                    updateTutorsCount(allRegisteredTutors.length);
+                    renderTutorsTable(allRegisteredTutors);
+                }).catch(e => {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--danger)">ডাটা লোড করতে সমস্যা: ${safe(e.message)}</td></tr>`;
+                });
+            });
+        };
+
+        function renderTutorsTable(tutorsList) {
+            const tbody = document.getElementById('tutorsTableBody');
+            if (!tbody) return;
+
+            if (tutorsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);">কোনো রেজিস্টার্ড টিউটর পাওয়া যায়নি।</td></tr>';
+                return;
+            }
+
+            let html = '';
+            tutorsList.forEach((tutor, idx) => {
+                const name = tutor.name || 'শিক্ষক';
+                const institute = tutor.institution || tutor.institute || 'N/A';
+                const department = tutor.department || 'N/A';
+                const phone = tutor.phone || '';
+                const address = tutor.address || 'N/A';
+                const gender = tutor.gender || '';
+                const genderIcon = isFemaleGender(gender) ? '<i class="fa-solid fa-venus" style="color:#EC4899;"></i>' : '<i class="fa-solid fa-mars" style="color:#3B82F6;"></i>';
+                
+                const docsHtml = `${fileLink(tutor.nidUrl || tutor.nidFileUrl, 'Student ID / NID')} ${fileLink(tutor.msUrl || tutor.marksheetFileUrl, 'Marksheet')}`;
+
+                html += `
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.06);transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding:12px 14px;color:var(--text-muted);font-size:13px;">${idx + 1}</td>
+                        <td style="padding:12px 14px;font-size:14px;font-weight:600;color:#F8FAFC;">
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                ${genderIcon}
+                                <span>${safe(name)}</span>
+                            </div>
+                            ${tutor.email ? `<div style="font-size:11px;color:var(--text-muted);font-weight:normal;margin-top:2px;">${safe(tutor.email)}</div>` : ''}
+                        </td>
+                        <td style="padding:12px 14px;font-size:13px;color:#CBD5E1;">${safe(institute)}</td>
+                        <td style="padding:12px 14px;font-size:13px;color:#CBD5E1;">${safe(department)}</td>
+                        <td style="padding:12px 14px;">${renderWhatsAppPhoneHtml(phone, name, 'টিএসবিডি পোর্টাল')}</td>
+                        <td style="padding:12px 14px;font-size:13px;color:#CBD5E1;max-width:220px;">${safe(address)}</td>
+                        <td style="padding:12px 14px;font-size:12px;">${docsHtml}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        window.filterTutorsTable = function () {
+            const query = (document.getElementById('tutorSearchInput')?.value || '').toLowerCase().trim();
+            if (!query) {
+                renderTutorsTable(allRegisteredTutors);
+                return;
+            }
+
+            const filtered = allRegisteredTutors.filter(t => {
+                const name = (t.name || '').toLowerCase();
+                const institute = (t.institution || t.institute || '').toLowerCase();
+                const department = (t.department || '').toLowerCase();
+                const phone = (t.phone || '').toLowerCase();
+                const address = (t.address || '').toLowerCase();
+                return name.includes(query) || institute.includes(query) || department.includes(query) || phone.includes(query) || address.includes(query);
+            });
+
+            renderTutorsTable(filtered);
+        };
+
+        function updateTutorsCount(count) {
+            const cEl = document.getElementById('count-tutors');
+            const tEl = document.getElementById('tutors-total-count');
+            if (cEl) cEl.innerText = count;
+            if (tEl) tEl.innerText = count;
+        }
+
         // Realtime Listeners
         let unsubscribeApps = null;
         let unsubscribeTuitions = null;
@@ -2911,19 +3070,21 @@ ${detailsUrl}`;
                 const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
                 const queueAction = normStatus(item.tracking?.queueAction || item.queueAction);
                 const status = normStatus(item.status);
+                const isFullPaidChecked = Boolean(item.tracking?.isPaidFull || (estCommission > 0 && paidAmount >= estCommission));
 
                 totalSalaryVolume += salary;
 
                 if (queueAction === normStatus('বাতিল হয়ে গেছে') || status === normStatus('closed')) {
-                    // Cancelled/Closed without earnings unless paidAmount exists
+                    // Cancelled/Closed: only actually collected amount is earned, no pending profit
                     earnedProfit += paidAmount;
-                } else if (queueAction === normStatus('সফল হয়েছে') || status === normStatus('assigned')) {
-                    earnedProfit += Math.max(paidAmount, estCommission);
-                } else if (paidAmount > 0) {
+                } else if (isFullPaidChecked || (estCommission > 0 && paidAmount >= estCommission)) {
+                    // Full commission confirmed/paid
+                    const actualEarned = Math.max(paidAmount, estCommission);
+                    earnedProfit += actualEarned;
+                } else {
+                    // Tutor appointed or open, but commission NOT fully paid yet -> stays in Pending
                     earnedProfit += paidAmount;
                     pendingProfit += Math.max(estCommission - paidAmount, 0);
-                } else {
-                    pendingProfit += estCommission;
                 }
             });
 
@@ -2941,12 +3102,9 @@ ${detailsUrl}`;
             const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
             const estCommissionAmount = Math.round((salary * commPercent) / 100);
             const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+            const isFullPaidChecked = Boolean(item.tracking?.isPaidFull || (estCommissionAmount > 0 && paidAmount >= estCommissionAmount));
 
-            // Stay in pending tab until payment is 100% complete
-            if (estCommissionAmount > 0) {
-                return paidAmount < estCommissionAmount;
-            }
-            return s !== normStatus('assigned') && q !== normStatus('সফল হয়েছে');
+            return !isFullPaidChecked;
         }
 
         function isTuitionPaidOrCompleted(item) {
@@ -2958,11 +3116,9 @@ ${detailsUrl}`;
             const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
             const estCommissionAmount = Math.round((salary * commPercent) / 100);
             const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+            const isFullPaidChecked = Boolean(item.tracking?.isPaidFull || (estCommissionAmount > 0 && paidAmount >= estCommissionAmount));
 
-            if (estCommissionAmount > 0) {
-                return paidAmount >= estCommissionAmount;
-            }
-            return s === normStatus('assigned') || q === normStatus('সফল হয়েছে');
+            return isFullPaidChecked;
         }
 
         function updateTabCounts() {
@@ -3019,6 +3175,7 @@ ${detailsUrl}`;
                 const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
                 const estCommissionAmount = Math.round((salary * commPercent) / 100);
                 const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+                const isFullPaid = Boolean(item.tracking?.isPaidFull || (estCommissionAmount > 0 && paidAmount >= estCommissionAmount));
                 const remainingAmount = Math.max(estCommissionAmount - paidAmount, 0);
 
                 const queueAction = item.tracking?.queueAction || item.queueAction || 'অ্যাকশন নির্ধারিত হয়নি';
@@ -3036,20 +3193,20 @@ ${detailsUrl}`;
                 }
 
                 let paymentPillClass = 'paid-none';
-                let paymentPillText = '💰 কমিশন পরিশোধ হয়নি';
-                if (paidAmount >= estCommissionAmount && estCommissionAmount > 0) {
+                let paymentPillText = `💰 কমিশন বাকি: ৳${estCommissionAmount.toLocaleString('bn-BD')} (Pending)`;
+                if (isFullPaid) {
                     paymentPillClass = 'paid-full';
-                    paymentPillText = `✅ পুরো কমিশন পরিশোধিত (৳${paidAmount})`;
+                    paymentPillText = `✅ পুরো কমিশন পরিশোধিত (৳${(paidAmount || estCommissionAmount).toLocaleString('bn-BD')})`;
                 } else if (paidAmount > 0) {
                     paymentPillClass = 'paid-partial';
-                    paymentPillText = `⏳ পরিশোধ: ৳${paidAmount} | বাকি: ৳${remainingAmount}`;
+                    paymentPillText = `⏳ পরিশোধ: ৳${paidAmount.toLocaleString('bn-BD')} | বাকি: ৳${remainingAmount.toLocaleString('bn-BD')}`;
                 }
 
                 let planAlertBadge = '';
                 if (nextPlanDate === today) {
                     planAlertBadge = `<span class="plan-alert-tag today"><i class="fa-solid fa-bell"></i> আজ ফলো-আপ</span>`;
                 } else if (nextPlanDate === tomorrow) {
-                    planAlertBadge = `<span class="plan-alert-tag tomorrow"><i class="fa-solid fa-clock"></i> আগামীকাল</span>`;
+                    planAlertBadge = `<span class="plan-alert-tag tomorrow"><i class="fa-solid fa-clock"></i> আগামীকালের প্ল্যান</span>`;
                 } else if (nextPlanDate) {
                     planAlertBadge = `<span class="plan-alert-tag" style="background:rgba(56,189,248,0.15);color:#38BDF8;border-color:rgba(56,189,248,0.3);"><i class="fa-solid fa-calendar"></i> ${nextPlanDate}</span>`;
                 }
@@ -3131,7 +3288,14 @@ ${detailsUrl}`;
             document.getElementById('editSubjects').value = item.subject || item.subjects || '';
             document.getElementById('editTime').value = item.time || '';
             document.getElementById('editDays').value = item.days || '';
-            document.getElementById('editGender').value = item.studentGender || 'Any';
+            const sG = item.studentGender || 'Any';
+            if (String(sG).toLowerCase().includes('female') || String(sG).includes('মহিলা')) {
+                document.getElementById('editGender').value = 'Female';
+            } else if (String(sG).toLowerCase().includes('male') || String(sG).includes('পুরুষ')) {
+                document.getElementById('editGender').value = 'Male';
+            } else {
+                document.getElementById('editGender').value = 'Any';
+            }
             document.getElementById('editSalary').value = item.salary || '';
             document.getElementById('editCommission').value = item.commission || item.offer?.commission || '50%';
             document.getElementById('editPhone').value = item.guardianPhone || '';
@@ -3160,11 +3324,12 @@ ${detailsUrl}`;
             const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
             const estCommissionAmount = Math.round((salary * commPercent) / 100);
             const paidAmount = Number(tracking.paidAmount || item.paidAmount || 0);
+            const isPaidFull = Boolean(tracking.isPaidFull || (estCommissionAmount > 0 && paidAmount >= estCommissionAmount));
 
             document.getElementById('editPaidAmount').value = paidAmount;
             const chkFull = document.getElementById('chkFullPaid');
             if (chkFull) {
-                chkFull.checked = (estCommissionAmount > 0 && paidAmount >= estCommissionAmount);
+                chkFull.checked = isPaidFull;
             }
 
             const modal = document.getElementById('editModal');
@@ -3224,6 +3389,9 @@ ${detailsUrl}`;
             const tuitionId = document.getElementById('editDocId').value;
             if (!tuitionId) return;
 
+            const isFullChecked = document.getElementById('chkFullPaid')?.checked ?? false;
+            const paidAmountVal = Number(document.getElementById('editPaidAmount').value || 0);
+
             const updatedData = {
                 className: document.getElementById('editClass').value,
                 location: document.getElementById('editLocation').value,
@@ -3243,7 +3411,8 @@ ${detailsUrl}`;
                         action: document.getElementById('editNextPlanAction').value,
                         date: document.getElementById('editNextPlanDate').value
                     },
-                    paidAmount: Number(document.getElementById('editPaidAmount').value || 0)
+                    paidAmount: paidAmountVal,
+                    isPaidFull: isFullChecked
                 }
             };
 
@@ -3467,7 +3636,7 @@ ${detailsUrl}`;
                                 <tr><th>Tutor Name</th><td><strong>${safe(tData.name)}</strong></td></tr>
                                 <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`)}</td></tr>
                                 <tr><th>Messenger</th><td>${msngrLinkHtml}</td></tr>
-                                <tr><th>Institution</th><td>${safe(tData.institution || tData.institute || 'N/A')}</td></tr>
+                                <tr><th>Institution</th><td>${safe(tData.institution || tData.institute || 'N/A')}${tData.department ? ` (${safe(tData.department)})` : ''}</td></tr>
                                 ${isRegistered ? `
                                     <tr><th>UID</th><td>${safe(tuitionData.assignedTutor)}</td></tr>
                                     <tr><th>Email</th><td>${safe(tData.email)}</td></tr>
@@ -3587,7 +3756,7 @@ ${detailsUrl}`;
                                     <tr><th>Application ID</th><td>${safe(appDoc.id)}</td></tr>
                                     <tr><th>UID</th><td>${safe(tutorUid)}</td></tr>
                                     <tr><th>Name</th><td><strong>${safe(tutorName)}</strong></td></tr>
-                                    <tr><th>Institution</th><td>${safe(ad.institute || ad.institution)}</td></tr>
+                                    <tr><th>Institution</th><td>${safe(ad.institute || ad.institution || 'N/A')}${ad.department ? ` (${safe(ad.department)})` : ''}</td></tr>
                                     <tr><th>Email</th><td>${safe(ad.email)}</td></tr>
                                     <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`)}</td></tr>
                                     <tr><th>Address</th><td>${safe(ad.address)}</td></tr>
@@ -3600,15 +3769,12 @@ ${detailsUrl}`;
 
                                 <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
                                     ${isThisTutorAssigned ? `
-                                        <button type="button" class="btn-primary" onclick="resendRecruitWhatsApp('${tuitionId}', '${escapedPhone}', '${escapedName}')" style="background:#059669;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 2px 8px rgba(5,150,105,0.35);">
-                                            <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> পুনরায় কনফার্মেশন WA মেসেজ পাঠান
-                                        </button>
                                         <button type="button" class="btn-warning" onclick="unassignTutor('${tuitionId}')" style="padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
                                             <i class="fa-solid fa-user-minus"></i> নিয়োগ বাতিল করে টিউশন ওপেন করুন
                                         </button>
                                     ` : `
                                         <button type="button" class="btn-primary" onclick="recruitApplicant('${tuitionId}', '${appDoc.id}', '${tutorUid}', '${escapedPhone}', '${escapedName}')" style="background:linear-gradient(135deg, #2563EB, #1D4ED8);color:#FFF;padding:8px 18px;border-radius:6px;font-size:13.5px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;box-shadow:0 3px 10px rgba(37,99,235,0.4);transition:all 0.2s ease;">
-                                            <i class="fa-solid fa-user-check"></i> এই টিউটরকে নিয়োগ দিন ও অটো WA পাঠান
+                                            <i class="fa-solid fa-user-check"></i> এই টিউটরকে নিয়োগ দিন
                                         </button>
                                     `}
                                 </div>
@@ -3694,21 +3860,7 @@ ${detailsUrl}`;
                     isCustomRecruit: true
                 }).catch(e => console.warn("Custom app log note:", e));
 
-                // 3. Option to send WhatsApp message
-                const guardianPhone = tuitionData.guardianPhone || 'N/A';
-                const messageText = formatTutorRecruitmentWhatsAppMessage(tuitionData, phone, guardianPhone, name);
-                let cleanPhone = String(phone).replace(/[^0-9]/g, '');
-                if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
-                const waDirectUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
-
-                if (confirm(`✅ "${name}"-কে সফলভাবে কাস্টম টিউটর হিসেবে নিয়োগ দেওয়া হয়েছে!\n\nআপনি কি এই শিক্ষকের হোয়াটসঅ্যাপে কনফার্মেশন ও অভিভাবকের নম্বর পাঠাতে চান?`)) {
-                    const sendRes = await sendSingleWhatsAppMessage(phone, messageText);
-                    if (sendRes && sendRes.success) {
-                        alert("📲 শিক্ষকের হোয়াটসঅ্যাপে স্বয়ংক্রিয় মেসেজ পৌঁছে গেছে!");
-                    } else {
-                        window.open(waDirectUrl, '_blank');
-                    }
-                }
+                alert(`✅ "${name}"-কে সফলভাবে কাস্টম টিউটর হিসেবে নিয়োগ দেওয়া হয়েছে!`);
 
                 // Refresh details
                 toggleExpand(tuitionId);
@@ -3720,10 +3872,10 @@ ${detailsUrl}`;
             }
         };
 
-        // Action: Recruit specific applicant & auto send WhatsApp
+        // Action: Recruit specific applicant
         window.recruitApplicant = async function (tuitionId, appId, tutorUid, tutorPhone, tutorName) {
             const safeName = tutorName || 'এই শিক্ষক';
-            if (!confirm(`আপনি কি নিশ্চিত যে "${safeName}"-কে এই টিউশনে চূড়ান্ত নিয়োগ দিতে চান?\n\nনিয়োগ দিলে তার হোয়াটসঅ্যাপে অভিভাবকের নম্বরসহ কনফার্মেশন মেসেজ স্বয়ংক্রিয়ভাবে চলে যাবে।`)) {
+            if (!confirm(`আপনি কি নিশ্চিত যে "${safeName}"-কে এই টিউশনে চূড়ান্ত নিয়োগ দিতে চান?`)) {
                 return;
             }
 
@@ -3731,9 +3883,6 @@ ${detailsUrl}`;
                 const tuitionRef = doc(db, 'tuitions', tuitionId);
                 const tuitionSnap = await getDoc(tuitionRef);
                 if (!tuitionSnap.exists()) throw new Error("টিউশনটি পাওয়া যায়নি!");
-                const tuitionData = tuitionSnap.data();
-
-                const guardianPhone = tuitionData.guardianPhone || 'N/A';
 
                 // 1. Update tuition doc
                 await updateDoc(tuitionRef, {
@@ -3752,31 +3901,7 @@ ${detailsUrl}`;
                     }).catch(e => console.warn("App status update notice:", e));
                 }
 
-                // 3. Automatically send WhatsApp message to the recruited tutor
-                const messageText = formatTutorRecruitmentWhatsAppMessage(tuitionData, tutorPhone, guardianPhone, safeName);
-                let waSuccess = false;
-                if (tutorPhone) {
-                    const sendRes = await sendSingleWhatsAppMessage(tutorPhone, messageText);
-                    waSuccess = sendRes && sendRes.success;
-                }
-
-                // 4. Construct direct WhatsApp link as fallback
-                let cleanPhone = String(tutorPhone || '').replace(/[^0-9]/g, '');
-                if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
-                const waDirectUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
-
-                let alertMsg = `✅ "${safeName}"-কে সফলভাবে টিউশনে নিয়োগ দেওয়া হয়েছে!\n\nটিউশনের স্ট্যাটাস "Assigned" হয়েছে।`;
-                if (waSuccess) {
-                    alertMsg += `\n\n📲 টিউটরের হোয়াটসঅ্যাপে স্বয়ংক্রিয় মেসেজ পাঠানো হয়েছে!`;
-                } else {
-                    alertMsg += `\n\n⚠️ অটোমেটিক হোয়াটসঅ্যাপ বট কানেক্ট না থাকলে নিচের লিঙ্কে ক্লিক করে সরাসরি হোয়াটসঅ্যাপে পাঠিয়ে দিন।`;
-                }
-
-                alert(alertMsg);
-
-                if (!waSuccess && cleanPhone) {
-                    window.open(waDirectUrl, '_blank');
-                }
+                alert(`✅ "${safeName}"-কে সফলভাবে টিউশনে নিয়োগ দেওয়া হয়েছে!\n\nটিউশনের স্ট্যাটাস "Assigned" করা হয়েছে।`);
 
                 toggleExpand(tuitionId);
                 setTimeout(() => toggleExpand(tuitionId), 150);

@@ -367,6 +367,16 @@ export function validateGenderMatch(tutorGender, preferredTutor) {
     return { allowed: true, message: "" };
 }
 
+export function formatGenderDisplay(genderStr) {
+    if (!genderStr) return 'N/A';
+    const s = String(genderStr).trim();
+    if (isFemaleGender(s) && !isMaleGender(s)) return 'Female';
+    if (isMaleGender(s) && !isFemaleGender(s)) return 'Male';
+    const lower = s.toLowerCase();
+    if (lower === 'any' || lower === 'both' || s === 'উভয়' || lower === 'all') return 'Any';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 // Helper to populate Division, District and Thana selects
 export function initLocationDropdowns(divSelectId, distSelectId, thanaSelectId) {
     const divSelect = document.getElementById(divSelectId);

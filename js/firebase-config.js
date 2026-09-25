@@ -51,7 +51,8 @@ export const db = getFirestore(app);
 
 // Authorized Admins
 export const ALLOWED_ADMIN_EMAILS = [
-    "banglaworld247@gmail.com"
+    "banglaworld247@gmail.com",
+    "gdgourob32@gmail.com"
 ];
 
 // Helper to verify if user is an admin

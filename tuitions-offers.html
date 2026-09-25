@@ -11,12 +11,12 @@
         :root {
             --bg-color: #F4F7FA;
             --card-bg: #FFFFFF;
-            --primary: #6366F1; /* Primary Purple/Blue for Apply button */
-            --primary-hover: #4F46E5;
+            --primary: #2563EB; /* Generic Blue for Apply button */
+            --primary-hover: #1D4ED8;
             --text-dark: #1F2937;
             --text-muted: #6B7280;
             --border-color: #E5E7EB;
-            --icon-color: #3B82F6;
+            --icon-color: #2563EB;
             --success-bg: #10B981;
         }
 
@@ -466,7 +466,7 @@
             onAuthStateChanged, 
             signOut 
         } from "./js/firebase-config.js";
-        import { showToast, formatDate, formatSalary, toBnDigits, isFemaleGender, isMaleGender, escapeHtml } from "./js/utils.js";
+        import { showToast, formatDate, formatSalary, toBnDigits, isFemaleGender, isMaleGender, formatGenderDisplay, escapeHtml } from "./js/utils.js";
 
         // ===== TSBD NAVBAR AUTH UI =====
         const tsbdDrawer = document.getElementById("tsbdDrawer");
@@ -644,24 +644,25 @@
                 const preferredTutor = data.preferredTutor || "Any";
                 const noOfStudents = data.noOfStudents || "1";
                 
-                let prefTutorDisplay = escapeHtml(preferredTutor);
+                let prefTutorDisplay = "Any";
                 let tutorPrefText = "";
                 if (isFemaleGender(preferredTutor)) {
                     tutorPrefText = "মহিলা ";
-                    prefTutorDisplay = `<span style="color:#EC4899;font-weight:700;"><i class="fa-solid fa-venus"></i> ${escapeHtml(preferredTutor)} (মহিলা শিক্ষিকা আবেদন করতে পারবেন)</span>`;
+                    prefTutorDisplay = `<span style="color:#EC4899;font-weight:700;"><i class="fa-solid fa-venus"></i> Female</span>`;
                 } else if (isMaleGender(preferredTutor)) {
                     tutorPrefText = "পুরুষ ";
-                    prefTutorDisplay = `<span style="color:#3B82F6;font-weight:700;"><i class="fa-solid fa-mars"></i> ${escapeHtml(preferredTutor)} (পুরুষ শিক্ষক আবেদন করতে পারবেন)</span>`;
+                    prefTutorDisplay = `<span style="color:#2563EB;font-weight:700;"><i class="fa-solid fa-mars"></i> Male</span>`;
                 } else {
-                    prefTutorDisplay = `<span><i class="fa-solid fa-users"></i> ${escapeHtml(preferredTutor)} (উভয় আবেদন করতে পারবেন)</span>`;
+                    prefTutorDisplay = `<span><i class="fa-solid fa-users"></i> Any</span>`;
                 }
 
                 const titleText = data.specialNotes ? data.specialNotes : `${data.className || 'শিক্ষার্থী'} এর জন্য একজন অভিজ্ঞ ${tutorPrefText}শিক্ষক প্রয়োজন (${data.subject || ''})`;
 
                 const applicantsCount = Number(data.applicantsCount || 0);
                 const isClosed = data.status === 'closed';
-                const isAssigned = data.status === 'assigned';
+                const isAssigned = data.status === 'assigned' || Boolean(data.assignedTutor);
                 const isFull = isClosed || isAssigned;
+                const assignedName = data.assignedTutorName || '';
 
                 let badgeClass = 'status-available';
                 let badgeIcon = 'fa-circle-check';
@@ -673,7 +674,7 @@
                 } else if (isAssigned) {
                     badgeClass = 'status-full';
                     badgeIcon = 'fa-user-check';
-                    badgeText = 'ASSIGNED (টিউটর নির্ধারিত)';
+                    badgeText = assignedName ? `ASSIGNED (শিক্ষক: ${assignedName})` : 'ASSIGNED (নিয়োগ সম্পন্ন)';
                 } else if (applicantsCount > 0) {
                     badgeClass = 'status-partial';
                     badgeIcon = 'fa-users';
@@ -711,7 +712,7 @@
                             <i class="fa-solid fa-venus-mars info-icon"></i>
                             <div class="info-text">
                                 <span class="info-label">Student Gender</span>
-                                <span class="info-value">${data.studentGender || 'N/A'}</span>
+                                <span class="info-value">${formatGenderDisplay(data.studentGender)}</span>
                             </div>
                         </div>
                         <div class="info-block">
