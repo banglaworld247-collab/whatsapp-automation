@@ -328,21 +328,31 @@ export function showToast(message, type = 'info', duration = 3500) {
 export function isFemaleGender(genderStr) {
     if (!genderStr) return false;
     const s = String(genderStr).toLowerCase().trim();
-    return s === 'female' || s === 'মহিলা' || s === 'মহিলা শিক্ষিকা' || s === 'মেয়ে' || s === 'নারী' ||
-           s.includes('female') || s.includes('মহিলা') || s.includes('মেয়ে') || s.includes('নারী');
+    if (s === 'any' || s === 'both' || s === 'উভয়' || s === 'সকল' || s === 'all' || s === 'না') return false;
+    return s === 'female' || s === 'মহিলা' || s === 'মহিলা শিক্ষিকা' || s === 'মেয়ে' || s === 'মেয়ে' || s === 'নারী' ||
+           s.includes('female') || s.includes('মহিলা') || s.includes('মেয়ে') || s.includes('মেয়ে') || s.includes('নারী');
 }
 
 export function isMaleGender(genderStr) {
     if (!genderStr) return false;
     const s = String(genderStr).toLowerCase().trim();
+    if (s === 'any' || s === 'both' || s === 'উভয়' || s === 'সকল' || s === 'all' || s === 'না') return false;
+    // CRITICAL FIX: "female".includes("male") evaluates to true because "male" is a substring of "female".
+    // Therefore, any female string must be excluded first, and we use regex word boundary /\bmale\b/ for English.
+    if (isFemaleGender(s)) return false;
     return s === 'male' || s === 'পুরুষ' || s === 'পুরুষ শিক্ষক' || s === 'ছেলে' ||
-           s.includes('male') || s.includes('পুরুষ') || s.includes('ছেলে');
+           /\bmale\b/i.test(s) || s.includes('পুরুষ') || s.includes('ছেলে');
 }
 
 export function validateGenderMatch(tutorGender, preferredTutor) {
+    if (!tutorGender || !preferredTutor) {
+        return { allowed: true, message: "" };
+    }
+
     const isPrefFemale = isFemaleGender(preferredTutor);
     const isPrefMale = isMaleGender(preferredTutor);
 
+    // If preferred tutor requirement is Any or unspecific, any tutor can apply
     if (!isPrefFemale && !isPrefMale) {
         return { allowed: true, message: "" };
     }
@@ -350,18 +360,26 @@ export function validateGenderMatch(tutorGender, preferredTutor) {
     const isTutorFemale = isFemaleGender(tutorGender);
     const isTutorMale = isMaleGender(tutorGender);
 
-    if (isPrefFemale && isTutorMale) {
-        return {
-            allowed: false,
-            message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র মহিলা শিক্ষিকা আবেদন করতে পারবেন।"
-        };
+    // If tuition specifically requires a Female tutor
+    if (isPrefFemale && !isPrefMale) {
+        if (isTutorMale && !isTutorFemale) {
+            return {
+                allowed: false,
+                message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র মহিলা শিক্ষিকা আবেদন করতে পারবেন।"
+            };
+        }
+        return { allowed: true, message: "" };
     }
 
-    if (isPrefMale && isTutorFemale) {
-        return {
-            allowed: false,
-            message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র পুরুষ শিক্ষক আবেদন করতে পারবেন।"
-        };
+    // If tuition specifically requires a Male tutor
+    if (isPrefMale && !isPrefFemale) {
+        if (isTutorFemale && !isTutorMale) {
+            return {
+                allowed: false,
+                message: "দুঃখিত! এই টিউশনের জন্য শুধুমাত্র পুরুষ শিক্ষক আবেদন করতে পারবেন।"
+            };
+        }
+        return { allowed: true, message: "" };
     }
 
     return { allowed: true, message: "" };
