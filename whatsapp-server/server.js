@@ -185,7 +185,6 @@ async function connectToWhatsApp() {
             try {
                 if (!messages || !messages.length) return;
                 for (const msg of messages) {
-                    if (msg.key?.fromMe) continue;
                     const senderJid = msg.key?.remoteJid || '';
                     if (!senderJid || senderJid === 'status@broadcast' || senderJid.endsWith('@g.us')) continue;
 
@@ -197,7 +196,13 @@ async function connectToWhatsApp() {
                     ).trim();
 
                     if (!text) continue;
-                    console.log(`📩 [WhatsApp ইনকামিং] ${senderJid.split('@')[0]}: "${text}"`);
+
+                    // If message is sent by the bot itself, only process if it is a self-test verification message
+                    if (msg.key?.fromMe && !text.toUpperCase().includes('TSBD') && !text.toUpperCase().includes('VERIFY')) {
+                        continue;
+                    }
+
+                    console.log(`📩 [WhatsApp ইনকামিং] ${senderJid.split('@')[0]}: "${text}" (fromMe: ${!!msg.key?.fromMe})`);
                     await handleIncomingVerification(senderJid, text);
                 }
             } catch (err) {
