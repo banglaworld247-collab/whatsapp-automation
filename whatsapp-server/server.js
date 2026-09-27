@@ -33,6 +33,89 @@ const messageQueue = [];
 let isProcessingQueue = false;
 let queueStats = { sent: 0, failed: 0, pending: 0 };
 
+// ==========================================
+// INBOUND CLICK-TO-WHATSAPP VERIFICATION ENGINE
+// ==========================================
+const pendingVerifications = new Map();
+let verificationStats = { requested: 0, verified: 0 };
+
+// Auto-cleanup expired verifications every 5 minutes
+setInterval(() => {
+    const now = Date.now();
+    for (const [code, entry] of pendingVerifications.entries()) {
+        if (now > entry.expiresAt) {
+            pendingVerifications.delete(code);
+        }
+    }
+}, 5 * 60 * 1000);
+
+function normalizePhone(rawNumber) {
+    let clean = String(rawNumber || '').replace(/[^0-9]/g, '');
+    if (clean.startsWith('01')) {
+        clean = '88' + clean;
+    } else if (clean.startsWith('+8801')) {
+        clean = clean.substring(1);
+    }
+    return clean;
+}
+
+function getBotPhoneNumber() {
+    if (sock && sock.user && sock.user.id) {
+        return sock.user.id.split(':')[0].replace(/[^0-9]/g, '');
+    }
+    return process.env.BOT_PHONE || '8801735698076';
+}
+
+async function handleIncomingVerification(senderJid, text) {
+    if (!text || !senderJid) return;
+    const rawSender = senderJid.split('@')[0].replace(/[^0-9]/g, '');
+    const normSender = normalizePhone(rawSender);
+    const upperText = text.toUpperCase();
+
+    // Look for 6-digit code or TSBD code in text
+    // E.g. "TSBD-VERIFY 482910", "TSBD 482910", "482910", "VERIFY 482910"
+    const codeMatch = text.match(/\b\d{6}\b/) || text.match(/TSBD[-\s]?(\d{6})/i);
+    const codeFromText = codeMatch ? (codeMatch[1] || codeMatch[0]) : null;
+
+    let matchedEntry = null;
+
+    for (const [codeKey, entry] of pendingVerifications.entries()) {
+        if (Date.now() > entry.expiresAt) {
+            pendingVerifications.delete(codeKey);
+            continue;
+        }
+
+        const phoneMatches = entry.phone === normSender ||
+                             normSender.endsWith(entry.phone.slice(-10)) ||
+                             entry.phone.endsWith(normSender.slice(-10));
+        const codeMatches = codeFromText && entry.code === codeFromText;
+        const keywordMatches = upperText.includes('TSBD') || upperText.includes('VERIFY');
+
+        // Match if code is exact OR (phone matches AND keyword/code present)
+        if (codeMatches || (phoneMatches && (keywordMatches || codeFromText))) {
+            matchedEntry = entry;
+            break;
+        }
+    }
+
+    if (matchedEntry) {
+        matchedEntry.verified = true;
+        matchedEntry.verifiedAt = Date.now();
+        matchedEntry.verifiedPhone = normSender;
+        verificationStats.verified++;
+        console.log(`🎉 [Click-to-WhatsApp ভেরিফিকেশন সফল] প্রেরক: ${normSender}, কোড: ${matchedEntry.code}`);
+
+        // Safe reply (User-initiated conversation -> Zero ban risk)
+        try {
+            await sock.sendMessage(senderJid, {
+                text: `✅ *TSBD ভেরিফিকেশন সফল হয়েছে!*\n\nআপনার WhatsApp নম্বর (+${normSender}) সফলভাবে নিশ্চিত করা হয়েছে।\n\nঅনুগ্রহ করে ব্রাউজারে রেজিস্ট্রেশন ফর্মে ফিরে গিয়ে আবেদন সম্পন্ন করুন। ধন্যবাদ! 🎉\n\n- *Tuition Service BD (TSBD)*`
+            });
+        } catch (replyErr) {
+            console.warn('ভেরিফিকেশন রিপ্লাই পাঠানো যায়নি:', replyErr.message);
+        }
+    }
+}
+
 async function processQueue() {
     if (isProcessingQueue) return;
     isProcessingQueue = true;
@@ -96,6 +179,31 @@ async function connectToWhatsApp() {
         });
 
         sock.ev.on('creds.update', saveCreds);
+
+        // Listen for incoming WhatsApp messages (Inbound Click-to-WhatsApp Verification)
+        sock.ev.on('messages.upsert', async ({ messages, type }) => {
+            try {
+                if (!messages || !messages.length) return;
+                for (const msg of messages) {
+                    if (msg.key?.fromMe) continue;
+                    const senderJid = msg.key?.remoteJid || '';
+                    if (!senderJid || senderJid === 'status@broadcast' || senderJid.endsWith('@g.us')) continue;
+
+                    const text = (
+                        msg.message?.conversation ||
+                        msg.message?.extendedTextMessage?.text ||
+                        msg.message?.imageMessage?.caption ||
+                        ''
+                    ).trim();
+
+                    if (!text) continue;
+                    console.log(`📩 [WhatsApp ইনকামিং] ${senderJid.split('@')[0]}: "${text}"`);
+                    await handleIncomingVerification(senderJid, text);
+                }
+            } catch (err) {
+                console.error('ইনকামিং মেসেজ প্রসেসিং এরর:', err);
+            }
+        });
 
         sock.ev.on('connection.update', async (update) => {
             const { connection, lastDisconnect, qr } = update;
@@ -172,13 +280,128 @@ app.get(['/status', '/health', '/ping'], (req, res) => {
         success: true,
         status: connectionStatus,
         user: connectionUser,
+        botPhone: getBotPhoneNumber(),
         hasQr: !!currentQrCode,
         queue: {
             pending: messageQueue.length,
             isProcessing: isProcessingQueue,
             stats: queueStats
+        },
+        verification: {
+            pending: pendingVerifications.size,
+            stats: verificationStats
         }
     });
+});
+
+// 1.1 Inbound Click-to-WhatsApp: Request Verification Token
+app.post(['/api/request-verification', '/request-verification'], (req, res) => {
+    try {
+        const { phone } = req.body;
+        if (!phone) {
+            return res.status(400).json({ success: false, error: 'ফোন নম্বর প্রয়োজন।' });
+        }
+
+        const normPhone = normalizePhone(phone);
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+        const botPhone = getBotPhoneNumber();
+
+        const prefilledText = `TSBD-VERIFY ${code}`;
+        const waLink = `https://wa.me/${botPhone}?text=${encodeURIComponent(prefilledText)}`;
+
+        pendingVerifications.set(code, {
+            code,
+            phone: normPhone,
+            verified: false,
+            createdAt: Date.now(),
+            expiresAt
+        });
+        verificationStats.requested++;
+
+        console.log(`📱 [ভেরিফিকেশন অনুরোধ] নম্বর: ${normPhone}, কোড: ${code}, বট নম্বর: ${botPhone}`);
+
+        return res.json({
+            success: true,
+            code,
+            botPhone,
+            waLink,
+            prefilledText,
+            expiresInSeconds: 600
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// 1.2 Inbound Click-to-WhatsApp: Poll / Check Verification Status
+app.get(['/api/check-verification', '/check-verification'], (req, res) => {
+    try {
+        const { code, phone } = req.query;
+        if (!code && !phone) {
+            return res.status(400).json({ success: false, error: 'code বা phone প্যারামিটার প্রয়োজন।' });
+        }
+
+        let entry = null;
+        if (code && pendingVerifications.has(String(code).trim())) {
+            entry = pendingVerifications.get(String(code).trim());
+        } else if (phone) {
+            const norm = normalizePhone(phone);
+            for (const [k, v] of pendingVerifications.entries()) {
+                if (v.phone === norm || norm.endsWith(v.phone.slice(-10)) || v.phone.endsWith(norm.slice(-10))) {
+                    entry = v;
+                    break;
+                }
+            }
+        }
+
+        if (!entry) {
+            return res.json({
+                success: true,
+                verified: false,
+                message: 'কোনো পেন্ডিং ভেরিফিকেশন পাওয়া যায়নি বা মেয়াদ উত্তীর্ণ।'
+            });
+        }
+
+        return res.json({
+            success: true,
+            verified: !!entry.verified,
+            phone: entry.verifiedPhone || entry.phone,
+            code: entry.code,
+            verifiedAt: entry.verifiedAt || null
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// 1.3 Check if phone exists on WhatsApp (Zero message sent - purely metadata lookup)
+app.post(['/api/check-number', '/check-number', '/api/verify-number'], async (req, res) => {
+    try {
+        const { phone } = req.body;
+        if (!phone) {
+            return res.status(400).json({ success: false, error: 'phone নম্বর প্রয়োজন।' });
+        }
+
+        if (connectionStatus !== 'connected' || !sock) {
+            return res.status(503).json({
+                success: false,
+                error: 'WhatsApp বট এখনও কানেক্টেড নয়।'
+            });
+        }
+
+        const jid = formatRecipientJid(phone);
+        const results = await sock.onWhatsApp(jid);
+        const exists = Array.isArray(results) && results.length > 0 && results[0].exists;
+
+        return res.json({
+            success: true,
+            exists: !!exists,
+            jid: exists ? results[0].jid : null
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 // 2. Single Message Send (Queued & Safe - supports multiple route aliases)
@@ -370,6 +593,12 @@ app.get('/', (req, res) => {
             <div class="queue-item">ব্যর্থ মেসেজ <span id="qFailed" style="color:#F87171;">${queueStats.failed}</span></div>
         </div>
 
+        <div class="queue-box" style="margin-top: -10px; border-color: rgba(34, 197, 94, 0.3);">
+            <div class="queue-item">ভেরিফাই অনুরোধ <span id="vReq" style="color:#38BDF8;">${verificationStats.requested}</span></div>
+            <div class="queue-item">সফল ভেরিফাইড <span id="vDone" style="color:#4ADE80;">${verificationStats.verified}</span></div>
+            <div class="queue-item">পেন্ডিং ভেরিফাই <span id="vPending" style="color:#FBBF24;">${pendingVerifications.size}</span></div>
+        </div>
+
         <div class="test-box">
             <h4 style="font-size:14px;color:#38BDF8;margin-bottom:10px;"><i class="fa-solid fa-paper-plane"></i> টেস্ট মেসেজ পাঠান</h4>
             <input type="text" id="testTo" placeholder="নম্বর বা গ্রুপ আইডি: 017XXXXXXXX">
@@ -417,6 +646,11 @@ app.get('/', (req, res) => {
                     document.getElementById('qPending').innerText = data.queue.pending;
                     document.getElementById('qSent').innerText = data.queue.stats.sent;
                     document.getElementById('qFailed').innerText = data.queue.stats.failed;
+                }
+                if (data.verification) {
+                    if (document.getElementById('vReq')) document.getElementById('vReq').innerText = data.verification.stats.requested;
+                    if (document.getElementById('vDone')) document.getElementById('vDone').innerText = data.verification.stats.verified;
+                    if (document.getElementById('vPending')) document.getElementById('vPending').innerText = data.verification.pending;
                 }
                 if((data.status === 'connected' && document.querySelector('.connecting')) ||
                    (data.status === 'connecting' && document.querySelector('.disconnected'))) {

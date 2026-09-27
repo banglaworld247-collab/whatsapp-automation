@@ -249,7 +249,7 @@
             line-height: 1.5;
         }
 
-        /* WhatsApp OTP & Verification */
+        /* WhatsApp OTP & Inbound Click-to-WhatsApp Verification */
         .btn-otp {
             padding: 10px 16px;
             background: #25D366;
@@ -278,11 +278,79 @@
         .otp-verification-box {
             display: none;
             margin-top: 10px;
-            padding: 14px;
+            padding: 16px;
             background: rgba(37, 211, 102, 0.08);
             border: 1px solid rgba(37, 211, 102, 0.3);
-            border-radius: 10px;
+            border-radius: 12px;
             animation: fadeIn 0.3s ease;
+        }
+        .btn-wa-direct {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 18px;
+            background: #25D366;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.25);
+            transition: all 0.25s ease;
+        }
+        .btn-wa-direct:hover {
+            background: #20BA56;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        .wa-status-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px dashed rgba(37, 211, 102, 0.4);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #E2E8F0;
+            margin-bottom: 10px;
+        }
+        .pulse-dot {
+            width: 9px;
+            height: 9px;
+            background-color: #22C55E;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            animation: pulse-green 1.6s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+        @keyframes pulse-green {
+            to {
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+        }
+        .btn-check-verify {
+            width: 100%;
+            padding: 9px 14px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93C5FD;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .btn-check-verify:hover {
+            background: rgba(59, 130, 246, 0.25);
+            color: #BFDBFE;
         }
         .verified-badge {
             display: none;
@@ -500,21 +568,52 @@
                 <div style="display: flex; gap: 8px; align-items: stretch;">
                     <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric" autocomplete="tel" style="flex: 1;">
                     <button type="button" id="sendOtpBtn" class="btn-otp">
-                        <i class="fa-brands fa-whatsapp"></i> OTP পাঠান
+                        <i class="fa-brands fa-whatsapp"></i> WhatsApp ভেরিফাই
                     </button>
                 </div>
 
                 <div id="otpVerificationBox" class="otp-verification-box">
-                    <label style="font-size: 13px; color: #E2E8F0; margin-bottom: 8px; display: block; font-weight: 600;">
-                        <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp-এ পাঠানো ৬ ডিজিটের OTP কোডটি লিখুন:
-                    </label>
-                    <div style="display: flex; gap: 8px; align-items: stretch;">
-                        <input type="text" id="otpInput" placeholder="যেমন: 123456" maxlength="6" inputmode="numeric" style="flex: 1; letter-spacing: 3px; font-weight: 700; text-align: center; font-size: 16px;">
-                        <button type="button" id="verifyOtpBtn" style="padding: 10px 18px; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 14px;">
-                            যাচাই করুন
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 13px; font-weight: 700; color: #4ADE80;">
+                            <i class="fa-brands fa-whatsapp"></i> WhatsApp ভেরিফিকেশন (Ban-Proof)
+                        </span>
+                        <span id="otpTimerText" style="font-size: 12px; color: #94A3B8;"></span>
+                    </div>
+
+                    <p style="font-size: 13px; color: #CBD5E1; margin-bottom: 12px; line-height: 1.5;">
+                        নিচের বাটনে ক্লিক করে সরাসরি WhatsApp ওপেন করুন এবং প্রস্তুত করা মেসেজটি শুধুমাত্র <strong>Send</strong> করুন:
+                    </p>
+
+                    <a id="waDirectLink" href="#" target="_blank" class="btn-wa-direct">
+                        <i class="fa-brands fa-whatsapp" style="font-size: 20px;"></i>
+                        <span>সরাসরি WhatsApp-এ কোড পাঠান</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 13px; margin-left: auto;"></i>
+                    </a>
+
+                    <div id="waPollingStatus" class="wa-status-pill">
+                        <span class="pulse-dot"></span>
+                        <span id="waPollingText">আপনার মেসেজের জন্য অপেক্ষা করা হচ্ছে...</span>
+                    </div>
+
+                    <button type="button" id="verifyOtpBtn" class="btn-check-verify">
+                        <i class="fa-solid fa-rotate"></i> আমি মেসেজ পাঠিয়েছি, যাচাই সম্পন্ন করুন
+                    </button>
+
+                    <!-- Manual OTP fallback -->
+                    <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.1); text-align: center;">
+                        <button type="button" id="toggleManualOtpBtn" style="background: none; border: none; color: #94A3B8; font-size: 12px; cursor: pointer; text-decoration: underline;">
+                            মেসেজ পাঠাতে সমস্যা হচ্ছে? কোড লিখে যাচাই করুন
                         </button>
                     </div>
-                    <div id="otpTimerText" style="font-size: 12px; color: #94A3B8; margin-top: 6px;"></div>
+
+                    <div id="manualOtpContainer" style="display: none; margin-top: 8px;">
+                        <div style="display: flex; gap: 8px; align-items: stretch;">
+                            <input type="text" id="otpInput" placeholder="যেমন: 123456" maxlength="6" inputmode="numeric" style="flex: 1; letter-spacing: 3px; font-weight: 700; text-align: center; font-size: 16px;">
+                            <button type="button" id="manualSubmitOtpBtn" style="padding: 10px 16px; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 13px;">
+                                কোড যাচাই
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="phoneVerifiedBadge" class="verified-badge">
@@ -522,7 +621,7 @@
                     <button type="button" id="changePhoneBtn" style="background: none; border: none; color: #94A3B8; text-decoration: underline; font-size: 12px; cursor: pointer; margin-left: 8px;">পরিবর্তন করুন</button>
                 </div>
 
-                <span class="help-text" id="phoneHelpText">সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন। নম্বরে WhatsApp ওটিপি পাঠানো হবে।</span>
+                <span class="help-text" id="phoneHelpText">সঠিক ১১ ডিজিটের বাংলাদেশি WhatsApp নম্বর দিন। রেজিস্ট্রেশনের জন্য ভেরিফিকেশন বাধ্যতামূলক।</span>
             </div>
 
             <div class="form-group">
@@ -768,11 +867,17 @@
         const subjectsGrid = document.getElementById('subjectsGrid');
         const toastMessage = document.getElementById('toastMessage');
 
-        // WhatsApp OTP Elements
+        // WhatsApp Verification Elements
         const sendOtpBtn = document.getElementById('sendOtpBtn');
         const otpVerificationBox = document.getElementById('otpVerificationBox');
-        const otpInput = document.getElementById('otpInput');
+        const waDirectLink = document.getElementById('waDirectLink');
+        const waPollingStatus = document.getElementById('waPollingStatus');
+        const waPollingText = document.getElementById('waPollingText');
         const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const toggleManualOtpBtn = document.getElementById('toggleManualOtpBtn');
+        const manualOtpContainer = document.getElementById('manualOtpContainer');
+        const otpInput = document.getElementById('otpInput');
+        const manualSubmitOtpBtn = document.getElementById('manualSubmitOtpBtn');
         const phoneVerifiedBadge = document.getElementById('phoneVerifiedBadge');
         const changePhoneBtn = document.getElementById('changePhoneBtn');
         const otpTimerText = document.getElementById('otpTimerText');
@@ -787,6 +892,7 @@
         let generatedOtp = null;
         let otpExpiresAt = 0;
         let otpCountdownInterval = null;
+        let waPollingInterval = null;
 
         // Utility Functions
         function showLoading(text) {
@@ -805,93 +911,84 @@
             setTimeout(() => { toastMessage.style.display = "none"; }, 3500);
         }
 
-        // WhatsApp OTP Sender Helper
-        async function sendWhatsAppOtpMessage(recipientPhone, otpCode) {
-            let botUrl = localStorage.getItem('tsbd_wa_bot_url') || 'http://localhost:3000/send-otp';
-            let waConfig = null;
+        // Handle successful verification (real-time polling or manual check)
+        function handleVerificationSuccess(verifiedPhone) {
+            if (waPollingInterval) clearInterval(waPollingInterval);
+            if (otpCountdownInterval) clearInterval(otpCountdownInterval);
 
-            try {
-                const localSaved = localStorage.getItem('tsbd_wa_config');
-                if (localSaved) waConfig = JSON.parse(localSaved);
-            } catch (e) { }
+            isPhoneVerified = true;
+            phoneInput.readOnly = true;
 
-            const settingsSnap = await getDoc(doc(db, "settings", "whatsapp")).catch(() => null);
-            if (settingsSnap && settingsSnap.exists()) {
-                waConfig = settingsSnap.data();
+            if (verifiedPhone && isValidBDPhone(verifiedPhone)) {
+                let clean = String(verifiedPhone).replace(/[^0-9]/g, '');
+                if (clean.startsWith('8801')) clean = clean.substring(2);
+                phoneInput.value = clean;
             }
 
-            const otpText = `🔒 *TSBD টিউশন পোর্টাল (ভেরিফিকেশন)*\n\nআপনার WhatsApp ভেরিফিকেশন কোড (OTP) হলো:\n\n👉 *${otpCode}*\n\n⏱️ এটি ৫ মিনিটের জন্য কার্যকর থাকবে। অনুগ্রহ করে কাউকে এই কোডটি শেয়ার করবেন না।`;
+            if (sendOtpBtn) sendOtpBtn.style.display = "none";
+            if (otpVerificationBox) otpVerificationBox.style.display = "none";
+            if (phoneVerifiedBadge) phoneVerifiedBadge.style.display = "inline-flex";
 
-            if (waConfig) {
-                if (waConfig.provider === 'custom' || waConfig.webhookUrl || waConfig.botUrl) {
-                    botUrl = waConfig.webhookUrl || waConfig.botUrl || botUrl;
-                } else if (waConfig.provider === 'green-api' && waConfig.instanceId && waConfig.apiToken) {
-                    let host = waConfig.apiHost || 'https://api.green-api.com';
-                    host = host.replace(/\/+$/, '');
-                    let cleanPhone = recipientPhone.replace(/[^0-9]/g, '');
-                    if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
-                    const greenChatId = `${cleanPhone}@c.us`;
-                    const url = `${host}/waInstance${waConfig.instanceId}/sendMessage/${waConfig.apiToken}`;
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chatId: greenChatId, message: otpText })
-                    });
-                    return response.ok;
-                } else if (waConfig.provider === 'ultramsg' && waConfig.instanceId && waConfig.apiToken) {
-                    let cleanPhone = recipientPhone.replace(/[^0-9]/g, '');
-                    if (cleanPhone.startsWith('01')) cleanPhone = '+88' + cleanPhone;
-                    const url = `https://api.ultramsg.com/${waConfig.instanceId}/messages/chat`;
-                    const params = new URLSearchParams();
-                    params.append('token', waConfig.apiToken);
-                    params.append('to', cleanPhone);
-                    params.append('body', otpText);
-                    const response = await fetch(url, { method: 'POST', body: params });
-                    return response.ok;
-                }
-            }
-
-            // Default: TSBD WhatsApp Bot Server
-            let targetUrl = (botUrl || 'https://whatsapp-automation-386s.onrender.com/send-otp').trim();
-            if (!targetUrl.includes('/send') && !targetUrl.includes('/api/')) {
-                targetUrl = targetUrl.replace(/\/+$/, '') + '/send-otp';
-            }
-            const response = await fetch(targetUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    to: recipientPhone,
-                    otp: otpCode,
-                    message: otpText
-                })
-            });
-            return response.ok;
+            showToast("WhatsApp নম্বর সফলভাবে ভেরিফাইড হয়েছে! ✅", "success");
+            validateForm();
         }
 
-        function startOtpCooldown(seconds = 60) {
+        function startOtpCooldown(seconds = 600) {
             if (otpCountdownInterval) clearInterval(otpCountdownInterval);
             let remaining = seconds;
-            if (sendOtpBtn) {
-                sendOtpBtn.disabled = true;
-                sendOtpBtn.innerHTML = `<i class="fa-solid fa-clock"></i> পুনরায় পাঠান (${remaining}s)`;
-            }
+
+            const formatTimer = (s) => {
+                const m = Math.floor(s / 60);
+                const sec = s % 60;
+                return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+            };
+
+            if (otpTimerText) otpTimerText.textContent = `মেয়াদ: ${formatTimer(remaining)}`;
 
             otpCountdownInterval = setInterval(() => {
                 remaining--;
                 if (remaining <= 0) {
                     clearInterval(otpCountdownInterval);
+                    if (waPollingInterval) clearInterval(waPollingInterval);
+                    if (otpTimerText) otpTimerText.textContent = "সময় উত্তীর্ণ। আবার চেষ্টা করুন।";
                     if (sendOtpBtn) {
                         sendOtpBtn.disabled = false;
-                        sendOtpBtn.innerHTML = `<i class="fa-brands fa-whatsapp"></i> OTP পুনরায় পাঠান`;
+                        sendOtpBtn.innerHTML = `<i class="fa-brands fa-whatsapp"></i> WhatsApp ভেরিফাই`;
                     }
-                    if (otpTimerText) otpTimerText.textContent = "কোড পাননি? 'OTP পুনরায় পাঠান'-এ ক্লিক করুন।";
                 } else {
-                    if (sendOtpBtn) sendOtpBtn.innerHTML = `<i class="fa-solid fa-clock"></i> পুনরায় পাঠান (${remaining}s)`;
-                    if (otpTimerText) otpTimerText.textContent = `নতুন কোড পাঠাতে অপেক্ষা করুন: ${remaining} সেকেন্ড`;
+                    if (otpTimerText) otpTimerText.textContent = `মেয়াদ: ${formatTimer(remaining)}`;
                 }
             }, 1000);
         }
 
+        // Real-time status polling from WhatsApp Bot Server
+        function startVerificationPolling(code, phone) {
+            if (waPollingInterval) clearInterval(waPollingInterval);
+
+            const targetBase = (localStorage.getItem('tsbd_wa_bot_url') || 'https://whatsapp-automation-386s.onrender.com').replace(/\/+$/, '');
+
+            waPollingInterval = setInterval(async () => {
+                if (Date.now() > otpExpiresAt) {
+                    clearInterval(waPollingInterval);
+                    if (waPollingText) waPollingText.innerHTML = '<span style="color:#F87171;">ভেরিফিকেশনের মেয়াদ শেষ হয়েছে। আবার চেষ্টা করুন।</span>';
+                    return;
+                }
+
+                try {
+                    const checkUrl = `${targetBase}/api/check-verification?code=${encodeURIComponent(code)}&phone=${encodeURIComponent(phone)}`;
+                    const res = await fetch(checkUrl);
+                    const data = await res.json();
+                    if (data && data.success && data.verified) {
+                        clearInterval(waPollingInterval);
+                        handleVerificationSuccess(data.phone || phone);
+                    }
+                } catch (e) {
+                    // Ignore network noise during background poll
+                }
+            }, 2500);
+        }
+
+        // 1. Click-to-WhatsApp Request
         sendOtpBtn?.addEventListener('click', async () => {
             const phone = phoneInput.value.trim();
             if (!isValidBDPhone(phone)) {
@@ -914,70 +1011,119 @@
                 console.warn("Phone duplicate check:", err);
             }
 
-            generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
-            otpExpiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
+            showLoading("ভেরিফিকেশন প্রস্তুত হচ্ছে...");
 
-            showLoading("WhatsApp-এ OTP পাঠানো হচ্ছে...");
+            const targetBase = (localStorage.getItem('tsbd_wa_bot_url') || 'https://whatsapp-automation-386s.onrender.com').replace(/\/+$/, '');
+            let botPhone = '8801735698076';
+            let code = String(Math.floor(100000 + Math.random() * 900000));
+            let waLink = null;
 
             try {
-                const isSent = await sendWhatsAppOtpMessage(phone, generatedOtp);
-                hideLoading();
-                if (otpVerificationBox) otpVerificationBox.style.display = "block";
-                startOtpCooldown(60);
-
-                if (isSent) {
-                    showToast("WhatsApp-এ ৬ ডিজিটের OTP পাঠানো হয়েছে! মেসেজ চেক করুন।", "success");
-                } else {
-                    showToast("WhatsApp মেসেজ চেক করে কোডটি দিন।", "success");
+                const reqRes = await fetch(`${targetBase}/api/request-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const reqData = await reqRes.json();
+                if (reqData && reqData.success) {
+                    code = reqData.code;
+                    botPhone = reqData.botPhone || botPhone;
+                    waLink = reqData.waLink;
                 }
-                if (otpInput) otpInput.focus();
-            } catch (err) {
+            } catch (e) {
+                console.warn('Backend request fallback to direct WhatsApp URL:', e);
+            }
+
+            if (!waLink) {
+                const prefilled = `TSBD-VERIFY ${code}`;
+                waLink = `https://wa.me/${botPhone}?text=${encodeURIComponent(prefilled)}`;
+            }
+
+            generatedOtp = code;
+            otpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+            hideLoading();
+
+            // Setup UI
+            if (waDirectLink) waDirectLink.href = waLink;
+            if (otpVerificationBox) otpVerificationBox.style.display = "block";
+            if (waPollingText) waPollingText.innerHTML = `আপনার মেসেজের জন্য অপেক্ষা করা হচ্ছে... (কোড: <strong>${code}</strong>)`;
+
+            startOtpCooldown(600); // 10 minutes countdown
+            startVerificationPolling(code, phone);
+
+            showToast("WhatsApp ওপেন করে মেসেজটি Send করুন!", "success");
+        });
+
+        // 2. Manual Verification Check Button
+        verifyOtpBtn?.addEventListener('click', async () => {
+            const phone = phoneInput.value.trim();
+            if (!generatedOtp) {
+                showToast("প্রথমে 'WhatsApp ভেরিফাই' বাটনে ক্লিক করুন।");
+                return;
+            }
+
+            showLoading("যাচাই করা হচ্ছে...");
+            const targetBase = (localStorage.getItem('tsbd_wa_bot_url') || 'https://whatsapp-automation-386s.onrender.com').replace(/\/+$/, '');
+
+            try {
+                const checkUrl = `${targetBase}/api/check-verification?code=${encodeURIComponent(generatedOtp)}&phone=${encodeURIComponent(phone)}`;
+                const res = await fetch(checkUrl);
+                const data = await res.json();
                 hideLoading();
-                console.error("OTP send error:", err);
-                if (otpVerificationBox) otpVerificationBox.style.display = "block";
-                startOtpCooldown(60);
-                showToast("WhatsApp চেক করে কোড দিন।");
+
+                if (data && data.success && data.verified) {
+                    handleVerificationSuccess(data.phone || phone);
+                } else {
+                    showToast("WhatsApp-এ এখনও মেসেজটি পাওয়া যায়নি! অনুগ্রহ করে বাটনে ক্লিক করে মেসেজটি Send করুন।");
+                }
+            } catch (e) {
+                hideLoading();
+                showToast("সার্ভারের সাথে সংযোগ করা যায়নি। আবার চেষ্টা করুন।");
             }
         });
 
-        verifyOtpBtn?.addEventListener('click', () => {
-            const inputOtp = otpInput.value.trim();
+        // 3. Toggle manual OTP input container
+        toggleManualOtpBtn?.addEventListener('click', () => {
+            if (manualOtpContainer) {
+                manualOtpContainer.style.display = manualOtpContainer.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+
+        // 4. Manual OTP Code Submit (Fallback)
+        manualSubmitOtpBtn?.addEventListener('click', () => {
+            const inputOtp = (otpInput?.value || '').trim();
             if (!inputOtp) {
-                showToast("৬ ডিজিটের OTP কোডটি লিখুন।");
-                otpInput.focus();
+                showToast("৬ ডিজিটের কোডটি লিখুন।");
+                otpInput?.focus();
                 return;
             }
             if (Date.now() > otpExpiresAt) {
-                showToast("OTP কোডের মেয়াদ শেষ হয়ে গেছে। 'OTP পুনরায় পাঠান'-এ ক্লিক করুন।");
+                showToast("কোডের মেয়াদ শেষ হয়ে গেছে। 'WhatsApp ভেরিফাই'-এ পুনরায় ক্লিক করুন।");
                 return;
             }
             if (inputOtp === generatedOtp || (window.location.hostname === 'localhost' && inputOtp === '123456')) {
-                isPhoneVerified = true;
-                phoneInput.readOnly = true;
-                if (sendOtpBtn) sendOtpBtn.style.display = "none";
-                if (otpVerificationBox) otpVerificationBox.style.display = "none";
-                if (phoneVerifiedBadge) phoneVerifiedBadge.style.display = "inline-flex";
-                if (otpCountdownInterval) clearInterval(otpCountdownInterval);
-                showToast("WhatsApp নম্বর সফলভাবে ভেরিফাইড হয়েছে! ✅", "success");
-                validateForm();
+                handleVerificationSuccess(phoneInput.value.trim());
             } else {
-                showToast("ভুল OTP কোড! আপনার WhatsApp মেসেজ চেক করে সঠিক কোডটি দিন।");
+                showToast("ভুল কোড! আপনার প্রস্তুতকৃত কোডের সাথে মিলছে না।");
             }
         });
 
+        // 5. Change Phone Number
         changePhoneBtn?.addEventListener('click', () => {
             isPhoneVerified = false;
             phoneInput.readOnly = false;
             if (sendOtpBtn) {
                 sendOtpBtn.style.display = "inline-flex";
                 sendOtpBtn.disabled = false;
-                sendOtpBtn.innerHTML = `<i class="fa-brands fa-whatsapp"></i> OTP পাঠান`;
+                sendOtpBtn.innerHTML = `<i class="fa-brands fa-whatsapp"></i> WhatsApp ভেরিফাই`;
             }
             if (phoneVerifiedBadge) phoneVerifiedBadge.style.display = "none";
             if (otpVerificationBox) otpVerificationBox.style.display = "none";
             if (otpInput) otpInput.value = "";
             generatedOtp = null;
             if (otpCountdownInterval) clearInterval(otpCountdownInterval);
+            if (waPollingInterval) clearInterval(waPollingInterval);
             validateForm();
             phoneInput.focus();
         });
