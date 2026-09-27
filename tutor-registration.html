@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tutor Registration</title>
-    
+
     <!-- Google Fonts: Noto Sans Bengali -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -50,46 +52,329 @@
         }
 
         /* ===== TSBD NAVBAR ===== */
-        .tsbd-navbar{position:sticky;top:0;z-index:900;width:100%;margin:0 auto 28px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border-color,#E5E7EB);box-shadow:0 4px 18px rgba(15,23,42,.06);backdrop-filter:blur(12px)}
-        .tsbd-nav-inner{max-width:1200px;margin:0 auto;min-height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-        .tsbd-logo{text-decoration:none;display:inline-flex;align-items:center;gap:10px;color:#1F2937;font-weight:800;font-size:22px;letter-spacing:-.5px}
-        .tsbd-logo-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#6366F1,#3B82F6);font-size:14px;font-weight:800;box-shadow:0 5px 12px rgba(99,102,241,.25)}
-        .tsbd-nav-links{display:flex;align-items:center;gap:8px}
-        .tsbd-nav-link{border:0;background:transparent;text-decoration:none;color:#4B5563;font-size:14px;font-weight:600;padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s ease}
-        .tsbd-nav-link:hover{background:#F3F4F6;color:#4F46E5}
-        .tsbd-nav-link.active{background:rgba(99,102,241,.12);color:#4F46E5;font-weight:700}
-        
+        .tsbd-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            width: 100%;
+            margin: 0 auto 28px;
+            background: rgba(255, 255, 255, .96);
+            border-bottom: 1px solid var(--border-color, #E5E7EB);
+            box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
+            backdrop-filter: blur(12px)
+        }
+
+        .tsbd-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px
+        }
+
+        .tsbd-logo {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1F2937;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -.5px
+        }
+
+        .tsbd-logo-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: linear-gradient(135deg, #6366F1, #3B82F6);
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 5px 12px rgba(99, 102, 241, .25)
+        }
+
+        .tsbd-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .tsbd-nav-link {
+            border: 0;
+            background: transparent;
+            text-decoration: none;
+            color: #4B5563;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: .2s ease
+        }
+
+        .tsbd-nav-link:hover {
+            background: #F3F4F6;
+            color: #4F46E5
+        }
+
+        .tsbd-nav-link.active {
+            background: rgba(99, 102, 241, .12);
+            color: #4F46E5;
+            font-weight: 700
+        }
+
         /* User Avatar & Dropdown */
-        .tsbd-user{position:relative;display:none;align-items:center;margin-left:4px}
-        .tsbd-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #6366F1;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;user-select:none}
-        .tsbd-avatar:hover{transform:scale(1.06);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
-        .tsbd-avatar:active{transform:scale(0.96)}
-        
-        .tsbd-avatar-dropdown{position:absolute;top:calc(100% + 10px);right:0;min-width:140px;background:#ffffff;border:1px solid #E5E7EB;border-radius:10px;padding:6px;box-shadow:0 10px 25px -5px rgba(0,0,0,.12),0 8px 10px -6px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s cubic-bezier(.16,1,.3,1),transform .22s cubic-bezier(.16,1,.3,1),visibility .22s ease;z-index:1000;pointer-events:none}
-        .tsbd-avatar-dropdown.show{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
-        .tsbd-avatar-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease;white-space:nowrap}
-        .tsbd-avatar-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
-        
-        .tsbd-menu-btn{display:none;width:42px;height:42px;border:1px solid #E5E7EB;background:#fff;border-radius:10px;cursor:pointer;font-size:19px;color:#1F2937;align-items:center;justify-content:center}
-        .tsbd-drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:1090;opacity:0;visibility:hidden;transition:.25s ease}
-        .tsbd-drawer{position:fixed;top:0;right:0;width:min(82vw,320px);height:100vh;background:#fff;z-index:1100;padding:22px;box-shadow:-10px 0 30px rgba(15,23,42,.15);transform:translateX(100%);transition:transform .28s ease;display:flex;flex-direction:column}
-        .tsbd-drawer.open{transform:translateX(0)}.tsbd-drawer-overlay.open{opacity:1;visibility:visible}
-        .tsbd-drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #E5E7EB}
-        .tsbd-close{border:0;background:#F3F4F6;width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center}
-        .tsbd-drawer .tsbd-nav-link{width:100%;justify-content:flex-start;padding:12px 14px;margin-bottom:6px;font-size:15px}
-        
+        .tsbd-user {
+            position: relative;
+            display: none;
+            align-items: center;
+            margin-left: 4px
+        }
+
+        .tsbd-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #6366F1;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease;
+            user-select: none
+        }
+
+        .tsbd-avatar:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .2)
+        }
+
+        .tsbd-avatar:active {
+            transform: scale(0.96)
+        }
+
+        .tsbd-avatar-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 140px;
+            background: #ffffff;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .12), 0 8px 10px -6px rgba(0, 0, 0, .08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity .22s cubic-bezier(.16, 1, .3, 1), transform .22s cubic-bezier(.16, 1, .3, 1), visibility .22s ease;
+            z-index: 1000;
+            pointer-events: none
+        }
+
+        .tsbd-avatar-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto
+        }
+
+        .tsbd-avatar-dropdown .tsbd-logout {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 6px;
+            color: #EF4444;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: .2s ease;
+            white-space: nowrap
+        }
+
+        .tsbd-avatar-dropdown .tsbd-logout:hover {
+            background: rgba(239, 68, 68, .1);
+            color: #DC2626
+        }
+
+        .tsbd-menu-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid #E5E7EB;
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 19px;
+            color: #1F2937;
+            align-items: center;
+            justify-content: center
+        }
+
+        .tsbd-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .4);
+            z-index: 1090;
+            opacity: 0;
+            visibility: hidden;
+            transition: .25s ease
+        }
+
+        .tsbd-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(82vw, 320px);
+            height: 100vh;
+            background: #fff;
+            z-index: 1100;
+            padding: 22px;
+            box-shadow: -10px 0 30px rgba(15, 23, 42, .15);
+            transform: translateX(100%);
+            transition: transform .28s ease;
+            display: flex;
+            flex-direction: column
+        }
+
+        .tsbd-drawer.open {
+            transform: translateX(0)
+        }
+
+        .tsbd-drawer-overlay.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .tsbd-drawer-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #E5E7EB
+        }
+
+        .tsbd-close {
+            border: 0;
+            background: #F3F4F6;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            display: grid;
+            place-items: center
+        }
+
+        .tsbd-drawer .tsbd-nav-link {
+            width: 100%;
+            justify-content: flex-start;
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            font-size: 15px
+        }
+
         /* Mobile Drawer User Dropdown */
-        .tsbd-mobile-user-wrap{margin-top:10px;border-top:1px solid #E5E7EB;padding-top:8px}
-        .tsbd-mobile-user-row{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:8px;transition:background .2s ease}
-        .tsbd-mobile-user-row:hover{background:#F3F4F6}
-        .tsbd-mobile-caret{margin-left:auto;font-size:12px;color:#9CA3AF;transition:transform .25s ease}
-        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret{transform:rotate(180deg)}
-        .tsbd-mobile-dropdown{opacity:0;max-height:0;overflow:hidden;transform:translateY(-4px);transition:opacity .25s ease,transform .25s ease,max-height .25s ease;padding:0 10px}
-        .tsbd-mobile-dropdown.show{opacity:1;max-height:80px;transform:translateY(0);padding:6px 10px}
-        .tsbd-mobile-dropdown .tsbd-logout{display:flex;width:100%;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;color:#EF4444;font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;transition:.2s ease}
-        .tsbd-mobile-dropdown .tsbd-logout:hover{background:rgba(239,68,68,.1);color:#DC2626}
-        
-        @media(max-width:768px){body{padding:12px}.tsbd-navbar{margin:-12px -12px 24px;width:calc(100% + 24px);}.tsbd-nav-links{display:none}.tsbd-menu-btn{display:flex}.tsbd-user{display:none!important}}
+        .tsbd-mobile-user-wrap {
+            margin-top: 10px;
+            border-top: 1px solid #E5E7EB;
+            padding-top: 8px
+        }
+
+        .tsbd-mobile-user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background .2s ease
+        }
+
+        .tsbd-mobile-user-row:hover {
+            background: #F3F4F6
+        }
+
+        .tsbd-mobile-caret {
+            margin-left: auto;
+            font-size: 12px;
+            color: #9CA3AF;
+            transition: transform .25s ease
+        }
+
+        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret {
+            transform: rotate(180deg)
+        }
+
+        .tsbd-mobile-dropdown {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-4px);
+            transition: opacity .25s ease, transform .25s ease, max-height .25s ease;
+            padding: 0 10px
+        }
+
+        .tsbd-mobile-dropdown.show {
+            opacity: 1;
+            max-height: 80px;
+            transform: translateY(0);
+            padding: 6px 10px
+        }
+
+        .tsbd-mobile-dropdown .tsbd-logout {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #EF4444;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: .2s ease
+        }
+
+        .tsbd-mobile-dropdown .tsbd-logout:hover {
+            background: rgba(239, 68, 68, .1);
+            color: #DC2626
+        }
+
+        @media(max-width:768px) {
+            body {
+                padding: 12px
+            }
+
+            .tsbd-navbar {
+                margin: -12px -12px 24px;
+                width: calc(100% + 24px);
+            }
+
+            .tsbd-nav-links {
+                display: none
+            }
+
+            .tsbd-menu-btn {
+                display: flex
+            }
+
+            .tsbd-user {
+                display: none !important
+            }
+        }
 
         /* =========================================
            CARD & BUTTONS
@@ -128,7 +413,7 @@
         .btn-google {
             background-color: #ffffff;
             color: #333333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-google:hover {
@@ -161,7 +446,10 @@
            ========================================= */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background-color: rgba(10, 26, 47, 0.85);
             backdrop-filter: blur(4px);
             display: none;
@@ -180,7 +468,8 @@
             max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.5);
             text-align: left;
         }
 
@@ -214,6 +503,7 @@
             outline: none;
             transition: border-color 0.3s;
         }
+
         input[type="tel"]:focus,
         input[type="text"]:focus,
         input[type="email"]:focus,
@@ -264,9 +554,17 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
             width: fit-content;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .file-name {
@@ -303,7 +601,7 @@
             transition: all 0.2s ease;
         }
 
-        .chip input:checked + span {
+        .chip input:checked+span {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
             color: #ffffff;
@@ -314,7 +612,10 @@
            ========================================= */
         .loading-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background-color: rgba(10, 26, 47, 0.9);
             display: none;
             justify-content: center;
@@ -333,7 +634,15 @@
             margin-bottom: 15px;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
         .toast {
             position: fixed;
@@ -346,74 +655,153 @@
             font-weight: 500;
             z-index: 3000;
             display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             text-align: center;
             width: max-content;
             max-width: 90vw;
         }
-        
+
         .welcome-msg {
             font-size: 18px;
             color: var(--success-color);
             margin-top: 15px;
             display: none;
         }
-        
+
         /* Custom Scrollbar for Modal */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 3px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
 
         @media (max-width: 768px) {
-            body { padding: 0 0 30px 0 !important; }
-            .tsbd-navbar { margin: 0 0 16px 0 !important; width: 100% !important; }
-            .tsbd-nav-inner { padding: 0 14px; min-height: 60px; }
-            .tsbd-logo { font-size: 20px; }
-            .tsbd-logo-mark { width: 34px; height: 34px; font-size: 13px; }
-            .tsbd-nav-links { display: none; }
-            .tsbd-menu-btn { display: flex; }
-            .tsbd-user { display: none !important; }
-            .container-holder { padding: 12px; }
-            .card { padding: 26px 18px; border-radius: 16px; width: 100%; max-width: 100%; }
-            .modal-overlay { padding: 0; align-items: flex-end; }
-            .modal-content { max-width: 100%; border-radius: 20px 20px 0 0; padding: 20px 16px; max-height: 92vh; }
-            input[type="text"], input[type="tel"], input[type="email"], textarea { min-height: 46px; font-size: 15px !important; }
-            .btn { min-height: 48px; font-size: 15px; }
+            body {
+                padding: 0 0 30px 0 !important;
+            }
+
+            .tsbd-navbar {
+                margin: 0 0 16px 0 !important;
+                width: 100% !important;
+            }
+
+            .tsbd-nav-inner {
+                padding: 0 14px;
+                min-height: 60px;
+            }
+
+            .tsbd-logo {
+                font-size: 20px;
+            }
+
+            .tsbd-logo-mark {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+
+            .tsbd-nav-links {
+                display: none;
+            }
+
+            .tsbd-menu-btn {
+                display: flex;
+            }
+
+            .tsbd-user {
+                display: none !important;
+            }
+
+            .container-holder {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 26px 18px;
+                border-radius: 16px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .modal-overlay {
+                padding: 0;
+                align-items: flex-end;
+            }
+
+            .modal-content {
+                max-width: 100%;
+                border-radius: 20px 20px 0 0;
+                padding: 20px 16px;
+                max-height: 92vh;
+            }
+
+            input[type="text"],
+            input[type="tel"],
+            input[type="email"],
+            textarea {
+                min-height: 46px;
+                font-size: 15px !important;
+            }
+
+            .btn {
+                min-height: 48px;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- TSBD NAVBAR -->
     <nav class="tsbd-navbar">
         <div class="tsbd-nav-inner">
-            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
+            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD"><span
+                    class="tsbd-logo-mark">TS</span><span>TSBD</span></a>
             <div class="tsbd-nav-links">
                 <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
                 <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
-                <a class="tsbd-nav-link active" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
-                <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার
+                    প্রোগ্রাম</a>
+                <a class="tsbd-nav-link active" id="tutorRegLink" href="tutor-registration.html"><i
+                        class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+                <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i
+                        class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i
+                        class="fa-solid fa-right-to-bracket"></i> লগইন</a>
                 <div class="tsbd-user" id="tsbdDesktopUser">
                     <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Google profile" title="প্রোফাইল মেনু">
                     <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
-                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i
+                                class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
                     </div>
                 </div>
             </div>
-            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i
+                    class="fa-solid fa-bars"></i></button>
         </div>
     </nav>
     <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
     <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
-        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="tsbd-drawer-head"><a class="tsbd-logo" href="tuitions-offers.html"><span
+                    class="tsbd-logo-mark">TS</span><span>TSBD</span></a><button class="tsbd-close" id="tsbdClose"
+                type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
         <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
         <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
         <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
-        <a class="tsbd-nav-link active" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
-        <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <a class="tsbd-nav-link active" id="tutorRegLinkMobile" href="tutor-registration.html"><i
+                class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+        <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i
+                class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i
+                class="fa-solid fa-right-to-bracket"></i> লগইন</a>
         <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
             <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
                 <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Google profile">
@@ -421,7 +809,8 @@
                 <i class="fa-solid fa-chevron-down tsbd-mobile-caret"></i>
             </div>
             <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
-                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i
+                        class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
             </div>
         </div>
     </aside>
@@ -430,8 +819,9 @@
         <!-- 1. INITIAL LOGIN CARD -->
         <div class="card" id="loginCard">
             <h2>টিউটর পোর্টাল</h2>
-            <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">এগিয়ে যেতে আপনার গুগল একাউন্ট দিয়ে লগ ইন করুন</p>
-            
+            <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">এগিয়ে যেতে আপনার গুগল একাউন্ট
+                দিয়ে লগ ইন করুন</p>
+
             <button class="btn btn-google" id="googleSignInBtn">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
                 Google দিয়ে সাইন ইন করুন
@@ -453,45 +843,60 @@
 
             <div class="form-group">
                 <label class="title">২. শিক্ষাপ্রতিষ্ঠান *</label>
-                <input type="text" id="institutionInput" placeholder="যেমন: ঢাকা বিশ্ববিদ্যালয় / বুয়েট / জাতীয় বিশ্ববিদ্যালয়">
+                <input type="text" id="institutionInput"
+                    placeholder="যেমন: ঢাকা বিশ্ববিদ্যালয় / বুয়েট / জাতীয় বিশ্ববিদ্যালয়">
             </div>
 
             <div class="form-group">
                 <label class="title">৩. ডিপার্টমেন্ট *</label>
-                <input type="text" id="departmentInput" placeholder="যেমন: কম্পিউটার সায়েন্স / অর্থনীতি / ইংরেজি / পদার্থবিজ্ঞান">
+                <input type="text" id="departmentInput"
+                    placeholder="যেমন: কম্পিউটার সায়েন্স / অর্থনীতি / ইংরেজি / পদার্থবিজ্ঞান">
             </div>
 
             <div class="form-group" id="phoneGroup">
                 <label class="title">৪. ফোন নাম্বার (অবশ্যই WhatsApp নম্বর হতে হবে) *</label>
-                <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric" autocomplete="tel">
+                <input type="tel" id="phoneInput" placeholder="01XXXXXXXXX" maxlength="11" inputmode="numeric"
+                    autocomplete="tel">
 
-                <div style="margin-top: 10px; padding: 12px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
-                    <span style="font-size: 13px; color: #CBD5E1; display: block; margin-bottom: 10px; font-weight: 600;">
-                        <i class="fa-brands fa-whatsapp" style="color: #25D366; font-size: 16px;"></i> এই নম্বরে কি WhatsApp একাউন্ট আছে? *
+                <div
+                    style="margin-top: 10px; padding: 12px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+                    <span
+                        style="font-size: 13px; color: #CBD5E1; display: block; margin-bottom: 10px; font-weight: 600;">
+                        <i class="fa-brands fa-whatsapp" style="color: #25D366; font-size: 16px;"></i> এই নম্বরে কি
+                        WhatsApp একাউন্ট আছে? *
                     </span>
                     <div style="display: flex; gap: 24px; align-items: center;">
-                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #E2E8F0; font-size: 14px; font-weight: 500;">
-                            <input type="radio" name="hasWhatsApp" value="yes" id="waRadioYes" style="accent-color: #22C55E; width: 18px; height: 18px; cursor: pointer;">
+                        <label
+                            style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #E2E8F0; font-size: 14px; font-weight: 500;">
+                            <input type="radio" name="hasWhatsApp" value="yes" id="waRadioYes"
+                                style="accent-color: #22C55E; width: 18px; height: 18px; cursor: pointer;">
                             <span>হ্যাঁ, WhatsApp আছে</span>
                         </label>
-                        <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #E2E8F0; font-size: 14px; font-weight: 500;">
-                            <input type="radio" name="hasWhatsApp" value="no" id="waRadioNo" style="accent-color: #EF4444; width: 18px; height: 18px; cursor: pointer;">
+                        <label
+                            style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #E2E8F0; font-size: 14px; font-weight: 500;">
+                            <input type="radio" name="hasWhatsApp" value="no" id="waRadioNo"
+                                style="accent-color: #EF4444; width: 18px; height: 18px; cursor: pointer;">
                             <span>না</span>
                         </label>
                     </div>
 
                     <!-- Warning if 'No' is selected -->
-                    <div id="waNoNotice" style="display: none; margin-top: 10px; padding: 9px 12px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; color: #FCA5A5; font-size: 13px; line-height: 1.5;">
-                        <i class="fa-solid fa-circle-exclamation"></i> <strong>WhatsApp নম্বর দিন:</strong> টিউশন কনফার্মেশন ও যোগাযোগের জন্য WhatsApp নম্বর দেওয়া বাধ্যতামূলক। অনুগ্রহ করে আপনার সক্রিয় WhatsApp নম্বরটি লিখুন।
+                    <div id="waNoNotice"
+                        style="display: none; margin-top: 10px; padding: 9px 12px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; color: #FCA5A5; font-size: 13px; line-height: 1.5;">
+                        <i class="fa-solid fa-circle-exclamation"></i> <strong>WhatsApp নম্বর দিন:</strong> টিউশন
+                        কনফার্মেশন ও যোগাযোগের জন্য WhatsApp নম্বর দেওয়া বাধ্যতামূলক। অনুগ্রহ করে আপনার সক্রিয় WhatsApp
+                        নম্বরটি লিখুন।
                     </div>
 
                     <!-- Confirmation badge if 'Yes' is selected -->
-                    <div id="waYesNotice" style="display: none; margin-top: 10px; padding: 7px 12px; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.35); border-radius: 6px; color: #4ADE80; font-size: 13px;">
+                    <div id="waYesNotice"
+                        style="display: none; margin-top: 10px; padding: 7px 12px; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.35); border-radius: 6px; color: #4ADE80; font-size: 13px;">
                         <i class="fa-solid fa-circle-check"></i> WhatsApp নম্বর নিশ্চিত করা হয়েছে ✅
                     </div>
                 </div>
 
-                <span class="help-text" id="phoneHelpText">সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন। টিউটরদের সাথে শুধুমাত্র WhatsApp-এ যোগাযোগ করা হবে।</span>
+                <span class="help-text" id="phoneHelpText">সঠিক ১১ ডিজিটের বাংলাদেশি নম্বর দিন। টিউটরদের সাথে শুধুমাত্র
+                    WhatsApp-এ যোগাযোগ করা হবে।</span>
             </div>
 
             <div class="form-group">
@@ -509,7 +914,8 @@
 
             <div class="form-group">
                 <label class="title">৭. অভিজ্ঞতা *</label>
-                <textarea id="experienceInput" placeholder="যেমন: ৩ বছর / অভিজ্ঞতা নেই / পূর্বের পড়ানোর অভিজ্ঞতা"></textarea>
+                <textarea id="experienceInput"
+                    placeholder="যেমন: ৩ বছর / অভিজ্ঞতা নেই / পূর্বের পড়ানোর অভিজ্ঞতা"></textarea>
             </div>
 
             <div class="form-group">
@@ -559,18 +965,18 @@
          ========================================= -->
     <script type="module">
         // 1. IMPORT FIREBASE MODULES & SHARED UTILS
-        import { 
-            auth, 
-            db, 
-            isAdminUser, 
+        import {
+            auth,
+            db,
+            isAdminUser,
             ALLOWED_ADMIN_EMAILS,
-            doc, 
-            getDoc, 
-            setDoc, 
-            serverTimestamp, 
-            query, 
-            collection, 
-            where, 
+            doc,
+            getDoc,
+            setDoc,
+            serverTimestamp,
+            query,
+            collection,
+            where,
             getDocs,
             signInWithPopup,
             GoogleAuthProvider,
@@ -584,11 +990,11 @@
         const REDIRECT_OLD_USER = "tuitions-offers.html";
 
         // Upload Endpoint: Set your deployed Cloudflare Worker URL here
-        const CLOUDFLARE_WORKER_URL = "https://jts-uploader.banglaworld247.workers.dev"; 
+        const CLOUDFLARE_WORKER_URL = "https://jts-uploader.banglaworld247.workers.dev";
 
         // Legacy / Fallback Google Apps Script URL
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyq20tVZkZOw6wfzjCqzuwM7ARZNEOoklWCKSsqmWPhxM4l-klvySR3WqRRtunRL7dX/exec";
-        
+
         // Active upload URL
         const UPLOAD_ENDPOINT = CLOUDFLARE_WORKER_URL || APPS_SCRIPT_URL;
 
@@ -600,8 +1006,8 @@
         const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
         const tsbdClose = document.getElementById("tsbdClose");
 
-        function tsbdOpenDrawer(){if(tsbdDrawer){tsbdDrawer.classList.add("open");tsbdOverlay.classList.add("open");tsbdDrawer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}}
-        function tsbdCloseDrawer(){if(tsbdDrawer){tsbdDrawer.classList.remove("open");tsbdOverlay.classList.remove("open");tsbdDrawer.setAttribute("aria-hidden","true");document.body.style.overflow=""}}
+        function tsbdOpenDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.add("open"); tsbdOverlay.classList.add("open"); tsbdDrawer.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden" } }
+        function tsbdCloseDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.remove("open"); tsbdOverlay.classList.remove("open"); tsbdDrawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = "" } }
         tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
         tsbdClose?.addEventListener("click", tsbdCloseDrawer);
         tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
@@ -632,7 +1038,7 @@
 
 
 
-        function tsbdSetUser(user){
+        function tsbdSetUser(user) {
             const desktopUser = document.getElementById("tsbdDesktopUser");
             const mobileUser = document.getElementById("tsbdMobileUser");
             const desktopAvatar = document.getElementById("tsbdDesktopAvatar");
@@ -649,26 +1055,26 @@
             if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
             if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
 
-            if(user){
-                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName||user.email||(isAdmin ? 'Admin' : 'Tutor'))}&background=6366F1&color=fff`;
-                if(desktopAvatar) desktopAvatar.src = photo;
-                if(mobileAvatar) mobileAvatar.src = photo;
-                if(mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
-                if(desktopUser) desktopUser.style.display = "inline-flex";
-                if(mobileUser) mobileUser.style.display = "block";
-                if(loginLink) loginLink.style.display = "none";
-                if(loginLinkMobile) loginLinkMobile.style.display = "none";
-                if(tutorRegLink) tutorRegLink.style.display = "none";
-                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
+            if (user) {
+                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || (isAdmin ? 'Admin' : 'Tutor'))}&background=6366F1&color=fff`;
+                if (desktopAvatar) desktopAvatar.src = photo;
+                if (mobileAvatar) mobileAvatar.src = photo;
+                if (mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
+                if (desktopUser) desktopUser.style.display = "inline-flex";
+                if (mobileUser) mobileUser.style.display = "block";
+                if (loginLink) loginLink.style.display = "none";
+                if (loginLinkMobile) loginLinkMobile.style.display = "none";
+                if (tutorRegLink) tutorRegLink.style.display = "none";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
             } else {
-                if(desktopUser) desktopUser.style.display = "none";
-                if(mobileUser) mobileUser.style.display = "none";
-                if(desktopDropdown) desktopDropdown.classList.remove('show');
-                if(mobileDropdown) mobileDropdown.classList.remove('show');
-                if(loginLink) loginLink.style.display = "inline-flex";
-                if(loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
-                if(tutorRegLink) tutorRegLink.style.display = "inline-flex";
-                if(tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
+                if (desktopUser) desktopUser.style.display = "none";
+                if (mobileUser) mobileUser.style.display = "none";
+                if (desktopDropdown) desktopDropdown.classList.remove('show');
+                if (mobileDropdown) mobileDropdown.classList.remove('show');
+                if (loginLink) loginLink.style.display = "inline-flex";
+                if (loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if (tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
             }
         }
 
@@ -680,7 +1086,7 @@
             tsbdSetUser({ photoURL: cachedPhoto, displayName: cachedName, email: cachedEmail });
         }
 
-        async function tsbdLogout(){
+        async function tsbdLogout() {
             try {
                 await signOut(auth);
                 localStorage.removeItem("tutorPhotoURL");
@@ -691,7 +1097,7 @@
                 sessionStorage.removeItem("tutorSession");
                 tsbdCloseDrawer();
                 window.location.reload();
-            } catch(e) {
+            } catch (e) {
                 console.error("Logout error:", e);
                 alert("Logout failed. Please try again.");
             }
@@ -810,13 +1216,13 @@
                     <span>${item}</span>
                 </label>
             `).join('');
-            
+
             // Add change listener to validate form
             container.querySelectorAll('input').forEach(input => {
                 input.addEventListener('change', validateForm);
             });
         }
-        
+
         // Form Validation Logic
         function isValidBDPhone(phone) {
             return /^01[3-9]\d{8}$/.test(phone);
@@ -1130,4 +1536,5 @@
 
     </script>
 </body>
+
 </html>
