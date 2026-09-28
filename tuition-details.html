@@ -1299,7 +1299,7 @@
                 data.specialNotes ||
                 `${className} শ্রেণির শিক্ষার্থীর জন্য একজন অভিজ্ঞ ${tutorPrefText}শিক্ষক প্রয়োজন ${subject}(${days}) পড়াতে হবে`;
 
-            let badgeText = 'AVAILABLE (নতুন)';
+            let badgeText = 'AVAILABLE (আবেদন উন্মুক্ত)';
             let badgeColor = '#10B981';
             let badgeIcon = 'fa-circle-check';
 
@@ -1311,10 +1311,6 @@
                 badgeText = appointedTutorName ? `ASSIGNED (শিক্ষক: ${appointedTutorName})` : 'ASSIGNED (টিউটর নির্ধারিত)';
                 badgeColor = '#2563EB';
                 badgeIcon = 'fa-user-check';
-            } else if (applicantsCount > 0) {
-                badgeText = `AVAILABLE (${toBnDigits(applicantsCount)} জন আবেদন করেছেন)`;
-                badgeColor = '#F59E0B';
-                badgeIcon = 'fa-users';
             }
 
             let statusRowHtml = '';
@@ -1324,8 +1320,6 @@
                 statusRowHtml = appointedTutorName 
                     ? `🔵 শিক্ষক চূড়ান্ত নিয়োগ সম্পন্ন: <strong>${escapeHtml(appointedTutorName)}</strong>` 
                     : '🔵 এই টিউশনে ইতিমধ্যে শিক্ষক চূড়ান্ত করা হয়েছে';
-            } else if (applicantsCount > 0) {
-                statusRowHtml = `🟢 মোট ${toBnDigits(applicantsCount)} জন শিক্ষক আবেদন করেছেন (আবেদন উন্মুক্ত)`;
             } else {
                 statusRowHtml = '🟢 আবেদন গ্রহণ চলছে (উন্মুক্ত)';
             }
@@ -1356,7 +1350,7 @@
                     <div class="grid-item full-width"><div class="label-row"><i class="fa-solid fa-book icon"></i> Subjects</div><div class="value-row">${escapeHtml(subject)}</div></div>
                     <div class="grid-item full-width" style="background: rgba(99,102,241,0.06); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.18); margin-top: 4px;">
                         <div class="label-row"><i class="fa-solid fa-users-viewfinder icon"></i> আবেদনের বর্তমান স্থিতি</div>
-                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isClosed ? '#EF4444' : (isAssigned ? '#60A5FA' : (applicantsCount > 0 ? '#059669' : '#3B82F6'))};">
+                        <div class="value-row" style="font-size:14px; font-weight:700; color:${isClosed ? '#EF4444' : (isAssigned ? '#60A5FA' : '#059669')};">
                             ${statusRowHtml}
                         </div>
                     </div>

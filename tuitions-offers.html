@@ -666,7 +666,7 @@
 
                 let badgeClass = 'status-available';
                 let badgeIcon = 'fa-circle-check';
-                let badgeText = 'AVAILABLE (নতুন)';
+                let badgeText = 'AVAILABLE (আবেদন উন্মুক্ত)';
                 if (isClosed) {
                     badgeClass = 'status-full';
                     badgeIcon = 'fa-circle-xmark';
@@ -675,10 +675,6 @@
                     badgeClass = 'status-full';
                     badgeIcon = 'fa-user-check';
                     badgeText = assignedName ? `ASSIGNED (শিক্ষক: ${assignedName})` : 'ASSIGNED (নিয়োগ সম্পন্ন)';
-                } else if (applicantsCount > 0) {
-                    badgeClass = 'status-partial';
-                    badgeIcon = 'fa-users';
-                    badgeText = `AVAILABLE (${toBnDigits(applicantsCount)} জন আবেদনকারী)`;
                 }
 
                 const card = document.createElement('div');
