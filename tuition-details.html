@@ -1391,7 +1391,7 @@
 
             const commissionBox = document.getElementById("commission-options");
             if (commissionBox) {
-                if (rawCommission === '0%') {
+                if (rawCommission === '0%' || commPercent === 0) {
                     const optText = "এই টিউশনের জন্য কোনো মিডিয়া কমিশন প্রযোজ্য নয় (০%)";
                     commissionBox.innerHTML = `
                         <label style="display:flex;align-items:center;gap:8px;color:#34D399;font-weight:600;font-size:14px;cursor:pointer;background:rgba(16,185,129,0.08);padding:10px 14px;border-radius:8px;border:1px solid rgba(16,185,129,0.25);">
@@ -1400,9 +1400,14 @@
                         </label>
                     `;
                 } else {
-                    const optTaka = (!Number.isNaN(salaryAmount) && salaryAmount > 0) ? Math.round(salaryAmount * 0.40) : 0;
-                    const optTakaStr = optTaka > 0 ? ` [${optTaka.toLocaleString('bn-BD')} টাকা]` : '';
-                    const optText = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৪০%${optTakaStr} মিডিয়া কমিশন পরিশোধ করব`;
+                    const toBnDigits = (n) => String(n).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+                    const effectivePercent = (!Number.isNaN(commPercent) && commPercent > 0) ? commPercent : 40;
+                    const percentStr = `${toBnDigits(effectivePercent)}%`;
+                    const optTaka = (!Number.isNaN(salaryAmount) && salaryAmount > 0) 
+                        ? Math.round(salaryAmount * (effectivePercent / 100)) 
+                        : 0;
+                    const optTakaStr = optTaka > 0 ? ` বা ${optTaka.toLocaleString('bn-BD')} টাকা` : '';
+                    const optText = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ${percentStr}${optTakaStr} মিডিয়া কমিশন পরিশোধ করব`;
                     commissionBox.innerHTML = `
                         <label style="display:flex;align-items:flex-start;gap:10px;line-height:1.5;cursor:pointer;color:#E2E8F0;font-size:14.5px;background:rgba(30,41,59,0.7);padding:12px 14px;border-radius:8px;border:1px solid rgba(59,130,246,0.3);">
                             <input type="radio" name="commission" value="${escapeHtml(optText)}" checked required style="margin-top:3px;accent-color:#3B82F6;transform:scale(1.15);">
