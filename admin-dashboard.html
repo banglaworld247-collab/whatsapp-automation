@@ -1738,8 +1738,8 @@
                     <div class="form-group">
                         <label>মিডিয়া কমিশন (%):</label>
                         <select id="t-commission">
-                            <option value="50%">50% (Standard)</option>
-                            <option value="40%">40%</option>
+                            <option value="40%" selected>40% (Standard)</option>
+                            <option value="50%">50%</option>
                             <option value="30%">30%</option>
                             <option value="60%">60%</option>
                             <option value="0%">0% (No commission)</option>
@@ -2322,7 +2322,7 @@
 
             // Calculate commission with exact Taka amount
             const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
-            const commVal = tuition.commission || tuition.commissionPolicy || '50%';
+            const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
             if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
@@ -2442,7 +2442,7 @@ ${detailsUrl}`;
 
             // Calculate commission with exact Taka amount
             const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
-            const commVal = tuition.commission || tuition.commissionPolicy || '50%';
+            const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
             if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
@@ -3854,7 +3854,7 @@ ${detailsUrl}`;
                     messengerLink: messenger,
                     institute: institute || 'N/A',
                     gender: 'N/A',
-                    commissionPolicy: tuitionData.commission || '50%',
+                    commissionPolicy: tuitionData.commission || '40%',
                     appliedAt: serverTimestamp(),
                     status: 'Selected',
                     isCustomRecruit: true

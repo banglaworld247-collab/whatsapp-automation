@@ -1087,7 +1087,7 @@
 
             // Calculate commission with exact Taka
             const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
-            const commVal = tuition.commission || tuition.commissionPolicy || '50%';
+            const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
             if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
@@ -1255,7 +1255,7 @@
             const subject = data.subject || "N/A";
             const location = data.location || "N/A";
             const salary = data.salary || "N/A";
-            const rawCommission = data.commission || data.commissionPolicy || '50%';
+            const rawCommission = data.commission || data.commissionPolicy || '40%';
             const days = data.days || "N/A";
             const time = data.time || "N/A";
             const studentGender = data.studentGender || "N/A";
@@ -1394,43 +1394,19 @@
                 if (rawCommission === '0%') {
                     const optText = "এই টিউশনের জন্য কোনো মিডিয়া কমিশন প্রযোজ্য নয় (০%)";
                     commissionBox.innerHTML = `
-                        <label style="display:block;margin-bottom:10px;color:#34D399;font-weight:600;">
-                            <input type="radio" name="commission" value="${escapeHtml(optText)}" checked required>
-                            ✅ ${escapeHtml(optText)}
-                        </label>
-                    `;
-                } else if (!Number.isNaN(commPercent) && commPercent > 0) {
-                    const opt1TakaStr = commissionTaka > 0 ? ` বা (${commissionTaka.toLocaleString('bn-BD')} টাকা)` : '';
-                    const opt2Taka = salaryAmount > 0 ? Math.round(salaryAmount * 0.60) : 0;
-                    const opt2TakaStr = opt2Taka > 0 ? ` বা (${opt2Taka.toLocaleString('bn-BD')} টাকা)` : '';
-
-                    const opt1Text = `টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে নির্ধারিত ${commPercent}%${opt1TakaStr} মিডিয়া কমিশন প্রদান করব`;
-                    const opt2Text = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৬০%${opt2TakaStr} মিডিয়া কমিশন পরিশোধ করব`;
-                    commissionBox.innerHTML = `
-                        <label style="display:block;margin-bottom:10px;">
-                            <input type="radio" name="commission" value="${escapeHtml(opt1Text)}" checked required>
-                            ${escapeHtml(opt1Text)}
-                        </label>
-                        <label style="display:block;">
-                            <input type="radio" name="commission" value="${escapeHtml(opt2Text)}">
-                            ${escapeHtml(opt2Text)}
+                        <label style="display:flex;align-items:center;gap:8px;color:#34D399;font-weight:600;font-size:14px;cursor:pointer;background:rgba(16,185,129,0.08);padding:10px 14px;border-radius:8px;border:1px solid rgba(16,185,129,0.25);">
+                            <input type="radio" name="commission" value="${escapeHtml(optText)}" checked required style="accent-color:#10B981;">
+                            <span>✅ ${escapeHtml(optText)}</span>
                         </label>
                     `;
                 } else {
-                    let commission1Text = "টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে ৫০% কমিশন দিব";
-                    let commission2Text = "১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৬০% মিডিয়া কমিশন পরিশোধ করব";
-                    if (!Number.isNaN(salaryAmount) && salaryAmount > 0) {
-                        commission1Text = `টিউশন কনফার্ম হওয়ার ৭ দিনের মধ্যে ৫০% বা (${Math.round(salaryAmount * 0.50).toLocaleString('bn-BD')} টাকা) কমিশন দিব`;
-                        commission2Text = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৬০% বা (${Math.round(salaryAmount * 0.60).toLocaleString('bn-BD')} টাকা) মিডিয়া কমিশন পরিশোধ করব`;
-                    }
+                    const optTaka = (!Number.isNaN(salaryAmount) && salaryAmount > 0) ? Math.round(salaryAmount * 0.40) : 0;
+                    const optTakaStr = optTaka > 0 ? ` [${optTaka.toLocaleString('bn-BD')} টাকা]` : '';
+                    const optText = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ৪০%${optTakaStr} মিডিয়া কমিশন পরিশোধ করব`;
                     commissionBox.innerHTML = `
-                        <label style="display:block;margin-bottom:10px;">
-                            <input type="radio" name="commission" value="${escapeHtml(commission1Text)}" checked required>
-                            ${escapeHtml(commission1Text)}
-                        </label>
-                        <label style="display:block;">
-                            <input type="radio" name="commission" value="${escapeHtml(commission2Text)}">
-                            ${escapeHtml(commission2Text)}
+                        <label style="display:flex;align-items:flex-start;gap:10px;line-height:1.5;cursor:pointer;color:#E2E8F0;font-size:14.5px;background:rgba(30,41,59,0.7);padding:12px 14px;border-radius:8px;border:1px solid rgba(59,130,246,0.3);">
+                            <input type="radio" name="commission" value="${escapeHtml(optText)}" checked required style="margin-top:3px;accent-color:#3B82F6;transform:scale(1.15);">
+                            <span style="font-weight:500;">${escapeHtml(optText)}</span>
                         </label>
                     `;
                 }
