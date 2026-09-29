@@ -716,6 +716,118 @@
                 font-size: 15px !important;
             }
         }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .whatsapp-float-btn:hover {
+            transform: translateY(-4px) scale(1.06);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.65);
+            color: #ffffff;
+        }
+
+        .whatsapp-float-icon {
+            font-size: 32px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+        }
+
+        /* Subtle Pulse Ripple Animation */
+        .whatsapp-float-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            border: 2px solid #25D366;
+            animation: waPulse 2s infinite ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes waPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            70% {
+                transform: scale(1.35);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1.35);
+                opacity: 0;
+            }
+        }
+
+        /* Tooltip */
+        .whatsapp-float-tooltip {
+            position: absolute;
+            right: 70px;
+            background: #111827;
+            color: #F9FAFB;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .whatsapp-float-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -5px;
+            transform: translateY(-50%);
+            border-width: 5px 0 5px 6px;
+            border-style: solid;
+            border-color: transparent transparent transparent #111827;
+        }
+
+        .whatsapp-float-btn:hover .whatsapp-float-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 68px;
+        }
+
+        @media (max-width: 600px) {
+            .whatsapp-float-btn {
+                bottom: 18px;
+                right: 18px;
+                width: 52px;
+                height: 52px;
+            }
+            .whatsapp-float-icon {
+                font-size: 28px;
+            }
+            .whatsapp-float-tooltip {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -794,6 +906,18 @@
 
         <div id="result-message" class="result-box"></div>
     </div>
+
+    <!-- Floating WhatsApp Group Button -->
+    <a href="https://chat.whatsapp.com/C14K0kJcZJ0J3bVabIasC1" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="whatsapp-float-btn" 
+       id="waGroupFloatBtn"
+       aria-label="Join TSBD WhatsApp Group" 
+       title="WhatsApp গ্রুপে যুক্ত হোন">
+        <i class="fa-brands fa-whatsapp whatsapp-float-icon"></i>
+        <span class="whatsapp-float-tooltip">WhatsApp গ্রুপে যুক্ত হোন</span>
+    </a>
 
     <script type="module">
         import { 
