@@ -828,6 +828,207 @@
                 display: none;
             }
         }
+
+        /* Floating How to Apply Video Button (Bottom-Left) */
+        .video-float-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, #EF4444, #B91C1C);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            box-shadow: 0 4px 18px rgba(239, 68, 68, 0.45);
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .video-float-btn:hover {
+            transform: translateY(-4px) scale(1.06);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.65);
+            color: #ffffff;
+        }
+
+        .video-float-icon {
+            font-size: 24px;
+            margin-left: 3px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Video Button Pulse */
+        .video-float-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            border: 2px solid #EF4444;
+            animation: videoPulse 2s infinite ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes videoPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            70% {
+                transform: scale(1.35);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1.35);
+                opacity: 0;
+            }
+        }
+
+        /* Tooltip for Video Button */
+        .video-float-tooltip {
+            position: absolute;
+            left: 70px;
+            background: #111827;
+            color: #F9FAFB;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-float-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+            border-width: 5px 6px 5px 0;
+            border-style: solid;
+            border-color: transparent #111827 transparent transparent;
+        }
+
+        .video-float-btn:hover .video-float-tooltip {
+            opacity: 1;
+            visibility: visible;
+            left: 68px;
+        }
+
+        /* Video Modal Styles */
+        .video-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 26, 47, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            animation: fadeInModal 0.22s ease-out;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .video-modal-content {
+            background: #13233D;
+            border: 1.5px solid #1E3A5F;
+            border-radius: 18px;
+            padding: 24px 20px 20px;
+            max-width: 440px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            color: #F3F4F6;
+            animation: scaleInModal 0.22s ease-out;
+        }
+
+        @keyframes scaleInModal {
+            from { transform: scale(0.93); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .video-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #9CA3AF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .video-modal-close:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: #EF4444;
+            transform: rotate(90deg);
+        }
+
+        .modal-video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            margin: 12px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .modal-video-wrapper iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .video-float-btn {
+                bottom: 18px;
+                left: 18px;
+                width: 52px;
+                height: 52px;
+            }
+            .video-float-icon {
+                font-size: 22px;
+            }
+            .video-float-tooltip {
+                display: none;
+            }
+            .modal-video-wrapper iframe {
+                height: 430px;
+            }
+        }
     </style>
 </head>
 
@@ -918,6 +1119,26 @@
         <i class="fa-brands fa-whatsapp whatsapp-float-icon"></i>
         <span class="whatsapp-float-tooltip">WhatsApp গ্রুপে যুক্ত হোন</span>
     </a>
+
+    <!-- Floating How to Apply Video Button (Bottom-Left) -->
+    <button type="button" 
+       class="video-float-btn" 
+       id="howToApplyFloatBtn" 
+       aria-label="How to Apply Video" 
+       title="কিভাবে আবেদন করবেন? ভিডিও দেখুন">
+        <i class="fa-solid fa-play video-float-icon"></i>
+        <span class="video-float-tooltip">কিভাবে আবেদন করবেন? (ভিডিও)</span>
+    </button>
+
+    <!-- How to Apply / Login Required Modal -->
+    <div class="video-modal-backdrop" id="howToApplyModal" aria-hidden="true" style="display:none;">
+        <div class="video-modal-content">
+            <button type="button" class="video-modal-close" id="closeHowToApplyModalBtn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="videoModalBody"></div>
+        </div>
+    </div>
 
     <script type="module">
         import { 
@@ -1077,6 +1298,124 @@
 
         const ADMIN_PHONES = ["01700000000", "01800000000"];
         const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB per file
+
+        const HOW_TO_APPLY_REEL_URL = "https://www.facebook.com/reel/28930556803217235";
+        const HOW_TO_APPLY_EMBED_URL = "https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F28930556803217235&show_text=0&width=360";
+
+        function openHowToApplyModal(showLoginPrompt = false) {
+            const modal = document.getElementById("howToApplyModal");
+            const modalBody = document.getElementById("videoModalBody");
+            if (!modal || !modalBody) return;
+
+            const phone = String(
+                localStorage.getItem("tutorPhone") ||
+                sessionStorage.getItem("tutorPhone") || ""
+            ).trim();
+            const phoneRegex = /^01[3-9]\d{8}$/;
+            const isTutorLoggedIn = phoneRegex.test(phone);
+            const redirectUrl = `tutor-registration.html?redirect=${encodeURIComponent(window.location.href)}`;
+
+            if (showLoginPrompt || !isTutorLoggedIn) {
+                modalBody.innerHTML = `
+                    <div style="text-align:center;margin-bottom:12px;">
+                        <div style="width:52px;height:52px;border-radius:50%;background:rgba(239,68,68,0.15);color:#EF4444;display:inline-flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:8px;">
+                            <i class="fa-solid fa-user-lock"></i>
+                        </div>
+                        <h3 style="font-size:18px;font-weight:700;color:#F3F4F6;margin-bottom:6px;">প্রথমে টিউটর হিসেবে রেজিস্ট্রেশন/লগইন করুন</h3>
+                        <p style="font-size:13.5px;color:#94A3B8;line-height:1.5;">
+                            টিউশনে আবেদন করার জন্য একটি টিউটর একাউন্ট থাকা বাধ্যতামূলক। একাউন্ট তৈরি বা লগইন করার পর সরাসরি আবেদন করতে পারবেন।
+                        </p>
+                    </div>
+
+                    <!-- Login / Registration Button -->
+                    <a href="${redirectUrl}" 
+                       class="btn btn-apply" 
+                       style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;margin:12px 0 16px;background:linear-gradient(135deg,#2563EB,#1D4ED8);font-size:15px;font-weight:700;padding:12px 18px;border-radius:10px;box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+                        <i class="fa-solid fa-right-to-bracket"></i> টিউটর রেজিস্ট্রেশন বা লগইন করুন
+                    </a>
+
+                    <!-- Video Guide Below Button -->
+                    <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;margin-top:8px;">
+                        <div style="font-size:13.5px;font-weight:700;color:#38BDF8;display:flex;align-items:center;gap:6px;margin-bottom:8px;justify-content:center;">
+                            <i class="fa-solid fa-circle-play" style="color:#EF4444;font-size:15px;"></i> আবেদনের নিয়ম ও নির্দেশিকা ভিডিও:
+                        </div>
+                        <div class="modal-video-wrapper">
+                            <iframe 
+                                id="howToApplyIframe"
+                                src="${HOW_TO_APPLY_EMBED_URL}" 
+                                scrolling="no" 
+                                frameborder="0" 
+                                allowfullscreen="true" 
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                            </iframe>
+                        </div>
+                        <div style="text-align:center;margin-top:8px;">
+                            <a href="${HOW_TO_APPLY_REEL_URL}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#93C5FD;text-decoration:none;">
+                                <i class="fa-brands fa-facebook"></i> ফেসবুকে সরাসরি ভিডিওটি দেখুন
+                            </a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                modalBody.innerHTML = `
+                    <div style="text-align:center;margin-bottom:12px;">
+                        <div style="width:48px;height:48px;border-radius:50%;background:rgba(239,68,68,0.15);color:#EF4444;display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:8px;">
+                            <i class="fa-solid fa-circle-play"></i>
+                        </div>
+                        <h3 style="font-size:18px;font-weight:700;color:#F3F4F6;margin-bottom:4px;">কিভাবে আবেদন করবেন?</h3>
+                        <p style="font-size:13px;color:#94A3B8;">
+                            নিচের ভিডিও নির্দেশিকা দেখে সহজেই টিউশনে আবেদন সম্পন্ন করুন:
+                        </p>
+                    </div>
+
+                    <div class="modal-video-wrapper">
+                        <iframe 
+                            id="howToApplyIframe"
+                            src="${HOW_TO_APPLY_EMBED_URL}" 
+                            scrolling="no" 
+                            frameborder="0" 
+                            allowfullscreen="true" 
+                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                        </iframe>
+                    </div>
+                    <div style="text-align:center;margin-top:8px;">
+                        <a href="${HOW_TO_APPLY_REEL_URL}" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#93C5FD;text-decoration:none;">
+                            <i class="fa-brands fa-facebook"></i> ফেসবুকে সরাসরি ভিডিওটি দেখুন
+                        </a>
+                    </div>
+                `;
+            }
+
+            modal.style.display = "flex";
+            modal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeHowToApplyModal() {
+            const modal = document.getElementById("howToApplyModal");
+            if (modal) {
+                modal.style.display = "none";
+                modal.setAttribute("aria-hidden", "true");
+                document.body.style.overflow = "";
+                const modalBody = document.getElementById("videoModalBody");
+                if (modalBody) modalBody.innerHTML = "";
+            }
+        }
+
+        document.getElementById("howToApplyFloatBtn")?.addEventListener("click", () => openHowToApplyModal(false));
+        document.getElementById("closeHowToApplyModalBtn")?.addEventListener("click", closeHowToApplyModal);
+        document.getElementById("howToApplyModal")?.addEventListener("click", (e) => {
+            if (e.target.id === "howToApplyModal") closeHowToApplyModal();
+        });
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeHowToApplyModal();
+        });
 
         const urlParams = new URLSearchParams(window.location.search);
         const tuitionId = urlParams.get("id");
@@ -1551,8 +1890,7 @@
                     const phoneRegex = /^01[3-9]\d{8}$/;
 
                     if (!phoneRegex.test(phone)) {
-                        alert("প্রথমে টিউটর হিসেবে রেজিস্ট্রেশন/লগইন করুন। তারপর টিউশনে আবেদন করুন।");
-                        window.location.href = "tutor-registration.html";
+                        openHowToApplyModal(true);
                         return;
                     }
 
@@ -1703,8 +2041,7 @@
             const phoneRegex = /^01[3-9]\d{8}$/;
 
             if (!phoneRegex.test(phone)) {
-                alert("প্রথমে টিউটর হিসেবে রেজিস্ট্রেশন/লগইন করুন। তারপর টিউশনে আবেদন করুন।");
-                window.location.href = "tutor-registration.html";
+                openHowToApplyModal(true);
                 return;
             }
             if (ADMIN_PHONES.includes(phone)) {
