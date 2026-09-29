@@ -1125,7 +1125,8 @@
        class="video-float-btn" 
        id="howToApplyFloatBtn" 
        aria-label="How to Apply Video" 
-       title="কিভাবে আবেদন করবেন? ভিডিও দেখুন">
+       title="কিভাবে আবেদন করবেন? ভিডিও দেখুন"
+       style="display:none;">
         <i class="fa-solid fa-play video-float-icon"></i>
         <span class="video-float-tooltip">কিভাবে আবেদন করবেন? (ভিডিও)</span>
     </button>
@@ -1223,6 +1224,27 @@
         document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
         document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
 
+        function isUserLoggedIn() {
+            const phone = String(
+                localStorage.getItem("tutorPhone") ||
+                sessionStorage.getItem("tutorPhone") || ""
+            ).trim();
+            const phoneRegex = /^01[3-9]\d{8}$/;
+            const hasPhone = phoneRegex.test(phone);
+            const hasAuth = Boolean(auth?.currentUser || localStorage.getItem("userEmail") || localStorage.getItem("tutorDisplayName"));
+            return hasPhone || hasAuth;
+        }
+
+        function updateVideoFloatBtnVisibility() {
+            const floatBtn = document.getElementById("howToApplyFloatBtn");
+            if (!floatBtn) return;
+            if (isUserLoggedIn()) {
+                floatBtn.style.display = "none";
+            } else {
+                floatBtn.style.display = "flex";
+            }
+        }
+
         function tsbdSetUser(user) {
             const desktopUser = document.getElementById("tsbdDesktopUser");
             const mobileUser = document.getElementById("tsbdMobileUser");
@@ -1261,6 +1283,7 @@
                 if (tutorRegLink) tutorRegLink.style.display = "inline-flex";
                 if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
             }
+            updateVideoFloatBtnVisibility();
         }
 
         // Preload cached avatar and admin status immediately on page load
@@ -1270,6 +1293,7 @@
         if (cachedPhoto || cachedEmail) {
             tsbdSetUser({ photoURL: cachedPhoto, displayName: cachedName, email: cachedEmail });
         }
+        updateVideoFloatBtnVisibility();
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -1284,6 +1308,7 @@
                 localStorage.removeItem("userEmail");
                 tsbdSetUser(null);
             }
+            updateVideoFloatBtnVisibility();
         });
 
         // Upload Endpoint: Set your deployed Cloudflare Worker URL here
@@ -1307,12 +1332,7 @@
             const modalBody = document.getElementById("videoModalBody");
             if (!modal || !modalBody) return;
 
-            const phone = String(
-                localStorage.getItem("tutorPhone") ||
-                sessionStorage.getItem("tutorPhone") || ""
-            ).trim();
-            const phoneRegex = /^01[3-9]\d{8}$/;
-            const isTutorLoggedIn = phoneRegex.test(phone);
+            const isTutorLoggedIn = isUserLoggedIn();
             const redirectUrl = `tutor-registration.html?redirect=${encodeURIComponent(window.location.href)}`;
 
             if (showLoginPrompt || !isTutorLoggedIn) {
