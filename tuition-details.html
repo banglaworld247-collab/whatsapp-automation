@@ -2103,6 +2103,8 @@
                 const tutorData = tutorSnap.data();
                 const tutorName = tutorData.name || "";
                 const institute = tutorData.institute || tutorData.institution || "";
+                const department = tutorData.department || "";
+                const experience = tutorData.experience || "";
                 const address = tutorData.address || "";
                 const gender = tutorData.gender || "";
                 const email = tutorData.email || "";
@@ -2170,6 +2172,8 @@
                     tutorUid: tutorSnap.id,
                     tutorName,
                     institute,
+                    department,
+                    experience,
                     email,
                     phone,
                     address,

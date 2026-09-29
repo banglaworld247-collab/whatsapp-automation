@@ -3721,8 +3721,50 @@ ${detailsUrl}`;
                 if (appSnaps.empty) {
                     html += `<div class="applicant-detail" style="color:var(--text-muted);text-align:center;padding:24px;">এই টিউশনের জন্য এখনও কোনো শিক্ষক আবেদন করেননি।</div>`;
                 } else {
-                    appSnaps.forEach((appDoc, index) => {
+                    const applicantDataList = await Promise.all(appSnaps.docs.map(async (appDoc) => {
                         const ad = appDoc.data();
+                        const tutorUid = ad.uid || ad.tutorUid || '';
+                        const tutorPhone = ad.phone || ad.tutorPhone || '';
+
+                        let department = ad.department || '';
+                        let experience = ad.experience || '';
+
+                        // Check in-memory registered tutors if department or experience is missing
+                        if ((!department || !experience) && typeof allRegisteredTutors !== 'undefined' && allRegisteredTutors.length > 0) {
+                            const found = allRegisteredTutors.find(t => (tutorUid && t.id === tutorUid) || (tutorPhone && t.phone === tutorPhone));
+                            if (found) {
+                                if (!department) department = found.department || '';
+                                if (!experience) experience = found.experience || '';
+                            }
+                        }
+
+                        // Fallback Firestore fetch if still missing
+                        if ((!department || !experience) && tutorUid) {
+                            try {
+                                const tSnap = await getDoc(doc(db, "tutors", tutorUid));
+                                if (tSnap.exists()) {
+                                    const td = tSnap.data();
+                                    if (!department) department = td.department || '';
+                                    if (!experience) experience = td.experience || '';
+                                }
+                            } catch (e) { }
+                        }
+                        if ((!department || !experience) && tutorPhone) {
+                            try {
+                                const tQuery = query(collection(db, "tutors"), where("phone", "==", tutorPhone));
+                                const tRes = await getDocs(tQuery);
+                                if (!tRes.empty) {
+                                    const td = tRes.docs[0].data();
+                                    if (!department) department = td.department || '';
+                                    if (!experience) experience = td.experience || '';
+                                }
+                            } catch (e) { }
+                        }
+
+                        return { appDoc, ad, department, experience };
+                    }));
+
+                    applicantDataList.forEach(({ appDoc, ad, department, experience }, index) => {
                         const tutorName = ad.tutorName || ad.name || 'শিক্ষক';
                         const tutorPhone = ad.phone || ad.tutorPhone || '';
                         const tutorUid = ad.uid || ad.tutorUid || '';
@@ -3753,17 +3795,15 @@ ${detailsUrl}`;
                                 </div>
 
                                 <table class="data-table">
-                                    <tr><th>Application ID</th><td>${safe(appDoc.id)}</td></tr>
-                                    <tr><th>UID</th><td>${safe(tutorUid)}</td></tr>
                                     <tr><th>Name</th><td><strong>${safe(tutorName)}</strong></td></tr>
-                                    <tr><th>Institution</th><td>${safe(ad.institute || ad.institution || 'N/A')}${ad.department ? ` (${safe(ad.department)})` : ''}</td></tr>
-                                    <tr><th>Email</th><td>${safe(ad.email)}</td></tr>
+                                    <tr><th>Institution</th><td>${safe(ad.institute || ad.institution || 'N/A')}</td></tr>
+                                    <tr><th>Department</th><td>${safe(department || 'N/A')}</td></tr>
                                     <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`)}</td></tr>
-                                    <tr><th>Address</th><td>${safe(ad.address)}</td></tr>
-                                    <tr><th>Gender</th><td>${safe(ad.gender)}</td></tr>
-                                    <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy)}</td></tr>
+                                    <tr><th>Address</th><td>${safe(ad.address || 'N/A')}</td></tr>
+                                    <tr><th>Gender</th><td>${safe(ad.gender || 'N/A')}</td></tr>
+                                    <tr><th>Experience</th><td>${safe(experience || 'N/A')}</td></tr>
+                                    <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy || 'N/A')}</td></tr>
                                     <tr><th>Status</th><td>${safe(ad.status || 'Pending')}</td></tr>
-                                    <tr><th>Student ID / NID</th><td>${fileLink(ad.nidFileUrl || ad.nidUrl, 'View Document')}</td></tr>
                                     <tr><th>SSC/HSC Marksheet</th><td>${fileLink(ad.marksheetFileUrl || ad.msUrl, 'View Document')}</td></tr>
                                 </table>
 
