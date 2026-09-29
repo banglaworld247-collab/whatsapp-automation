@@ -2125,7 +2125,7 @@
             GoogleAuthProvider,
             signInWithPopup
         } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, getDoc, getDocs, where, arrayUnion, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, getDoc, getDocs, where, arrayUnion, setDoc, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // === আপনার ফায়ারবেস কনফিগ এখানে বসান ===
         const firebaseConfig = {
@@ -2722,7 +2722,6 @@ ${detailsUrl}`;
 
         async function tsbdLogout() {
             try {
-                if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
                 if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
                 await signOut(auth);
                 localStorage.removeItem("tutorPhotoURL");
@@ -2769,9 +2768,8 @@ ${detailsUrl}`;
                 dashboardContainer.style.display = 'block';
                 initWhatsAppConfig(); // Load WhatsApp remote config on verified admin auth
                 loadTuitions(); // Load data on verified admin login
-                loadRegisteredTutors(); // Load registered tutors count & data
+                updateTutorsBadgeCount(); // Lightweight server count only - full tutors data loads when Tutors tab is opened
             } else {
-                if (unsubscribeApps) { unsubscribeApps(); unsubscribeApps = null; }
                 if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
                 localStorage.removeItem("userEmail");
                 tsbdSetUser(null);
@@ -2861,8 +2859,9 @@ ${detailsUrl}`;
         // CRM, Analytics & Data Logic
         // ==========================================
         let allTuitions = [];
-        let allApplications = [];
         let currentFilter = 'pending';
+        const TUITIONS_PER_PAGE = 20;
+        let displayedCount = TUITIONS_PER_PAGE;
 
         function normStatus(str) {
             return (str || '').normalize('NFC').trim();
@@ -2919,6 +2918,16 @@ ${detailsUrl}`;
         // Registered Tutors Data & Table Logic
         // ==========================================
         let allRegisteredTutors = [];
+
+        window.updateTutorsBadgeCount = async function() {
+            try {
+                const snapshot = await getCountFromServer(collection(db, "tutors"));
+                const count = snapshot.data().count;
+                updateTutorsCount(count);
+            } catch (e) {
+                console.warn("Could not get tutors count from server:", e);
+            }
+        };
 
         window.loadRegisteredTutors = function(force = false) {
             const tbody = document.getElementById('tutorsTableBody');
@@ -3024,23 +3033,10 @@ ${detailsUrl}`;
         }
 
         // Realtime Listeners
-        let unsubscribeApps = null;
         let unsubscribeTuitions = null;
 
         function loadTuitions() {
-            if (unsubscribeApps) unsubscribeApps();
             if (unsubscribeTuitions) unsubscribeTuitions();
-
-            // Listen to applications in realtime
-            unsubscribeApps = onSnapshot(collection(db, "applications"), (appSnap) => {
-                allApplications = [];
-                appSnap.forEach(docSnap => {
-                    allApplications.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                renderTuitionCards();
-            }, (error) => {
-                console.warn("Applications snapshot notice:", error.message);
-            });
 
             // Listen to tuitions in realtime
             const q = query(collection(db, "tuitions"), orderBy("createdAt", "desc"));
@@ -3140,10 +3136,16 @@ ${detailsUrl}`;
 
         window.setTuitionFilter = function (filterKey, btnElement) {
             currentFilter = filterKey;
+            displayedCount = TUITIONS_PER_PAGE; // Reset pagination count on filter switch
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
             renderTuitionCards();
         }
+
+        window.loadMoreTuitions = function () {
+            displayedCount += TUITIONS_PER_PAGE;
+            renderTuitionCards();
+        };
 
         function renderTuitionCards() {
             if (!listContainer) return;
@@ -3165,11 +3167,13 @@ ${detailsUrl}`;
             }
 
             if (filtered.length === 0) {
-                listContainer.innerHTML = '<div class="loading" style="color:var(--text-muted);">কোনো টিউশন পাওয়া যায়নি।</div>';
+                listContainer.innerHTML = '<div class="loading" style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:30px;">কোনো টিউশন পাওয়া যায়নি।</div>';
                 return;
             }
 
-            filtered.forEach((item) => {
+            const visibleItems = filtered.slice(0, displayedCount);
+
+            visibleItems.forEach((item) => {
                 const id = item.id;
                 const salary = parseSalary(item.salary || item.offer?.salary);
                 const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
@@ -3211,8 +3215,8 @@ ${detailsUrl}`;
                     planAlertBadge = `<span class="plan-alert-tag" style="background:rgba(56,189,248,0.15);color:#38BDF8;border-color:rgba(56,189,248,0.3);"><i class="fa-solid fa-calendar"></i> ${nextPlanDate}</span>`;
                 }
 
-                // Count applicants
-                const appsCount = allApplications.filter(a => a.tuitionId === id).length;
+                // Count applicants directly from tuition document
+                const appsCount = Number(item.applicantsCount || 0);
 
                 const card = document.createElement('div');
                 card.className = `tuition-card ${statusClass}`;
@@ -3273,6 +3277,23 @@ ${detailsUrl}`;
                 `;
                 listContainer.appendChild(card);
             });
+
+            // Pagination / Load More button
+            if (filtered.length > displayedCount) {
+                const loadMoreWrap = document.createElement('div');
+                loadMoreWrap.style.gridColumn = '1 / -1';
+                loadMoreWrap.style.textAlign = 'center';
+                loadMoreWrap.style.margin = '20px 0 10px';
+                const remaining = filtered.length - displayedCount;
+                const nextBatch = Math.min(TUITIONS_PER_PAGE, remaining);
+
+                loadMoreWrap.innerHTML = `
+                    <button type="button" onclick="loadMoreTuitions()" class="btn-primary" style="padding:12px 28px;font-size:14px;font-weight:700;border-radius:30px;background:linear-gradient(135deg, #3B82F6, #2563EB);border:none;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.4);display:inline-flex;align-items:center;gap:8px;">
+                        <i class="fa-solid fa-angles-down"></i> আরও ${nextBatch}টি টিউশন দেখুন (মোট ${filtered.length}-টির মধ্যে ${displayedCount}টি প্রদর্শিত)
+                    </button>
+                `;
+                listContainer.appendChild(loadMoreWrap);
+            }
         }
 
         // ==========================================
