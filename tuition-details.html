@@ -1884,17 +1884,30 @@
                     `;
                 } else {
                     const toBnDigits = (n) => String(n).replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
-                    const effectivePercent = (!Number.isNaN(commPercent) && commPercent > 0) ? commPercent : 40;
-                    const percentStr = `${toBnDigits(effectivePercent)}%`;
-                    const optTaka = (!Number.isNaN(salaryAmount) && salaryAmount > 0) 
-                        ? Math.round(salaryAmount * (effectivePercent / 100)) 
+                    const opt1Percent = (!Number.isNaN(commPercent) && commPercent > 0) ? commPercent : 40;
+                    const opt1PercentStr = `${toBnDigits(opt1Percent)}%`;
+                    const opt1Taka = (!Number.isNaN(salaryAmount) && salaryAmount > 0) 
+                        ? Math.round(salaryAmount * (opt1Percent / 100)) 
                         : 0;
-                    const optTakaStr = optTaka > 0 ? ` বা ${optTaka.toLocaleString('bn-BD')} টাকা` : '';
-                    const optText = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত ${percentStr}${optTakaStr} মিডিয়া কমিশন পরিশোধ করব`;
+                    const opt1TakaStr = opt1Taka > 0 ? ` বা ${opt1Taka.toLocaleString('bn-BD')} টাকা` : '';
+                    const opt1Text = `টিউশন কনফর্মের ৭দিন পর নির্ধারিত বেতনের ${opt1PercentStr}${opt1TakaStr} মিডিয়া কমিশন পরিশোধ করব`;
+
+                    const opt2Percent = 60;
+                    const opt2PercentStr = '৬০%';
+                    const opt2Taka = (!Number.isNaN(salaryAmount) && salaryAmount > 0) 
+                        ? Math.round(salaryAmount * (opt2Percent / 100)) 
+                        : 0;
+                    const opt2TakaStr = opt2Taka > 0 ? ` বা ${opt2Taka.toLocaleString('bn-BD')} টাকা` : '';
+                    const opt2Text = `১ম মাসের বেতন পাওয়ার পর নির্ধারিত বেতনের ${opt2PercentStr}${opt2TakaStr} মিডিয়া কমিশন পরিশোধ করব`;
+
                     commissionBox.innerHTML = `
+                        <label style="display:flex;align-items:flex-start;gap:10px;line-height:1.5;cursor:pointer;color:#E2E8F0;font-size:14.5px;background:rgba(30,41,59,0.7);padding:12px 14px;border-radius:8px;border:1px solid rgba(59,130,246,0.3);margin-bottom:10px;">
+                            <input type="radio" name="commission" value="${escapeHtml(opt1Text)}" checked required style="margin-top:3px;accent-color:#3B82F6;transform:scale(1.15);">
+                            <span style="font-weight:500;">${escapeHtml(opt1Text)}</span>
+                        </label>
                         <label style="display:flex;align-items:flex-start;gap:10px;line-height:1.5;cursor:pointer;color:#E2E8F0;font-size:14.5px;background:rgba(30,41,59,0.7);padding:12px 14px;border-radius:8px;border:1px solid rgba(59,130,246,0.3);">
-                            <input type="radio" name="commission" value="${escapeHtml(optText)}" checked required style="margin-top:3px;accent-color:#3B82F6;transform:scale(1.15);">
-                            <span style="font-weight:500;">${escapeHtml(optText)}</span>
+                            <input type="radio" name="commission" value="${escapeHtml(opt2Text)}" required style="margin-top:3px;accent-color:#3B82F6;transform:scale(1.15);">
+                            <span style="font-weight:500;">${escapeHtml(opt2Text)}</span>
                         </label>
                     `;
                 }
