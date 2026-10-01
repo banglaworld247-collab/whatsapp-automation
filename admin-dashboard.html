@@ -2278,7 +2278,7 @@
             closeWhatsAppModal();
         };
 
-        function renderWhatsAppPhoneHtml(rawPhone, name = 'শিক্ষক', context = '') {
+        function renderWhatsAppPhoneHtml(rawPhone, name = 'শিক্ষক', context = '', customMsg = '') {
             if (!rawPhone) return '<span style="color:var(--text-muted);">প্রদান করা হয়নি</span>';
             const cleanDigits = String(rawPhone).replace(/[^0-9]/g, '');
             if (!cleanDigits) return safe(rawPhone);
@@ -2288,7 +2288,8 @@
             else if (waDigits.startsWith('+8801')) waDigits = waDigits.substring(1);
 
             const defaultMsg = `আসসালামু আলাইকুম ${name}, TSBD (Tuition Service BD) থেকে যোগাযোগ করা হচ্ছে। ${context ? `(${context})` : ''}`;
-            const waLink = `https://wa.me/${waDigits}?text=${encodeURIComponent(defaultMsg)}`;
+            const finalMsg = customMsg || defaultMsg;
+            const waLink = `https://wa.me/${waDigits}?text=${encodeURIComponent(finalMsg)}`;
 
             return `
                 <div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
@@ -2301,6 +2302,55 @@
                     </a>
                 </div>
             `;
+        }
+
+        function formatApplicantWhatsAppMessage(tuition, tuitionId, tutorName = 'শিক্ষক') {
+            const origin = window.location.origin;
+            const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            const detailsUrl = `${origin}${path}/tuition-details.html?id=${tuitionId}`;
+
+            const jobId = tuition.jobId || 'N/A';
+            const cls = tuition.className || tuition.class || 'N/A';
+            const cat = tuition.category || 'Bangla Medium';
+            const sub = tuition.subject || tuition.subjects || 'N/A';
+            const loc = tuition.location || 'N/A';
+            const sal = tuition.salary || 'আলোচনা সাপেক্ষে';
+            const days = tuition.days || '৩ দিন / সপ্তাহ';
+            const time = tuition.time || 'সন্ধ্যা';
+            const pref = tuition.preferredTutor || 'Any';
+            const gender = tuition.studentGender ? ` (${tuition.studentGender} Student)` : '';
+            const notes = tuition.specialNotes ? `\n📝 *শর্ত / নোট:* ${tuition.specialNotes}` : '';
+
+            // Calculate commission with exact Taka amount
+            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            const commVal = tuition.commission || tuition.commissionPolicy || '40%';
+            let commText = commVal;
+            const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
+            if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
+                const commTaka = Math.round(salaryNum * (commPercent / 100));
+                commText = `${commPercent}% (${commTaka.toLocaleString('bn-BD')} টাকা)`;
+            } else if (commVal === '0%') {
+                commText = 'কোনো কমিশন নেই (০%)';
+            }
+
+            return `আসসালামু আলাইকুম ${tutorName}, TSBD (Tuition Service BD) থেকে যোগাযোগ করা হচ্ছে। (Job ID #${jobId} আবেদন)
+
+📌 *আবেদনকৃত টিউশনের বিবরণ:*
+━━━━━━━━━━━━━━━━━━━━
+🆔 *Job ID:* #${jobId}
+🎓 *শ্রেণী:* ${cls} (${cat})
+📚 *বিষয়:* ${sub}
+📍 *লোকেশন:* ${loc}
+📅 *দিন:* ${days}
+⏰ *সময়:* ${time}
+💰 *বেতন:* ${sal}
+💵 *মিডিয়া কমিশন:* ${commText}
+👥 *টিউটর রিকোয়ারমেন্ট:* ${pref}${gender}${notes}
+━━━━━━━━━━━━━━━━━━━━
+👉 *টিউশন লিঙ্ক:*
+${detailsUrl}
+
+আপনি কি এই টিউশনটি নিতে আগ্রহী ও প্রস্তুত আছেন? জানালে পরবর্তী প্রসেসিং শুরু করা হবে। ধন্যবাদ।`;
         }
 
         function formatWhatsAppMessage(tuition, docId) {
@@ -3645,6 +3695,8 @@ ${detailsUrl}`;
                         </a>
                     ` : '<span style="color:var(--text-muted);">প্রদান করা হয়নি</span>';
 
+                    const assignedWaMsg = formatApplicantWhatsAppMessage(tuitionData, tuitionId, tData.name || 'শিক্ষক');
+
                     html += `
                         <div class="assigned-tutor-box" style="border: 1px solid rgba(34,197,94,0.4); background: rgba(34,197,94,0.06); border-radius:8px; padding:16px; margin: 16px 0;">
                             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
@@ -3655,7 +3707,7 @@ ${detailsUrl}`;
                             </div>
                             <table class="data-table" style="margin-top:10px;">
                                 <tr><th>Tutor Name</th><td><strong>${safe(tData.name)}</strong></td></tr>
-                                <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`)}</td></tr>
+                                <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`, assignedWaMsg)}</td></tr>
                                 <tr><th>Messenger</th><td>${msngrLinkHtml}</td></tr>
                                 <tr><th>Institution</th><td>${safe(tData.institution || tData.institute || 'N/A')}${tData.department ? ` (${safe(tData.department)})` : ''}</td></tr>
                                 ${isRegistered ? `
@@ -3806,6 +3858,8 @@ ${detailsUrl}`;
                         const escapedName = String(tutorName).replace(/'/g, "\\'");
                         const escapedPhone = String(tutorPhone).replace(/'/g, "\\'");
 
+                        const applicantWaMsg = formatApplicantWhatsAppMessage(tuitionData, tuitionId, tutorName);
+
                         html += `
                             <div class="applicant-detail" style="border-left: 4px solid ${isThisTutorAssigned ? '#22C55E' : '#3B82F6'}; margin-bottom:16px; background: ${isThisTutorAssigned ? 'rgba(34,197,94,0.06)' : 'rgba(30,41,59,0.7)'}; border-radius:8px; padding:16px; border: 1px solid ${isThisTutorAssigned ? 'rgba(34,197,94,0.3)' : 'rgba(255,255,255,0.08)'};">
                                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
@@ -3819,7 +3873,7 @@ ${detailsUrl}`;
                                     <tr><th>Name</th><td><strong>${safe(tutorName)}</strong></td></tr>
                                     <tr><th>Institution</th><td>${safe(ad.institute || ad.institution || 'N/A')}</td></tr>
                                     <tr><th>Department</th><td>${safe(department || 'N/A')}</td></tr>
-                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`)}</td></tr>
+                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`, applicantWaMsg)}</td></tr>
                                     <tr><th>Address</th><td>${safe(ad.address || 'N/A')}</td></tr>
                                     <tr><th>Gender</th><td>${safe(ad.gender || 'N/A')}</td></tr>
                                     <tr><th>Experience</th><td>${safe(experience || 'N/A')}</td></tr>
