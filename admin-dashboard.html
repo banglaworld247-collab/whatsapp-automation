@@ -3801,28 +3801,34 @@ ${detailsUrl}`;
 
                         let department = ad.department || '';
                         let experience = ad.experience || '';
+                        let nidDocUrl = ad.nidFileUrl || ad.nidUrl || '';
+                        let marksheetDocUrl = ad.marksheetFileUrl || ad.msUrl || '';
 
-                        // Check in-memory registered tutors if department or experience is missing
-                        if ((!department || !experience) && typeof allRegisteredTutors !== 'undefined' && allRegisteredTutors.length > 0) {
+                        // Check in-memory registered tutors if department, experience, nid or marksheet is missing
+                        if ((!department || !experience || !nidDocUrl || !marksheetDocUrl) && typeof allRegisteredTutors !== 'undefined' && allRegisteredTutors.length > 0) {
                             const found = allRegisteredTutors.find(t => (tutorUid && t.id === tutorUid) || (tutorPhone && t.phone === tutorPhone));
                             if (found) {
                                 if (!department) department = found.department || '';
                                 if (!experience) experience = found.experience || '';
+                                if (!nidDocUrl) nidDocUrl = found.nidFileUrl || found.nidUrl || '';
+                                if (!marksheetDocUrl) marksheetDocUrl = found.marksheetFileUrl || found.msUrl || '';
                             }
                         }
 
                         // Fallback Firestore fetch if still missing
-                        if ((!department || !experience) && tutorUid) {
+                        if ((!department || !experience || !nidDocUrl || !marksheetDocUrl) && tutorUid) {
                             try {
                                 const tSnap = await getDoc(doc(db, "tutors", tutorUid));
                                 if (tSnap.exists()) {
                                     const td = tSnap.data();
                                     if (!department) department = td.department || '';
                                     if (!experience) experience = td.experience || '';
+                                    if (!nidDocUrl) nidDocUrl = td.nidFileUrl || td.nidUrl || '';
+                                    if (!marksheetDocUrl) marksheetDocUrl = td.marksheetFileUrl || td.msUrl || '';
                                 }
                             } catch (e) { }
                         }
-                        if ((!department || !experience) && tutorPhone) {
+                        if ((!department || !experience || !nidDocUrl || !marksheetDocUrl) && tutorPhone) {
                             try {
                                 const tQuery = query(collection(db, "tutors"), where("phone", "==", tutorPhone));
                                 const tRes = await getDocs(tQuery);
@@ -3830,14 +3836,16 @@ ${detailsUrl}`;
                                     const td = tRes.docs[0].data();
                                     if (!department) department = td.department || '';
                                     if (!experience) experience = td.experience || '';
+                                    if (!nidDocUrl) nidDocUrl = td.nidFileUrl || td.nidUrl || '';
+                                    if (!marksheetDocUrl) marksheetDocUrl = td.marksheetFileUrl || td.msUrl || '';
                                 }
                             } catch (e) { }
                         }
 
-                        return { appDoc, ad, department, experience };
+                        return { appDoc, ad, department, experience, nidDocUrl, marksheetDocUrl };
                     }));
 
-                    applicantDataList.forEach(({ appDoc, ad, department, experience }, index) => {
+                    applicantDataList.forEach(({ appDoc, ad, department, experience, nidDocUrl, marksheetDocUrl }, index) => {
                         const tutorName = ad.tutorName || ad.name || 'শিক্ষক';
                         const tutorPhone = ad.phone || ad.tutorPhone || '';
                         const tutorUid = ad.uid || ad.tutorUid || '';
@@ -3879,7 +3887,8 @@ ${detailsUrl}`;
                                     <tr><th>Experience</th><td>${safe(experience || 'N/A')}</td></tr>
                                     <tr><th>Commission Policy</th><td>${safe(ad.commissionPolicy || 'N/A')}</td></tr>
                                     <tr><th>Status</th><td>${safe(ad.status || 'Pending')}</td></tr>
-                                    <tr><th>SSC/HSC Marksheet</th><td>${fileLink(ad.marksheetFileUrl || ad.msUrl, 'View Document')}</td></tr>
+                                    <tr><th>Student ID / NID</th><td>${fileLink(nidDocUrl || ad.nidFileUrl || ad.nidUrl, 'View Document')}</td></tr>
+                                    <tr><th>SSC/HSC Marksheet</th><td>${fileLink(marksheetDocUrl || ad.marksheetFileUrl || ad.msUrl, 'View Document')}</td></tr>
                                 </table>
 
                                 <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
