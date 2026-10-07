@@ -1166,7 +1166,8 @@
             isMaleGender, 
             validateGenderMatch,
             formatGenderDisplay,
-            escapeHtml
+            escapeHtml,
+            parseSalary
         } from "./js/utils.js";
 
         // ===== TSBD NAVBAR AUTH UI =====
@@ -1568,8 +1569,8 @@
             const time = tuition.time || 'N/A';
             const studentGender = tuition.studentGender || 'N/A';
 
-            // Calculate commission with exact Taka
-            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            // Calculate commission with exact Taka (based on highest range if salary is a range)
+            const salaryNum = parseSalary(sal);
             const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
@@ -1705,7 +1706,7 @@
             const docRef = doc(db, "tuitions", tuitionId);
             const docSnap = await getDoc(docRef);
 
-            if (!docSnap.exists()) {
+            if (!docSnap.exists() || docSnap.data().deleted || docSnap.data().isDeleted || docSnap.data().status === 'deleted') {
                 detailsContainer.innerHTML =
                     `<div class="tuition-card"><div class="error-message">টিউশনটি খুঁজে পাওয়া যায়নি বা মুছে ফেলা হয়েছে।</div></div>`;
                 return;
@@ -1748,7 +1749,7 @@
             const preferredTutor = data.preferredTutor || "any";
             const noOfStudents = data.noOfStudents || "1";
 
-            const salaryAmount = parseInt(String(salary).replace(/\D/g, ""), 10);
+            const salaryAmount = parseSalary(salary);
             const commPercent = parseInt(String(rawCommission).replace(/\D/g, ""), 10);
             let commissionDisplay = rawCommission;
             let commissionTaka = 0;

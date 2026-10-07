@@ -129,12 +129,31 @@ export function toEnDigits(str) {
     return String(str).replace(/[০-৯]/g, d => enDigits[d]);
 }
 
+// Parse salary - extracts highest range for commission/revenue calculations
+export function parseSalary(val) {
+    if (typeof val === 'number') return isNaN(val) ? 0 : val;
+    if (!val) return 0;
+    const str = toEnDigits(String(val)).replace(/,/g, '');
+    const matches = str.match(/\d+(?:\.\d+)?/g);
+    if (!matches || matches.length === 0) return 0;
+    const nums = matches.map(n => parseFloat(n)).filter(n => !isNaN(n));
+    if (nums.length === 0) return 0;
+    return Math.max(...nums);
+}
+
 // Format currency
 export function formatSalary(amount) {
-    if (!amount) return 'আলোচনা সাপেক্ষে';
-    const num = parseInt(toEnDigits(amount), 10);
-    if (isNaN(num)) return amount;
-    return `৳ ${toBnDigits(num.toLocaleString('en-IN'))}/-`;
+    if (!amount && amount !== 0) return 'আলোচনা সাপেক্ষে';
+    if (typeof amount === 'number') return `৳ ${toBnDigits(amount.toLocaleString('en-IN'))}/-`;
+    const str = String(amount).trim();
+    if (!str || str.toLowerCase() === 'n/a') return 'আলোচনা সাপেক্ষে';
+    if (str.includes('৳')) return str;
+    if (!/\d|[০-৯]/.test(str)) return str;
+    const enStr = toEnDigits(str);
+    if (/^\d+$/.test(enStr)) {
+        return `৳ ${toBnDigits(Number(enStr).toLocaleString('en-IN'))}/-`;
+    }
+    return `৳ ${str}`;
 }
 
 // Format relative date or standard date

@@ -832,7 +832,10 @@
 
         // Realtime listener
         onSnapshot(allOpenQuery, (snapshot) => {
-            allTuitionDocs = snapshot.docs;
+            allTuitionDocs = snapshot.docs.filter(docSnap => {
+                const data = docSnap.data();
+                return !data.deleted && !data.isDeleted && data.status !== 'deleted';
+            });
             renderPage();
         }, (error) => {
             loadingMessage.innerHTML = `<span style="color: #EF4444;">দুঃখিত, ডেটা লোড করতে সমস্যা হয়েছে। রিফ্রেশ করুন।</span>`;

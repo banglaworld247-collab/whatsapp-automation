@@ -1009,6 +1009,90 @@
             background: #B91C1C;
         }
 
+        .btn-restore-card {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-restore-card:hover {
+            background: #047857;
+        }
+
+        .btn-perm-delete-card {
+            background: #DC2626;
+            color: white;
+        }
+
+        .btn-perm-delete-card:hover {
+            background: #991B1B;
+        }
+
+        .recycle-card {
+            border: 1px solid rgba(239, 68, 68, 0.4) !important;
+            background: rgba(30, 41, 59, 0.75) !important;
+            border-left: 4px solid #EF4444 !important;
+            transition: all 0.25s ease;
+        }
+
+        .recycle-card:hover {
+            border-color: rgba(239, 68, 68, 0.65) !important;
+            box-shadow: 0 4px 18px rgba(239, 68, 68, 0.15) !important;
+        }
+
+        .recycle-badge-deleted {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Toast notifications */
+        .tsbd-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 99999;
+            background: #1E293B;
+            color: #F8FAFC;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            animation: slideInUpToast 0.3s ease, fadeOutToast 0.3s ease 2.7s forwards;
+            pointer-events: none;
+        }
+
+        .tsbd-toast.toast-success {
+            border-color: #10B981;
+            color: #34D399;
+        }
+
+        .tsbd-toast.toast-danger {
+            border-color: #EF4444;
+            color: #F87171;
+        }
+
+        @keyframes slideInUpToast {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeOutToast {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
         /* Expanded Details */
         .tuition-details {
             display: none;
@@ -1680,9 +1764,10 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
-            <button class="tab-btn active" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
-            <button class="tab-btn" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></button>
+            <button class="tab-btn" id="tab-btn-post" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
+            <button class="tab-btn active" id="tab-btn-list" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
+            <button class="tab-btn" id="tab-btn-tutors" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></button>
+            <button class="tab-btn" id="tab-btn-recycle" onclick="switchTab('recycle-bin')"><i class="fa-solid fa-trash-can"></i> রিসাইকেল বিন <span class="badge-count" id="count-recycle-bin" style="background:#EF4444;color:#fff;">0</span></button>
         </div>
 
         <!-- Section 1: Post Tuition -->
@@ -1867,6 +1952,34 @@
                         <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> টিউটর লোড হচ্ছে...</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Section 4: Recycle Bin (রিসাইকেল বিন) -->
+        <div id="section-recycle-bin" class="section">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <h3 style="color:#EF4444;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i class="fa-solid fa-trash-can"></i> রিসাইকেল বিন (Recycle Bin)
+                        <span style="font-size:14px;color:var(--text-muted);font-weight:normal;">(মোট <span id="recycle-total-count">0</span>টি)</span>
+                    </h3>
+                    <p style="color:var(--text-muted);font-size:13px;margin-top:4px;">
+                        ভুলবশত মুছে ফেলা প্রতিরোধে ডিলিট করা টিউশনগুলো এখানে জমা থাকে। আপনি চাইলে যেকোনো টিউশন পুনরুদ্ধার (Restore) করতে পারেন অথবা ডাটাবেস থেকে স্থায়ীভাবে মুছে ফেলতে পারেন।
+                    </p>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <input type="text" id="recycleSearchInput" placeholder="Job ID, শ্রেণী, বিষয় বা লোকেশন দিয়ে খুঁজুন..." 
+                           style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 14px;border-radius:8px;font-size:13px;min-width:270px;"
+                           oninput="searchRecycleBin(this.value)">
+                    <button type="button" id="btn-empty-recycle" onclick="handleEmptyRecycleBin()" 
+                            style="background:rgba(239,68,68,0.18);color:#EF4444;border:1px solid #EF4444;padding:8px 16px;border-radius:8px;font-weight:700;display:none;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+                        <i class="fa-solid fa-dumpster-fire"></i> সব স্থায়ীভাবে মুছুন (Empty Bin)
+                    </button>
+                </div>
+            </div>
+
+            <div class="tuition-cards" id="recycle-bin-container">
+                <div class="loading">লোড হচ্ছে...</div>
             </div>
         </div>
     </div>
@@ -2321,8 +2434,8 @@
             const gender = tuition.studentGender ? ` (${tuition.studentGender} Student)` : '';
             const notes = tuition.specialNotes ? `\n📝 *শর্ত / নোট:* ${tuition.specialNotes}` : '';
 
-            // Calculate commission with exact Taka amount
-            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            // Calculate commission with exact Taka amount (using highest range if salary is a range)
+            const salaryNum = parseSalary(sal);
             const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
@@ -2370,8 +2483,8 @@ ${detailsUrl}
             const gender = tuition.studentGender ? ` (${tuition.studentGender} Student)` : '';
             const notes = tuition.specialNotes ? `\n📝 *শর্ত / নোট:* ${tuition.specialNotes}` : '';
 
-            // Calculate commission with exact Taka amount
-            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            // Calculate commission with exact Taka amount (using highest range if salary is a range)
+            const salaryNum = parseSalary(sal);
             const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
@@ -2490,8 +2603,8 @@ ${detailsUrl}`;
             const studentGender = tuition.studentGender || 'N/A';
             const notes = tuition.specialNotes ? `\n📝 *বিশেষ নোট:* ${tuition.specialNotes}` : '';
 
-            // Calculate commission with exact Taka amount
-            const salaryNum = parseInt(String(sal).replace(/\D/g, ""), 10);
+            // Calculate commission with exact Taka amount (using highest range if salary is a range)
+            const salaryNum = parseSalary(sal);
             const commVal = tuition.commission || tuition.commissionPolicy || '40%';
             let commText = commVal;
             const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
@@ -2795,18 +2908,20 @@ ${detailsUrl}`;
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            const tabButtons = document.querySelectorAll('.tab-btn');
-
             if (tabName === 'post') {
-                document.getElementById('section-post').classList.add('active');
-                if (tabButtons[0]) tabButtons[0].classList.add('active');
+                document.getElementById('section-post')?.classList.add('active');
+                document.getElementById('tab-btn-post')?.classList.add('active');
             } else if (tabName === 'tutors') {
-                document.getElementById('section-tutors').classList.add('active');
-                if (tabButtons[2]) tabButtons[2].classList.add('active');
+                document.getElementById('section-tutors')?.classList.add('active');
+                document.getElementById('tab-btn-tutors')?.classList.add('active');
                 loadRegisteredTutors();
+            } else if (tabName === 'recycle-bin') {
+                document.getElementById('section-recycle-bin')?.classList.add('active');
+                document.getElementById('tab-btn-recycle')?.classList.add('active');
+                renderRecycleBin();
             } else {
-                document.getElementById('section-list').classList.add('active');
-                if (tabButtons[1]) tabButtons[1].classList.add('active');
+                document.getElementById('section-list')?.classList.add('active');
+                document.getElementById('tab-btn-list')?.classList.add('active');
             }
         }
 
@@ -2909,6 +3024,8 @@ ${detailsUrl}`;
         // CRM, Analytics & Data Logic
         // ==========================================
         let allTuitions = [];
+        let deletedTuitions = [];
+        let recycleSearchTerm = '';
         let currentFilter = 'pending';
         const TUITIONS_PER_PAGE = 20;
         let displayedCount = TUITIONS_PER_PAGE;
@@ -2932,10 +3049,30 @@ ${detailsUrl}`;
         }
 
         function parseSalary(val) {
-            if (typeof val === 'number') return val;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
             if (!val) return 0;
-            const cleaned = String(val).replace(/[^0-9.]/g, '');
-            return parseFloat(cleaned) || 0;
+            const bnToEn = { '০':'0', '১':'1', '২':'2', '৩':'3', '৪':'4', '৫':'5', '৬':'6', '৭':'7', '৮':'8', '৯':'9' };
+            const str = String(val).replace(/[০-৯]/g, d => bnToEn[d] || d).replace(/,/g, '');
+            const matches = str.match(/\d+(?:\.\d+)?/g);
+            if (!matches || matches.length === 0) return 0;
+            const nums = matches.map(n => parseFloat(n)).filter(n => !isNaN(n));
+            if (nums.length === 0) return 0;
+            return Math.max(...nums);
+        }
+
+        function formatSalaryDisplay(val) {
+            if (!val && val !== 0) return 'আলোচনা সাপেক্ষে';
+            if (typeof val === 'number') return `৳ ${val.toLocaleString('bn-BD')}`;
+            const str = String(val).trim();
+            if (!str || str.toLowerCase() === 'n/a') return 'আলোচনা সাপেক্ষে';
+            if (str.includes('৳')) return str;
+            if (!/\d|[০-৯]/.test(str)) return str;
+            const bnToEn = { '০':'0', '১':'1', '২':'2', '৩':'3', '৪':'4', '৫':'5', '৬':'6', '৭':'7', '৮':'8', '৯':'9' };
+            const enStr = str.replace(/[০-৯]/g, d => bnToEn[d] || d);
+            if (/^\d+$/.test(enStr)) {
+                return `৳ ${Number(enStr).toLocaleString('bn-BD')}`;
+            }
+            return `৳ ${str}`;
         }
 
         function parseCommissionPercent(val) {
@@ -3091,14 +3228,18 @@ ${detailsUrl}`;
             // Listen to tuitions in realtime
             const q = query(collection(db, "tuitions"), orderBy("createdAt", "desc"));
             unsubscribeTuitions = onSnapshot(q, (snapshot) => {
-                allTuitions = [];
+                const rawDocs = [];
                 snapshot.forEach((docSnap) => {
-                    allTuitions.push({ id: docSnap.id, ...docSnap.data() });
+                    rawDocs.push({ id: docSnap.id, ...docSnap.data() });
                 });
+
+                allTuitions = rawDocs.filter(item => !item.deleted && !item.isDeleted && item.status !== 'deleted');
+                deletedTuitions = rawDocs.filter(item => item.deleted === true || item.isDeleted === true || item.status === 'deleted');
 
                 calculateProfitAnalytics();
                 updateTabCounts();
                 renderTuitionCards();
+                renderRecycleBin();
             }, (error) => {
                 listContainer.innerHTML = `<p class="loading" style="color:red;">ডাটা লোড করতে সমস্যা হয়েছে: ${error.message}</p>`;
             });
@@ -3176,12 +3317,17 @@ ${detailsUrl}`;
             const countTomorrow = allTuitions.filter(item => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow).length;
             const countPending = allTuitions.filter(isTuitionPaymentPending).length;
             const countAssigned = allTuitions.filter(isTuitionPaidOrCompleted).length;
+            const countRecycle = deletedTuitions.length;
 
             if (document.getElementById('count-all')) document.getElementById('count-all').innerText = countAll;
             if (document.getElementById('count-today')) document.getElementById('count-today').innerText = countToday;
             if (document.getElementById('count-tomorrow')) document.getElementById('count-tomorrow').innerText = countTomorrow;
             if (document.getElementById('count-pending')) document.getElementById('count-pending').innerText = countPending;
             if (document.getElementById('count-assigned')) document.getElementById('count-assigned').innerText = countAssigned;
+            if (document.getElementById('count-recycle-bin')) document.getElementById('count-recycle-bin').innerText = countRecycle;
+            if (document.getElementById('recycle-total-count')) document.getElementById('recycle-total-count').innerText = countRecycle;
+            const emptyBtn = document.getElementById('btn-empty-recycle');
+            if (emptyBtn) emptyBtn.style.display = countRecycle > 0 ? 'inline-flex' : 'none';
         }
 
         window.setTuitionFilter = function (filterKey, btnElement) {
@@ -3284,7 +3430,7 @@ ${detailsUrl}`;
                         </div>
                         <div style="text-align:right;">
                             <span class="status-badge ${statusClass}">${statusText}</span>
-                            <div style="font-size:18px; font-weight:800; color:#34D399; margin-top:6px;">৳ ${salary.toLocaleString('bn-BD')}</div>
+                            <div style="font-size:18px; font-weight:800; color:#34D399; margin-top:6px;">${formatSalaryDisplay(item.salary || item.offer?.salary)}</div>
                         </div>
                     </div>
 
@@ -3499,18 +3645,280 @@ ${detailsUrl}`;
         window.handleDeleteFromModal = async function () {
             const tuitionId = document.getElementById('editDocId').value;
             if (!tuitionId) return;
-            handleDeleteTuition(tuitionId);
+            const currentQueueAction = document.getElementById('editQueueAction')?.value?.trim();
             closeEditModal();
+            await handleDeleteTuition(tuitionId, currentQueueAction);
         }
 
-        window.handleDeleteTuition = async function (tuitionId) {
-            if (!confirm("আপনি কি নিশ্চিতভাবে এই টিউশনটি মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।")) return;
+        window.handleDeleteTuition = async function (tuitionId, overrideQueueAction) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            const jobId = item?.jobId ? `#${item.jobId}` : '';
+            if (!confirm(`আপনি কি এই টিউশনটি (${jobId}) রিসাইকেল বিনে সরাতে চান?\n\nভুলবশত মুছে ফেলা প্রতিরোধে এটি রিসাইকেল বিনে জমা থাকবে। আপনি যেকোনো সময় এটি পুনরুদ্ধার (Restore) বা স্থায়ীভাবে মুছে ফেলতে পারবেন।`)) return;
             try {
-                await deleteDoc(doc(db, "tuitions", tuitionId));
+                const updatePayload = {
+                    deleted: true,
+                    isDeleted: true,
+                    deletedAt: serverTimestamp(),
+                    deletedAtString: new Date().toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' }),
+                    previousStatus: item?.status || 'open'
+                };
+                if (overrideQueueAction !== undefined && overrideQueueAction !== null && overrideQueueAction !== '') {
+                    updatePayload["tracking.queueAction"] = overrideQueueAction;
+                    updatePayload.queueAction = overrideQueueAction;
+                }
+                await updateDoc(doc(db, "tuitions", tuitionId), updatePayload);
+                showAdminToast("🗑️ টিউশনটি রিসাইকেল বিনে সরানো হয়েছে।", "danger");
             } catch (err) {
-                alert("মুছে ফেলতে সমস্যা হয়েছে: " + err.message);
+                alert("রিসাইকেল বিনে সরাতে সমস্যা হয়েছে: " + err.message);
                 console.error(err);
             }
+        }
+
+        window.handleEditRecycleReason = async function (tuitionId) {
+            const item = deletedTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
+            const currentReason = item.tracking?.queueAction || item.queueAction || '';
+            const newReason = prompt("মুছে ফেলার কারণ বা অ্যাকশন / Queue Status লিখুন:", currentReason);
+            if (newReason === null) return;
+            try {
+                await updateDoc(doc(db, "tuitions", tuitionId), {
+                    "tracking.queueAction": newReason.trim(),
+                    queueAction: newReason.trim()
+                });
+                showAdminToast("অ্যাকশন / Queue Status সফলভাবে আপডেট করা হয়েছে।", "success");
+            } catch (err) {
+                alert("আপডেট করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
+
+        // ==========================================
+        // Section 4: Recycle Bin & Permanent Delete Handlers
+        // ==========================================
+        window.searchRecycleBin = function (query) {
+            recycleSearchTerm = (query || '').toLowerCase().trim();
+            renderRecycleBin();
+        };
+
+        window.renderRecycleBin = function () {
+            const container = document.getElementById('recycle-bin-container');
+            const counterSpan = document.getElementById('recycle-total-count');
+            const tabBadge = document.getElementById('count-recycle-bin');
+            const emptyBtn = document.getElementById('btn-empty-recycle');
+
+            if (tabBadge) tabBadge.innerText = deletedTuitions.length;
+            if (counterSpan) counterSpan.innerText = deletedTuitions.length;
+            if (emptyBtn) emptyBtn.style.display = deletedTuitions.length > 0 ? 'inline-flex' : 'none';
+
+            if (!container) return;
+            container.innerHTML = '';
+
+            let filtered = deletedTuitions;
+            if (recycleSearchTerm) {
+                filtered = deletedTuitions.filter(item => {
+                    const jId = String(item.jobId || '').toLowerCase();
+                    const cls = String(item.className || '').toLowerCase();
+                    const sub = String(item.subject || '').toLowerCase();
+                    const loc = String(item.location || '').toLowerCase();
+                    const qAct = String(item.tracking?.queueAction || item.queueAction || '').toLowerCase();
+                    return jId.includes(recycleSearchTerm) || cls.includes(recycleSearchTerm) || sub.includes(recycleSearchTerm) || loc.includes(recycleSearchTerm) || qAct.includes(recycleSearchTerm);
+                });
+            }
+
+            if (deletedTuitions.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(30, 41, 59, 0.4); border: 1px dashed var(--border-color); border-radius: 12px;">
+                        <i class="fa-regular fa-trash-can" style="font-size: 50px; color: #64748B; margin-bottom: 14px; display: inline-block;"></i>
+                        <h4 style="font-size: 18px; color: var(--text-light); margin-bottom: 6px;">রিসাইকেল বিন সম্পূর্ণ খালি</h4>
+                        <p style="color: var(--text-muted); font-size: 13px; max-width: 480px; margin: 0 auto; line-height: 1.6;">
+                            মুছে ফেলা টিউশনগুলো এখানে জমা থাকে যাতে কোনো টিউশন ভুলবশত মুছে গেলেও আপনি সহজেই এক ক্লিকে পুনরুদ্ধার (Restore) করতে পারেন অথবা চাইলে স্থায়ীভাবে চিরতরে ডিলিট করতে পারেন।
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        "${safe(recycleSearchTerm)}" এর সাথে মিলে এমন কোনো মুছে ফেলা টিউশন পাওয়া যায়নি।
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const id = item.id;
+                const salary = parseSalary(item.salary || item.offer?.salary);
+                const prevStatus = item.previousStatus || item.status || 'open';
+                const deletedDateStr = item.deletedAtString || (item.deletedAt?.toDate ? item.deletedAt.toDate().toLocaleString('bn-BD') : 'তারিখ পাওয়া যায়নি');
+                const appsCount = Number(item.applicantsCount || 0);
+                const queueAction = item.tracking?.queueAction || item.queueAction || '';
+
+                const card = document.createElement('div');
+                card.className = 'tuition-card recycle-card';
+                card.innerHTML = `
+                    <div class="tuition-header">
+                        <div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                                <span class="tuition-job-id" style="background:#EF4444;color:#fff;">#${safe(item.jobId || id.slice(0, 5))}</span>
+                                <span class="recycle-badge-deleted"><i class="fa-solid fa-trash"></i> রিসাইকেল বিনে আছে</span>
+                                <span style="font-size:12px;color:var(--text-muted);"><i class="fa-solid fa-clock-rotate-left"></i> ${deletedDateStr}</span>
+                            </div>
+                            <h3 class="tuition-title" style="color:#FCA5A5;">📚 ${safe(item.className || 'শ্রেণী উল্লেখ নেই')} - ${safe(item.subject || 'সকল বিষয়')}</h3>
+                            <div class="tuition-meta">
+                                <span><i class="fa-solid fa-location-dot"></i> ${safe(item.location || 'লোকেশন উল্লেখ নেই')}</span>
+                                <span><i class="fa-solid fa-calendar-days"></i> ${safe(item.days || '৩ দিন')}</span>
+                                <span><i class="fa-solid fa-user-tag"></i> টিউটর: ${safe(item.preferredTutor || 'Any')}</span>
+                                <span><i class="fa-solid fa-clock"></i> পূর্বের স্ট্যাটাস: <strong>${safe(prevStatus)}</strong></span>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <span class="status-badge" style="background:rgba(239,68,68,0.2);color:#FCA5A5;border:1px solid rgba(239,68,68,0.4);">Deleted</span>
+                            <div style="font-size:18px; font-weight:800; color:#34D399; margin-top:6px;">${formatSalaryDisplay(item.salary || item.offer?.salary)}</div>
+                        </div>
+                    </div>
+
+                    <div style="background:rgba(0,0,0,0.25);border-radius:8px;padding:10px 14px;margin:12px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px;">
+                        <span style="color:var(--text-muted);"><i class="fa-solid fa-users"></i> আবেদনকারী ছিলেন: <strong>${appsCount}</strong> জন</span>
+                        <span style="color:#FCD34D;display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                            <i class="fa-solid fa-clipboard-list"></i> 
+                            <span>অ্যাকশন / Queue Status: <strong>${queueAction ? safe(queueAction) : '<span style="opacity:0.75;font-weight:normal;">কোনো কারণ লেখা হয়নি</span>'}</strong></span>
+                            <button type="button" onclick="handleEditRecycleReason('${id}')" title="কারণ পরিবর্তন বা আপডেট করুন" style="background:rgba(252,211,77,0.15);border:1px solid rgba(252,211,77,0.3);color:#FCD34D;cursor:pointer;padding:2px 7px;border-radius:4px;font-size:11px;display:inline-flex;align-items:center;gap:4px;margin-left:4px;">
+                                <i class="fa-solid fa-pen-to-square"></i> এডিট
+                            </button>
+                        </span>
+                    </div>
+
+                    <div class="card-action-bar" style="margin-top:12px;">
+                        <button type="button" class="btn-card-action btn-restore-card" onclick="handleRestoreTuition('${id}')" title="টিউশনটি পুনরুদ্ধার করে মূল তালিকায় ফিরিয়ে আনুন">
+                            <i class="fa-solid fa-rotate-left"></i> পুনরুদ্ধার করুন (Restore)
+                        </button>
+                        <button type="button" class="btn-card-action btn-perm-delete-card" onclick="handlePermanentDelete('${id}')" title="স্থায়ীভাবে মুছে ফেলুন">
+                            <i class="fa-solid fa-trash-can"></i> স্থায়ীভাবে মুছুন (Permanent Delete)
+                        </button>
+                        <button type="button" class="btn-card-action btn-view-apps" onclick="toggleExpandRecycle('${id}')" title="বিস্তারিত দেখুন">
+                            <i class="fa-solid fa-eye"></i> বিস্তারিত
+                        </button>
+                    </div>
+
+                    <div class="tuition-details" id="details-recycle-${id}">
+                        <div class="loading">ডেটা লোড হচ্ছে...</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        window.toggleExpandRecycle = async function (tuitionId) {
+            const detailsDiv = document.getElementById(`details-recycle-${tuitionId}`);
+            if (!detailsDiv) return;
+
+            if (detailsDiv.style.display === 'block') {
+                detailsDiv.style.display = 'none';
+                return;
+            }
+
+            document.querySelectorAll('#recycle-bin-container .tuition-details').forEach(div => div.style.display = 'none');
+            detailsDiv.style.display = 'block';
+            detailsDiv.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ডেটা লোড হচ্ছে...</div>';
+
+            try {
+                const tuitionSnap = await getDoc(doc(db, "tuitions", tuitionId));
+                if (!tuitionSnap.exists()) {
+                    detailsDiv.innerHTML = '<p style="color:var(--danger)">টিউশন ডাটা পাওয়া যায়নি।</p>';
+                    return;
+                }
+
+                const tuitionData = tuitionSnap.data();
+
+                let html = `
+                    <h4 style="color:var(--accent);margin-bottom:10px;"><i class="fa-solid fa-circle-info"></i> টিউশনের বিস্তারিত তথ্য</h4>
+                    <table class="data-table">
+                        <tr><th>Job ID</th><td>#${safe(tuitionData.jobId)}</td></tr>
+                        <tr><th>Class & Subject</th><td>${safe(tuitionData.className)} (${safe(tuitionData.subject)})</td></tr>
+                        <tr><th>Category & Medium</th><td>${safe(tuitionData.category)}</td></tr>
+                        <tr><th>Location</th><td>${safe(tuitionData.location)}</td></tr>
+                        <tr><th>Salary</th><td>${formatSalaryDisplay(tuitionData.salary)}</td></tr>
+                        <tr><th>Days & Time</th><td>${safe(tuitionData.days || '৩ দিন')} (${safe(tuitionData.time || 'সন্ধ্যা')})</td></tr>
+                        <tr><th>Preferred Tutor</th><td>${safe(tuitionData.preferredTutor || 'Any')}</td></tr>
+                        <tr><th>Phone / Contact</th><td>${safe(tuitionData.phone || tuitionData.contactNumber || 'গোপনীয়')}</td></tr>
+                        <tr><th>Special Notes</th><td>${safe(tuitionData.specialNotes || 'নেই')}</td></tr>
+                        <tr><th>মুছে ফেলার কারণ / Queue Status</th><td style="color:#FCD34D;font-weight:600;">${safe(tuitionData.tracking?.queueAction || tuitionData.queueAction || 'কোনো কারণ লেখা নেই')}</td></tr>
+                        <tr><th>মুছে ফেলার সময়</th><td>${safe(tuitionData.deletedAtString || 'N/A')}</td></tr>
+                    </table>
+                `;
+                detailsDiv.innerHTML = html;
+            } catch (err) {
+                detailsDiv.innerHTML = `<p style="color:var(--danger)">লোড করতে সমস্যা: ${err.message}</p>`;
+            }
+        };
+
+        window.handleRestoreTuition = async function (tuitionId) {
+            const item = deletedTuitions.find(t => t.id === tuitionId);
+            const jobId = item?.jobId ? `#${item.jobId}` : '';
+            if (!confirm(`আপনি কি এই টিউশনটি (${jobId}) পুনরায় পুনরুদ্ধার (Restore) করতে চান?\n\nএটি আবার আপনার সক্রিয় টিউশন তালিকায় ফিরে যাবে।`)) {
+                return;
+            }
+            try {
+                const prevStatus = (item?.previousStatus && item.previousStatus !== 'deleted') ? item.previousStatus : 'open';
+                await updateDoc(doc(db, "tuitions", tuitionId), {
+                    deleted: false,
+                    isDeleted: false,
+                    status: prevStatus,
+                    restoredAt: serverTimestamp()
+                });
+                showAdminToast("✅ টিউশনটি সফলভাবে পুনরুদ্ধার (Restore) করা হয়েছে!", "success");
+            } catch (err) {
+                alert("পুনরুদ্ধার করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
+
+        window.handlePermanentDelete = async function (tuitionId) {
+            const item = deletedTuitions.find(t => t.id === tuitionId);
+            const jobId = item?.jobId ? `#${item.jobId}` : '';
+            if (!confirm(`⚠️ স্থায়ীভাবে মুছে ফেলার চূড়ান্ত সতর্কতা!\n\nআপনি কি নিশ্চিত যে আপনি এই টিউশনটি (${jobId}) চিরতরে ডাটাবেস থেকে মুছে ফেলতে চান?\n\nএটি ডাটাবেস থেকে স্থায়ীভাবে মুছে যাবে এবং কোনোভাবেই আর পুনরুদ্ধার করা সম্ভব হবে না!`)) {
+                return;
+            }
+            try {
+                await deleteDoc(doc(db, "tuitions", tuitionId));
+                showAdminToast("🗑️ টিউশনটি স্থায়ীভাবে মুছে ফেলা হয়েছে।", "danger");
+            } catch (err) {
+                alert("স্থায়ীভাবে মুছতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
+
+        window.handleEmptyRecycleBin = async function () {
+            if (!deletedTuitions.length) {
+                alert("রিসাইকেল বিন ইতিমধ্যে খালি রয়েছে!");
+                return;
+            }
+            if (!confirm(`⚠️ চূড়ান্ত সতর্কতা!\n\nআপনি কি রিসাইকেল বিনে থাকা সকল (${deletedTuitions.length}টি) টিউশন স্থায়ীভাবে চিরতরে মুছে ফেলতে চান?\n\nএই প্রক্রিয়াটি আর ফেরানো যাবে না!`)) {
+                return;
+            }
+            try {
+                const deletePromises = deletedTuitions.map(t => deleteDoc(doc(db, "tuitions", t.id)));
+                await Promise.all(deletePromises);
+                showAdminToast("🗑️ রিসাইকেল বিন সম্পূর্ণ খালি করা হয়েছে।", "danger");
+            } catch (err) {
+                alert("রিসাইকেল বিন খালি করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
+
+        function showAdminToast(msg, type = 'success') {
+            const existingToast = document.querySelector('.tsbd-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `tsbd-toast toast-${type}`;
+            toast.innerHTML = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
 
         // ==========================================
