@@ -3,47 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>টিউশন পোস্ট করুন - অভিভাবক ফরম | TSBD (Tuition Service BD)</title>
-    <meta name="description" content="আপনার সন্তানের জন্য দক্ষ ও অভিজ্ঞ গৃহশিক্ষক খুঁজুন। নিচের ফরমটি পূরণ করুন, খুব শীঘ্রই আমাদের ভেরিফাইড টিউটর আপনাকে কল দিবেন।">
-    
-    <!-- OpenGraph Metadata for Ads & Social Sharing -->
-    <meta property="og:title" content="টিউশন পোস্ট করুন | TSBD">
-    <meta property="og:description" content="খুব শীঘ্রই একজন অভিজ্ঞ ও দক্ষ টিউটর আপনাকে কল দিবে। এখনই আপনার প্রয়োজনীয় টিউটরের তথ্য দিন।">
-    <meta property="og:type" content="website">
+    <title>টিউশন রিকুয়েস্ট ফরম | TSBD</title>
+    <meta name="description" content="আপনার সন্তানের জন্য অভিজ্ঞ ও দক্ষ গৃহশিক্ষক বা অনলাইন টিউটর পেতে তথ্য দিন। খুব শীঘ্রই আমাদের প্রতিনিধি আপনাকে কল দিবে।">
     <meta name="theme-color" content="#4F46E5">
 
-    <!-- Resource Preconnects for instant network handshakes -->
+    <!-- Preconnect CDNs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+
+    <!-- Google Font & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome 6 CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-color: #F8FAFC;
-            --card-bg: #FFFFFF;
             --primary: #4F46E5;
-            --primary-light: #EEF2FF;
             --primary-hover: #4338CA;
-            --primary-border: #C7D2FE;
-            --text-dark: #0F172A;
-            --text-main: #334155;
-            --text-muted: #64748B;
-            --border-color: #E2E8F0;
-            --border-hover: #CBD5E1;
+            --primary-light: #EEF2FF;
             --success: #10B981;
-            --success-light: #ECFDF5;
-            --whatsapp: #25D366;
-            --whatsapp-hover: #1EBE5D;
-            --warning: #F59E0B;
+            --success-dark: #059669;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-sub: #475569;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --border-focus: #6366F1;
             --danger: #EF4444;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.06);
-            --shadow-lg: 0 12px 32px rgba(79, 70, 229, 0.12);
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
         }
 
         *, *::before, *::after {
@@ -53,725 +44,361 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body, button, input, select, textarea {
+        body {
             font-family: 'Noto Sans Bengali', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        .fa, .fa-solid, .fa-regular, .fa-brands, [class*=" fa-"], [class^="fa-"] {
-            font-family: "Font Awesome 6 Free" !important;
-        }
-        .fa-brands {
-            font-family: "Font Awesome 6 Brands" !important;
-        }
-
-        html, body {
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
-            background-color: var(--bg-color);
+            background-color: var(--bg);
             color: var(--text-dark);
             line-height: 1.5;
             min-height: 100vh;
-        }
-
-        body {
             display: flex;
             flex-direction: column;
-            padding-bottom: max(40px, env(safe-area-inset-bottom));
+            padding-bottom: 70px;
         }
 
-        /* ===== TSBD NAVBAR ===== */
-        .tsbd-navbar {
+        /* ===== SIMPLE CLEAN HEADER ===== */
+        .tsbd-simple-header {
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
             position: sticky;
             top: 0;
-            z-index: 900;
-            width: 100%;
-            margin: 0;
-            background: rgba(255, 255, 255, 0.98);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
-        .tsbd-nav-inner {
-            max-width: 1100px;
+        .header-inner {
+            max-width: 680px;
             margin: 0 auto;
-            min-height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
         }
 
-        .tsbd-logo {
-            text-decoration: none;
-            display: inline-flex;
+        .tsbd-brand {
+            display: flex;
             align-items: center;
             gap: 10px;
-            color: #1F2937;
-            font-weight: 800;
-            font-size: 21px;
-            letter-spacing: -0.5px;
+            text-decoration: none;
+            color: var(--text-dark);
         }
 
-        .tsbd-logo-mark {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            color: #fff;
+        .brand-badge {
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #6366F1, #3B82F6);
-            font-size: 14px;
-            font-weight: 800;
-            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
-        }
-
-        .tsbd-nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tsbd-nav-link {
-            border: 0;
-            background: transparent;
-            text-decoration: none;
-            color: #4B5563;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .tsbd-nav-link:hover {
-            background: #F3F4F6;
-            color: #4F46E5;
-        }
-
-        .tsbd-user {
-            position: relative;
-            display: none;
-            align-items: center;
-            margin-left: 4px;
-        }
-
-        .tsbd-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #6366F1;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            user-select: none;
-        }
-
-        .tsbd-avatar:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        .tsbd-avatar-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            min-width: 140px;
-            background: #ffffff;
-            border: 1px solid #E5E7EB;
-            border-radius: 10px;
-            padding: 6px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(8px);
-            transition: all 0.2s ease;
-            z-index: 1000;
-        }
-
-        .tsbd-avatar-dropdown.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .tsbd-logout {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 12px;
-            border-radius: 6px;
-            color: #EF4444;
-            font-size: 14px;
-            font-weight: 600;
-            background: transparent;
-            border: 0;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .tsbd-logout:hover {
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .tsbd-menu-btn {
-            display: none;
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--border-color);
-            background: #fff;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #1F2937;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-        }
-
-        .tsbd-menu-btn:hover {
-            background: #F3F4F6;
-        }
-
-        /* Drawer Overlay & Aside */
-        .tsbd-drawer-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.5);
-            z-index: 1090;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.25s ease;
-        }
-
-        .tsbd-drawer {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: min(84vw, 320px);
-            height: 100vh;
-            background: #fff;
-            z-index: 1100;
-            padding: 22px;
-            box-shadow: -10px 0 30px rgba(15, 23, 42, 0.15);
-            transform: translateX(100%);
-            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tsbd-drawer.open {
-            transform: translateX(0);
-        }
-
-        .tsbd-drawer-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .tsbd-drawer-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        .tsbd-close {
-            border: 0;
-            background: #F3F4F6;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 17px;
+            color: #fff;
+            border-radius: 9px;
             display: grid;
             place-items: center;
+            font-size: 14px;
+            font-weight: 800;
         }
 
-        .tsbd-drawer .tsbd-nav-link {
-            width: 100%;
-            justify-content: flex-start;
-            padding: 12px 14px;
-            margin-bottom: 6px;
-            font-size: 15px;
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
         }
 
-        .tsbd-mobile-user-wrap {
-            margin-top: 10px;
-            border-top: 1px solid #E5E7EB;
-            padding-top: 8px;
+        .brand-sub {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-top: -3px;
         }
 
-        .tsbd-mobile-user-row {
-            display: flex;
+        .header-phone-btn {
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            cursor: pointer;
-            border-radius: 8px;
+            gap: 6px;
+            background: #F0FDF4;
+            color: #166534;
+            border: 1px solid #BBF7D0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
         }
 
-        .tsbd-mobile-caret {
-            margin-left: auto;
-            font-size: 12px;
-            color: #9CA3AF;
-            transition: transform 0.25s ease;
+        .header-phone-btn:hover {
+            background: #DCFCE7;
         }
 
-        .tsbd-mobile-user-wrap.open .tsbd-mobile-caret {
-            transform: rotate(180deg);
-        }
-
-        .tsbd-mobile-dropdown {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            padding: 0 10px;
-        }
-
-        .tsbd-mobile-dropdown.show {
-            opacity: 1;
-            max-height: 80px;
-            padding: 6px 10px;
-        }
-
-        @media (max-width: 768px) {
-            .tsbd-nav-links {
-                display: none;
-            }
-            .tsbd-menu-btn {
-                display: flex;
-            }
-        }
-
-        /* ===== MAIN HERO & NOTICE ===== */
-        .page-container {
+        /* ===== CONTAINER & CARDS ===== */
+        .main-wrap {
             max-width: 680px;
             width: 100%;
-            margin: 20px auto 40px;
+            margin: 18px auto;
             padding: 0 16px;
         }
 
-        .notice-banner {
+        /* Notice Banner */
+        .notice-card {
             background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
-            border: 1.5px solid #C7D2FE;
-            border-radius: 16px;
-            padding: 20px 22px;
-            margin-bottom: 22px;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.08);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid #C7D2FE;
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
         }
 
-        .notice-banner::after {
-            content: "";
-            position: absolute;
-            right: -20px;
-            top: -20px;
-            width: 90px;
-            height: 90px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+        .notice-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: #fff;
             border-radius: 50%;
-            pointer-events: none;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
         }
 
-        .notice-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #4F46E5;
-            color: #FFFFFF;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-            letter-spacing: 0.3px;
-        }
-
-        .notice-text {
-            font-size: 17.5px;
+        .notice-text h2 {
+            font-size: 15.5px;
             font-weight: 700;
             color: #1E1B4B;
-            line-height: 1.55;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
+            margin-bottom: 3px;
         }
 
-        .notice-icon-box {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            border-radius: 10px;
-            background: #4F46E5;
-            color: #FFFFFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            margin-top: 2px;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        .notice-text p {
+            font-size: 13.5px;
+            color: #312E81;
+            line-height: 1.45;
         }
 
-        .notice-highlights {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 14px;
-            padding-top: 12px;
-            border-top: 1px dashed rgba(99, 102, 241, 0.3);
-            font-size: 13px;
-            color: #4338CA;
-            font-weight: 600;
-        }
-
-        .notice-highlights span {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* ===== FORM CARD ===== */
+        /* Form Card */
         .form-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 28px 24px;
-            box-shadow: var(--shadow-md);
-            transition: box-shadow 0.2s ease;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            box-shadow: var(--shadow);
         }
 
-        @media (min-width: 640px) {
-            .form-card {
-                padding: 34px 32px;
-            }
-        }
-
-        .form-header {
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
-        }
-
-        .form-header-title {
-            font-size: 22px;
+        .form-title {
+            font-size: 19px;
             font-weight: 800;
             color: var(--text-dark);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .form-header-subtitle {
-            font-size: 13.5px;
-            color: var(--text-muted);
-            margin-top: 4px;
+            gap: 9px;
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 12px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-label {
             display: block;
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 700;
-            color: #1E293B;
-            margin-bottom: 8px;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
 
-        .form-label .required-star {
+        .required-star {
             color: var(--danger);
             margin-left: 2px;
         }
 
-        .form-label .sub-hint {
+        .sub-hint {
+            font-size: 12px;
+            color: var(--text-muted);
             font-weight: 400;
-            font-size: 12.5px;
-            color: var(--text-muted);
-            margin-left: 6px;
+            margin-left: 4px;
         }
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 14px;
-            color: var(--text-muted);
-            font-size: 15px;
-            pointer-events: none;
-            transition: color 0.2s ease;
-        }
-
+        /* Native fast inputs without lag */
         .form-control {
             width: 100%;
-            padding: 12px 14px 12px 42px;
-            font-size: 15px;
-            color: var(--text-dark);
+            height: 46px;
+            padding: 10px 14px;
+            font-size: 14.5px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
             background: #FFFFFF;
-            border: 1.5px solid var(--border-color);
-            border-radius: 10px;
+            color: var(--text-dark);
+            font-family: inherit;
             outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-        }
-
-        .form-control.no-icon {
-            padding-left: 14px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
         .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3.5px rgba(79, 70, 229, 0.12);
-            background: #FFFFFF;
-        }
-
-        .form-control:focus + .input-icon,
-        .input-wrapper:focus-within .input-icon {
-            color: var(--primary);
-        }
-
-        select.form-control {
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 16px;
-            padding-right: 38px;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
         textarea.form-control {
-            padding-left: 14px;
+            height: auto;
+            min-height: 68px;
             resize: vertical;
-            min-height: 72px;
         }
 
-        /* Chips for quick selection */
-        .quick-chips-wrap {
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 15px;
+            padding-right: 36px;
+        }
+
+        /* Quick clickable chips */
+        .chips-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 6px;
+            margin-top: 7px;
         }
 
-        button.quick-chip {
+        .chip-btn {
             background: #F1F5F9;
-            color: #475569;
-            border: 1px solid #E2E8F0;
-            border-radius: 18px;
-            padding: 6px 13px;
-            font-size: 13px;
+            color: #334155;
+            border: 1px solid #CBD5E1;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 12.5px;
             font-weight: 600;
             cursor: pointer;
-            user-select: none;
             outline: none;
-            transition: all 0.18s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            user-select: none;
+            transition: all 0.15s ease;
         }
 
-        button.quick-chip:hover {
+        .chip-btn:hover {
             background: var(--primary-light);
             color: var(--primary);
-            border-color: var(--primary-border);
-            transform: translateY(-1px);
+            border-color: #A5B4FC;
         }
 
-        button.quick-chip:active {
-            transform: translateY(0);
-        }
-
-        button.quick-chip.active {
+        .chip-btn.active {
             background: var(--primary) !important;
             color: #FFFFFF !important;
             border-color: var(--primary) !important;
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
         }
 
-        /* Radio Options Grid (Salary & Days) */
-        .radio-options-grid {
+        /* 2 Column Responsive Row */
+        .form-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
-        .custom-radio-card {
-            position: relative;
-            display: flex;
-            align-items: center;
-            padding: 12px 14px;
-            border: 1.5px solid var(--border-color);
-            background: #FFFFFF;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .custom-radio-card:hover {
-            border-color: var(--border-hover);
-            background: #F8FAFC;
-        }
-
-        .custom-radio-card input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .radio-indicator {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #CBD5E1;
-            border-radius: 50%;
-            margin-right: 9px;
-            display: grid;
-            place-items: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .radio-indicator::after {
-            content: "";
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #FFFFFF;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: all 0.2s ease;
-        }
-
-        .custom-radio-card.active {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .custom-radio-card.active .radio-indicator {
-            border-color: var(--primary);
-            background: var(--primary);
-        }
-
-        .custom-radio-card.active .radio-indicator::after {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .radio-label-text {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #1E293B;
-            line-height: 1.3;
-        }
-
-        .salary-input-container {
-            margin-top: 10px;
-            display: none;
-            animation: fadeIn 0.25s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 2-Column Responsive Form Row */
-        .form-row-2 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media (min-width: 600px) {
-            .form-row-2 {
-                grid-template-columns: 1fr 1fr;
+        @media (max-width: 540px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
             }
         }
 
-        /* Days Chips / Options */
-        .days-pills-wrap {
+        /* Days Pills */
+        .pills-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
-        button.day-pill {
-            flex: 1 1 calc(20% - 8px);
-            min-width: 80px;
-            text-align: center;
-            padding: 10px 8px;
-            border: 1.5px solid var(--border-color);
+        .pill-btn {
             background: #FFFFFF;
-            border-radius: 8px;
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #334155;
+            border: 1.5px solid var(--border);
+            color: var(--text-sub);
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             outline: none;
-            transition: all 0.2s ease;
-            user-select: none;
-            display: inline-flex;
+            transition: all 0.15s;
+        }
+
+        .pill-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pill-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Salary Radio Grid */
+        .salary-radio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .salary-radio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .salary-radio-card {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 9px;
+            cursor: pointer;
+            background: #FFFFFF;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-sub);
+            transition: all 0.15s;
         }
 
-        button.day-pill:hover {
-            border-color: var(--primary-border);
-            background: #F8FAFC;
+        .salary-radio-card input {
+            accent-color: var(--primary);
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
         }
 
-        button.day-pill.active {
-            border-color: var(--primary) !important;
-            background: var(--primary) !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+        .salary-radio-card.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
         /* Submit Button */
         .btn-submit {
             width: 100%;
+            height: 50px;
             background: linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%);
             color: #FFFFFF;
             border: none;
-            border-radius: 12px;
-            padding: 15px 24px;
-            font-size: 17px;
-            font-weight: 800;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 14px;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+            transition: all 0.2s ease;
         }
 
-        .btn-submit:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(79, 70, 229, 0.4);
-            filter: brightness(1.05);
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
         }
 
-        .btn-submit:active:not(:disabled) {
+        .btn-submit:active {
             transform: translateY(0);
         }
 
@@ -779,486 +406,237 @@
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
 
-        .privacy-hint {
-            text-align: center;
-            margin-top: 14px;
-            font-size: 12.5px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        /* ===== SUCCESS MODAL / CARD ===== */
+        /* Success Card */
         .success-card {
             display: none;
-            text-align: center;
-            padding: 34px 24px;
             background: #FFFFFF;
-            border: 1.5px solid #10B981;
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
-            animation: fadeIn 0.3s ease;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
         }
 
-        .success-icon-wrap {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: rgba(16, 185, 129, 0.12);
+        .success-icon {
+            width: 58px;
+            height: 58px;
+            background: #DCFCE7;
             color: #10B981;
+            border-radius: 50%;
             display: grid;
             place-items: center;
-            font-size: 34px;
-            margin: 0 auto 18px;
-            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.06);
+            font-size: 28px;
+            margin: 0 auto 14px;
         }
 
         .success-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             color: #065F46;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .success-desc {
-            font-size: 15px;
-            color: #334155;
-            line-height: 1.6;
-            max-width: 460px;
-            margin: 0 auto 20px;
+            font-size: 14.5px;
+            color: var(--text-sub);
+            margin-bottom: 20px;
         }
 
-        .receipt-box {
+        .receipt-card {
             background: #F8FAFC;
-            border: 1px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
+            border: 1px dashed #CBD5E1;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 20px;
             text-align: left;
-            margin-bottom: 22px;
             font-size: 13.5px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
 
         .receipt-row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #EDF2F7;
         }
 
-        .receipt-row .label {
+        .receipt-row:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-label {
             color: var(--text-muted);
             font-weight: 500;
         }
 
-        .receipt-row .val {
-            color: #0F172A;
+        .receipt-val {
             font-weight: 700;
-            text-align: right;
-            word-break: break-word;
+            color: var(--text-dark);
         }
 
-        .btn-whatsapp-direct {
-            background-color: var(--whatsapp);
-            color: #FFFFFF;
+        .btn-wa-direct {
+            background: #25D366;
+            color: #fff;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 15px;
             padding: 12px 18px;
-            border-radius: 10px;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 9px;
-            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
-            transition: all 0.2s ease;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
             width: 100%;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            margin-bottom: 10px;
         }
 
-        .btn-whatsapp-direct:hover {
-            background-color: var(--whatsapp-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-post-another {
-            margin-top: 12px;
+        .btn-post-again {
             background: #F1F5F9;
             color: #475569;
-            border: 1px solid var(--border-color);
-            padding: 10px 16px;
+            border: 1px solid var(--border);
+            padding: 10px;
             border-radius: 8px;
             font-size: 13.5px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: all 0.2s ease;
         }
 
-        .btn-post-another:hover {
-            background: #E2E8F0;
-            color: #0F172A;
-        }
-
-        /* ===== FLOATING CALL BUTTON & POPOVER ===== */
-        .tsbd-floating-call-container {
+        /* ===== FLOATING CALL BUTTON (Right Bottom) ===== */
+        .floating-call-bar {
             position: fixed;
-            bottom: 22px;
-            right: 22px;
-            z-index: 950;
+            bottom: 18px;
+            right: 18px;
+            z-index: 999;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
 
         .floating-call-btn {
-            position: relative;
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            background: linear-gradient(135deg, #10B981, #059669);
             color: #FFFFFF;
             border: 2px solid #FFFFFF;
-            border-radius: 50px;
-            padding: 11px 20px 11px 16px;
-            font-size: 14.5px;
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            gap: 8px;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
             user-select: none;
             outline: none;
-        }
-
-        .floating-call-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.5);
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        }
-
-        .floating-call-btn:active {
-            transform: translateY(0);
-        }
-
-        .call-icon-box {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.22);
-            display: grid;
-            place-items: center;
-            font-size: 15px;
-            animation: phoneRinging 1.8s infinite ease-in-out;
-        }
-
-        @keyframes phoneRinging {
-            0%, 100% { transform: rotate(0deg); }
-            10%, 30% { transform: rotate(-16deg); }
-            20%, 40% { transform: rotate(16deg); }
-            50% { transform: rotate(0deg); }
-        }
-
-        .call-pulse-ring {
-            position: absolute;
-            inset: -4px;
-            border-radius: 50px;
-            border: 2px solid #10B981;
-            opacity: 0.7;
-            animation: pulseRing 2s cubic-bezier(0.25, 0, 0.2, 1) infinite;
-            pointer-events: none;
-        }
-
-        @keyframes pulseRing {
-            0% { transform: scale(0.96); opacity: 0.8; }
-            70% { transform: scale(1.15); opacity: 0; }
-            100% { transform: scale(1.2); opacity: 0; }
-        }
-
-        .floating-call-popover {
-            width: 310px;
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.18);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(12px) scale(0.96);
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-        }
-
-        .floating-call-popover.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
-        }
-
-        .popover-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .popover-title {
-            font-size: 15.5px;
-            font-weight: 800;
-            color: #0F172A;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .popover-close-btn {
-            background: #F1F5F9;
-            border: none;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: #64748B;
-            display: grid;
-            place-items: center;
-            font-size: 13px;
-            transition: background 0.18s;
-        }
-
-        .popover-close-btn:hover {
-            background: #E2E8F0;
-            color: #0F172A;
-        }
-
-        .popover-subtitle {
-            font-size: 12.5px;
-            color: var(--text-muted);
-            margin-bottom: 14px;
-            line-height: 1.4;
-        }
-
-        .popover-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .popover-action-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-family: inherit;
             transition: all 0.2s ease;
         }
 
-        .btn-call-phone {
-            background: #EFF6FF;
-            border: 1.5px solid #BFDBFE;
-            color: #1E40AF;
+        .floating-call-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
         }
 
-        .btn-call-phone:hover {
-            background: #DBEAFE;
-            border-color: #93C5FD;
-            transform: translateX(2px);
+        .floating-menu {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 10px);
+            right: 0;
+            width: 250px;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        .btn-call-whatsapp {
-            background: #ECFDF5;
-            border: 1.5px solid #A7F3D0;
-            color: #065F46;
+        .floating-menu.open {
+            display: block;
         }
 
-        .btn-call-whatsapp:hover {
-            background: #D1FAE5;
-            border-color: #6EE7B7;
-            transform: translateX(2px);
-        }
-
-        .btn-icon-circle {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            font-size: 17px;
-            flex-shrink: 0;
-        }
-
-        .btn-call-phone .btn-icon-circle {
-            background: #2563EB;
-            color: #FFFFFF;
-        }
-
-        .btn-call-whatsapp .btn-icon-circle {
-            background: #25D366;
-            color: #FFFFFF;
-        }
-
-        .btn-text-wrap {
+        .menu-action {
             display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .btn-title {
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            text-decoration: none;
             font-size: 13.5px;
             font-weight: 700;
-            line-height: 1.25;
+            margin-bottom: 6px;
         }
 
-        .btn-number {
-            font-size: 12px;
-            opacity: 0.85;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+        .menu-action:last-child {
+            margin-bottom: 0;
         }
 
-        @media (max-width: 520px) {
-            .tsbd-floating-call-container {
-                bottom: 16px;
-                right: 16px;
-                left: 16px;
-                align-items: stretch;
-            }
-            .floating-call-btn {
-                justify-content: center;
-                width: 100%;
-                font-size: 14px;
-                padding: 12px 16px;
-            }
-            .floating-call-popover {
-                width: 100%;
-            }
+        .menu-phone {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #BFDBFE;
+        }
+
+        .menu-wa {
+            background: #F0FDF4;
+            color: #15803D;
+            border: 1px solid #BBF7D0;
         }
     </style>
 </head>
 <body>
 
-    <!-- TSBD NAVBAR (Excludes this direct page from menus) -->
-    <nav class="tsbd-navbar">
-        <div class="tsbd-nav-inner">
-            <a class="tsbd-logo" href="tuitions-offers.html" aria-label="Tuition Service BD">
-                <span class="tsbd-logo-mark">TS</span>
-                <span>TSBD</span>
-            </a>
-            
-            <div class="tsbd-nav-links">
-                <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
-                <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
-                <a class="tsbd-nav-link" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
-                <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
-                
-                <div class="tsbd-user" id="tsbdDesktopUser">
-                    <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Profile" title="প্রোফাইল">
-                    <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
-                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
-                    </div>
+    <!-- Simple Top Branding (No login/drawer clutter) -->
+    <header class="tsbd-simple-header">
+        <div class="header-inner">
+            <a href="javascript:void(0)" class="tsbd-brand">
+                <span class="brand-badge">TS</span>
+                <div>
+                    <span class="brand-title">TSBD</span>
+                    <span class="brand-sub">Tuition Service BD</span>
                 </div>
-            </div>
-
-            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Mobile Navigation Drawer -->
-    <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
-    <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
-        <div class="tsbd-drawer-head">
-            <a class="tsbd-logo" href="tuitions-offers.html">
-                <span class="tsbd-logo-mark">TS</span>
-                <span>TSBD</span>
             </a>
-            <button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+            <a href="tel:01735698076" class="header-phone-btn">
+                <i class="fa-solid fa-phone"></i> 01735-698076
+            </a>
         </div>
-        <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
-        <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
-        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
-        <a class="tsbd-nav-link" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
-        <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
-        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
-        
-        <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
-            <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
-                <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Profile">
-                <span style="font-size:14px;font-weight:600;color:#374151" id="tsbdMobileName">Signed in</span>
-                <i class="fa-solid fa-chevron-down tsbd-mobile-caret"></i>
-            </div>
-            <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
-                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
-            </div>
-        </div>
-    </aside>
+    </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="page-container">
-        
+    <main class="main-wrap">
+
         <!-- Guardian Notice Banner -->
-        <section class="notice-banner" aria-label="অভিভাবক নোটিশ">
-            <div class="notice-tag">
-                <i class="fa-solid fa-shield-halved"></i> বিশ্বস্ত অভিভাবক সেবা
+        <section class="notice-card">
+            <div class="notice-icon">
+                <i class="fa-solid fa-phone-volume"></i>
             </div>
             <div class="notice-text">
-                <div class="notice-icon-box">
-                    <i class="fa-solid fa-phone-volume"></i>
-                </div>
-                <div>
-                    অনুগ্রহ করে নিচের তথ্যগুলো দিন। খুব শিঘ্রই একজন অভিজ্ঞ ও দক্ষ টিউটর আপনাকে কল দিবে।
-                </div>
-            </div>
-            <div class="notice-highlights">
-                <span><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> ১০০% ফ্রি সার্ভিস</span>
-                <span><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> দ্রুত রেসপন্স</span>
-                <span><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> বিশ্বস্ত ও ভেরিফাইড শিক্ষক</span>
+                <h2>অভিভাবক ফর্ম (১০০% ফ্রি সার্ভিস)</h2>
+                <p>অনুগ্রহ করে নিচের তথ্যগুলো দিন। খুব শিঘ্রই একজন অভিজ্ঞ ও দক্ষ টিউটর আপনাকে কল দিবে।</p>
             </div>
         </section>
 
-        <!-- Form Card -->
+        <!-- The Main Tuition Form -->
         <section class="form-card" id="formCard">
-            <div class="form-header">
-                <h1 class="form-header-title">
-                    <i class="fa-solid fa-pen-to-square" style="color:var(--primary);font-size:20px;"></i>
-                    টিউশন চাহিদার তথ্য
-                </h1>
-                <p class="form-header-subtitle">আপনার প্রয়োজনীয় বিষয়, সময় ও এলাকা দিয়ে সহজে দক্ষ টিউটর খুঁজুন</p>
-            </div>
+            <h1 class="form-title">
+                <i class="fa-solid fa-pen-to-square" style="color:var(--primary);"></i>
+                টিউশন চাহিদার তথ্য পূরণ করুন
+            </h1>
 
-            <form id="guardianPostForm" novalidate>
-                
-                <!-- ১. ক্লাস / শ্রেণী -->
+            <form id="tuitionForm" autocomplete="on">
+
+                <!-- ১. ক্লাস -->
                 <div class="form-group">
                     <label class="form-label" for="classInput">
                         ক্লাস / শ্রেণী <span class="required-star">*</span>
                     </label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-graduation-cap input-icon"></i>
-                        <input type="text" id="classInput" class="form-control" placeholder="যেমন: Class 9 / HSC 1st Year / ৫ম শ্রেণী" required>
-                    </div>
-                    <!-- Quick Class Chips -->
-                    <div class="quick-chips-wrap" id="classChips">
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'Class 5')">Class 5</button>
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'Class 8 (JSC)')">Class 8</button>
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'Class 9')">Class 9</button>
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'Class 10 (SSC)')">Class 10 (SSC)</button>
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'HSC 1st Year')">HSC 1st Year</button>
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'HSC 2nd Year')">HSC 2nd Year</button>
-                        <button type="button" class="quick-chip" onclick="selectClassChip(this, 'Admission')">ভর্তি পরীক্ষা</button>
+                    <input type="text" id="classInput" class="form-control" placeholder="যেমন: Class 9 / HSC / ৫ম শ্রেণী" required>
+                    <div class="chips-container" id="classChips">
+                        <button type="button" class="chip-btn" onclick="selectChip('classInput', this, 'Class 5')">Class 5</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('classInput', this, 'Class 8')">Class 8</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('classInput', this, 'Class 9')">Class 9</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('classInput', this, 'SSC (Class 10)')">SSC</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('classInput', this, 'HSC 1st Year')">HSC 1st Year</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('classInput', this, 'HSC 2nd Year')">HSC 2nd Year</button>
                     </div>
                 </div>
 
@@ -1267,52 +645,38 @@
                     <label class="form-label" for="subjectInput">
                         বিষয় <span class="required-star">*</span>
                     </label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-book-open input-icon"></i>
-                        <input type="text" id="subjectInput" class="form-control" placeholder="যেমন: গণিত ও বিজ্ঞান / ইংরেজি / সকল বিষয়" required>
-                    </div>
-                    <!-- Quick Subject Chips -->
-                    <div class="quick-chips-wrap" id="subjectChips">
-                        <button type="button" class="quick-chip" onclick="selectSubjectChip(this, 'সকল বিষয়')">সকল বিষয়</button>
-                        <button type="button" class="quick-chip" onclick="selectSubjectChip(this, 'গণিত ও বিজ্ঞান')">গণিত ও বিজ্ঞান</button>
-                        <button type="button" class="quick-chip" onclick="selectSubjectChip(this, 'ইংরেজি')">ইংরেজি</button>
-                        <button type="button" class="quick-chip" onclick="selectSubjectChip(this, 'Physics, Chemistry, Math')">পদার্থ, রসায়ন, গণিত</button>
-                        <button type="button" class="quick-chip" onclick="selectSubjectChip(this, 'আইসিটি (ICT)')">আইসিটি</button>
-                        <button type="button" class="quick-chip" onclick="selectSubjectChip(this, 'কুরআন ও আরবি শিক্ষা')">কুরআন শিক্ষা</button>
+                    <input type="text" id="subjectInput" class="form-control" placeholder="যেমন: গণিত ও বিজ্ঞান / ইংরেজি / সকল বিষয়" required>
+                    <div class="chips-container" id="subjectChips">
+                        <button type="button" class="chip-btn" onclick="selectChip('subjectInput', this, 'সকল বিষয়')">সকল বিষয়</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('subjectInput', this, 'গণিত ও বিজ্ঞান')">গণিত ও বিজ্ঞান</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('subjectInput', this, 'ইংরেজি')">ইংরেজি</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('subjectInput', this, 'পদার্থ, রসায়ন, গণিত')">পদার্থ, রসায়ন, গণিত</button>
+                        <button type="button" class="chip-btn" onclick="selectChip('subjectInput', this, 'কুরআন ও আরবি')">কুরআন শিক্ষা</button>
                     </div>
                 </div>
 
-                <!-- ৩. লোকেশন / এলাকা -->
+                <!-- ৩. লোকেশন -->
                 <div class="form-group">
                     <label class="form-label" for="locationInput">
                         লোকেশন <span class="required-star">*</span>
-                        <span class="sub-hint">(এলাকা / থানা ও জেলা)</span>
+                        <span class="sub-hint">(এলাকা / জেলা)</span>
                     </label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-location-dot input-icon"></i>
-                        <input type="text" id="locationInput" class="form-control" placeholder="যেমন: উপশহর / পালবাড়ি, যশোর বা ধানমন্ডি, ঢাকা" required>
-                    </div>
+                    <input type="text" id="locationInput" class="form-control" placeholder="যেমন: উপশহর, যশোর বা ধানমন্ডি, ঢাকা" required>
                 </div>
 
-                <!-- ৪. সময় & সপ্তাহে কয়দিন (Grid) -->
-                <div class="form-row-2">
-                    <!-- সময় -->
+                <!-- ৪. সময় ও মাধ্যম -->
+                <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="timeInput">
-                            সময় <span class="required-star">*</span>
+                            সুবিধাজনক সময় <span class="required-star">*</span>
                         </label>
-                        <div class="input-wrapper">
-                            <i class="fa-solid fa-clock input-icon"></i>
-                            <input type="text" id="timeInput" class="form-control" placeholder="যেমন: সন্ধ্যা (৬:০০ - ৮:০০) / বিকাল" required>
-                        </div>
+                        <input type="text" id="timeInput" class="form-control" placeholder="যেমন: সন্ধ্যা (৬:০০ - ৮:০০) / বিকাল" required>
                     </div>
-
-                    <!-- মাধ্যমে (Medium) -->
                     <div class="form-group">
                         <label class="form-label" for="mediumSelect">
-                            মাধ্যম
+                            পড়ার মাধ্যম
                         </label>
-                        <select id="mediumSelect" class="form-control no-icon">
+                        <select id="mediumSelect" class="form-control">
                             <option value="Bangla Medium">Bangla Medium (বাংলা মাধ্যম)</option>
                             <option value="English Version">English Version (ইংলিশ ভার্সন)</option>
                             <option value="English Medium">English Medium (ইংলিশ মিডিয়াম)</option>
@@ -1328,393 +692,214 @@
                         সপ্তাহে <span class="required-star">*</span>
                         <span class="sub-hint">(কয়দিন পড়াতে হবে)</span>
                     </label>
-                    <div class="days-pills-wrap" id="daysPills">
-                        <button type="button" class="day-pill active" onclick="selectDayPill(this, '৩ দিন')">৩ দিন</button>
-                        <button type="button" class="day-pill" onclick="selectDayPill(this, '৪ দিন')">৪ দিন</button>
-                        <button type="button" class="day-pill" onclick="selectDayPill(this, '৫ দিন')">৫ দিন</button>
-                        <button type="button" class="day-pill" onclick="selectDayPill(this, '৬ দিন')">৬ দিন</button>
-                        <button type="button" class="day-pill" onclick="selectDayPill(this, 'আলোচনা সাপেক্ষে')">আলোচনা সাপেক্ষে</button>
+                    <div class="pills-group" id="daysPills">
+                        <button type="button" class="pill-btn active" onclick="selectDayPill(this, '৩ দিন')">৩ দিন</button>
+                        <button type="button" class="pill-btn" onclick="selectDayPill(this, '৪ দিন')">৪ দিন</button>
+                        <button type="button" class="pill-btn" onclick="selectDayPill(this, '৫ দিন')">৫ দিন</button>
+                        <button type="button" class="pill-btn" onclick="selectDayPill(this, '৬ দিন')">৬ দিন</button>
+                        <button type="button" class="pill-btn" onclick="selectDayPill(this, 'আলোচনা সাপেক্ষে')">আলোচনা সাপেক্ষে</button>
                     </div>
                     <input type="hidden" id="daysValue" value="৩ দিন">
                 </div>
 
-                <!-- ৬. স্যালারি (রেডিও বাটন Default: আলোচনা সাপেক্ষ্যে or Custom Input) -->
+                <!-- ৬. স্যালারি (Default: আলোচনা সাপেক্ষে OR নির্দিষ্ট ইনপুট) -->
                 <div class="form-group">
                     <label class="form-label">
                         স্যালারি <span class="required-star">*</span>
                     </label>
-                    
-                    <div class="radio-options-grid">
-                        <label class="custom-radio-card active" id="radioSalaryNegotiableCard" onclick="toggleSalaryMode('negotiable')">
-                            <input type="radio" name="salaryRadio" id="salaryNegotiableRadio" value="negotiable" checked>
-                            <span class="radio-indicator"></span>
-                            <span class="radio-label-text">আলোচনা সাপেক্ষে</span>
+                    <div class="salary-radio-grid">
+                        <label class="salary-radio-card active" id="cardSalaryNegotiable">
+                            <input type="radio" name="salaryMode" value="negotiable" checked onchange="handleSalaryChange('negotiable')">
+                            <span>আলোচনা সাপেক্ষে (Default)</span>
                         </label>
-
-                        <label class="custom-radio-card" id="radioSalaryFixedCard" onclick="toggleSalaryMode('fixed')">
-                            <input type="radio" name="salaryRadio" id="salaryFixedRadio" value="fixed">
-                            <span class="radio-indicator"></span>
-                            <span class="radio-label-text">নির্দিষ্ট স্যালারি উল্লেখ করুন</span>
+                        <label class="salary-radio-card" id="cardSalaryFixed">
+                            <input type="radio" name="salaryMode" value="fixed" onchange="handleSalaryChange('fixed')">
+                            <span>নির্দিষ্ট বাজেট উল্লেখ করুন</span>
                         </label>
                     </div>
-
-                    <div class="salary-input-container" id="salaryInputContainer">
-                        <div class="input-wrapper" style="margin-top: 10px;">
-                            <i class="fa-solid fa-bangladeshi-taka-sign input-icon"></i>
-                            <input type="text" id="salaryAmountInput" class="form-control" placeholder="টাকার পরিমাণ লিখুন (যেমন: ৩০০০ বা ৪০০০)">
-                        </div>
+                    <div id="salaryInputWrap" style="display:none; margin-top: 8px;">
+                        <input type="text" id="salaryAmountInput" class="form-control" placeholder="স্যালারি লিখুন (যেমন: ৩০০০ বা ৪০০০ টাকা)">
                     </div>
                 </div>
 
                 <!-- ৭. মোবাইল নম্বর -->
                 <div class="form-group">
                     <label class="form-label" for="phoneInput">
-                        মোবাইল <span class="required-star">*</span>
-                        <span class="sub-hint">(টিউটর কল দেওয়ার জন্য সঠিক নম্বর দিন)</span>
+                        মোবাইল নম্বর <span class="required-star">*</span>
+                        <span class="sub-hint">(টিউটর কল দেওয়ার জন্য)</span>
                     </label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-phone input-flip input-icon"></i>
-                        <input type="tel" id="phoneInput" class="form-control" placeholder="01XXXXXXXXX" maxlength="11" required>
-                    </div>
-                    <div id="phoneError" style="display:none;color:var(--danger);font-size:12.5px;margin-top:5px;font-weight:600;">
-                        <i class="fa-solid fa-circle-exclamation"></i> সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)
+                    <input type="tel" id="phoneInput" class="form-control" placeholder="01XXXXXXXXX" maxlength="11" required>
+                    <div id="phoneError" style="display:none; color:var(--danger); font-size:12.5px; margin-top:5px; font-weight:600;">
+                        <i class="fa-solid fa-circle-exclamation"></i> অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)
                     </div>
                 </div>
 
                 <!-- ৮. পছন্দের টিউটর (ঐচ্ছিক) -->
                 <div class="form-group">
                     <label class="form-label" for="preferredTutorSelect">
-                        পছন্দের টিউটর <span class="sub-hint">(ঐচ্ছিক)</span>
+                        পছন্দের শিক্ষক <span class="sub-hint">(ঐচ্ছিক)</span>
                     </label>
-                    <select id="preferredTutorSelect" class="form-control no-icon">
-                        <option value="Any">যেকোনো দক্ষ টিউটর</option>
+                    <select id="preferredTutorSelect" class="form-control">
+                        <option value="Any">যেকোনো দক্ষ ও অভিজ্ঞ টিউটর</option>
                         <option value="Female">মহিলা শিক্ষিকা</option>
                         <option value="Male">পুরুষ শিক্ষক</option>
                     </select>
                 </div>
 
-                <!-- ৯. বিশেষ নির্দেশনা / নোট (ঐচ্ছিক) -->
+                <!-- ৯. বিশেষ কোনো চাওয়া / নোট (ঐচ্ছিক) -->
                 <div class="form-group">
                     <label class="form-label" for="notesInput">
                         বিশেষ কোনো চাওয়া বা শর্ত <span class="sub-hint">(ঐচ্ছিক)</span>
                     </label>
-                    <textarea id="notesInput" class="form-control" rows="2" placeholder="যেমন: কোনো নির্দিষ্ট বিশ্ববিদ্যালয়ের শিক্ষক চান বা বিশেষ কোনো নির্দেশিকা..."></textarea>
+                    <textarea id="notesInput" class="form-control" rows="2" placeholder="যেমন: কোনো নির্দিষ্ট বিশ্ববিদ্যালয়ের শিক্ষক চান বা বিশেষ কোনো নোট..."></textarea>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- সাবমিট বাটন -->
                 <button type="submit" id="submitBtn" class="btn-submit">
                     <i class="fa-solid fa-paper-plane"></i>
                     <span>তথ্য জমা দিন ও টিউটর পান</span>
                 </button>
 
-                <div class="privacy-hint">
-                    <i class="fa-solid fa-lock" style="color:#10B981;"></i>
-                    আপনার নম্বর সম্পূর্ণ সুরক্ষিত রাখা হবে এবং কেবল শিক্ষক নির্ধারণে ব্যবহার হবে।
-                </div>
+                <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:10px;">
+                    <i class="fa-solid fa-shield-halved" style="color:var(--success);"></i> 
+                    আপনার নম্বর সম্পূর্ণ নিরাপদ থাকবে এবং শুধু শিক্ষক সংযোগে ব্যবহার হবে।
+                </p>
             </form>
         </section>
 
-        <!-- Success Result Card -->
-        <section class="success-card" id="successCard" aria-live="polite">
-            <div class="success-icon-wrap">
-                <i class="fa-solid fa-circle-check"></i>
+        <!-- সাবমিট সফল হওয়ার স্ক্রিন -->
+        <section class="success-card" id="successCard">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
             </div>
-            
-            <h2 class="success-title">আপনার রিকুয়েস্ট সফলভাবে গৃহীত হয়েছে!</h2>
-            <p class="success-desc">
-                ধন্যবাদ! খুব শীঘ্রই আমাদের একজন অভিজ্ঞ ও দক্ষ টিউটর আপনার দেওয়া মোবাইল নম্বরে কল করবেন।
-            </p>
+            <h2 class="success-title">আপনার তথ্য সফলভাবে গৃহীত হয়েছে!</h2>
+            <p class="success-desc">খুব শীঘ্রই একজন অভিজ্ঞ ও দক্ষ টিউটর আপনার দেওয়া মোবাইল নম্বরে কল দিবে।</p>
 
-            <!-- Submission Receipt Summary -->
-            <div class="receipt-box" id="receiptBox">
-                <!-- Dynamically populated -->
+            <div class="receipt-card" id="receiptContent">
+                <!-- Dynamically filled -->
             </div>
 
-            <div style="display:flex;flex-direction:column;gap:10px;">
-                <a href="#" id="directWhatsAppBtn" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-direct">
-                    <i class="fa-brands fa-whatsapp" style="font-size:18px;"></i>
-                    <span>জরুরি প্রয়োজনে WhatsApp-এ কথা বলুন</span>
-                </a>
+            <a href="#" id="directWhatsAppBtn" target="_blank" rel="noopener noreferrer" class="btn-wa-direct">
+                <i class="fa-brands fa-whatsapp" style="font-size:19px;"></i>
+                <span>জরুরি প্রয়োজনে WhatsApp-এ মেসেজ দিন</span>
+            </a>
 
-                <button type="button" id="postAnotherBtn" class="btn-post-another">
-                    <i class="fa-solid fa-rotate-right"></i> আরেকটি টিউশন পোস্ট করুন
-                </button>
-            </div>
+            <button type="button" class="btn-post-again" onclick="resetForm()">
+                <i class="fa-solid fa-rotate-right"></i> আরেকটি টিউশন পোস্ট করুন
+            </button>
         </section>
 
     </main>
 
-    <!-- Floating Quick Call Widget (Bottom Right) -->
-    <div class="tsbd-floating-call-container" id="floatingCallContainer">
-        <!-- Popover Options Card (Revealed on Click) -->
-        <div class="floating-call-popover" id="floatingCallPopover" aria-hidden="true">
-            <div class="popover-header">
-                <div class="popover-title">
-                    <i class="fa-solid fa-headset" style="color:#10B981;"></i> সরাসরি কথা বলুন
-                </div>
-                <button type="button" class="popover-close-btn" onclick="toggleCallPopover(false)" aria-label="বন্ধ করুন">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <p class="popover-subtitle">তথ্য পূরণ করতে না চাইলে এখনই আমাদের সাথে যোগাযোগ করুন:</p>
-            
-            <div class="popover-actions">
-                <!-- 1. Direct Phone Call -->
-                <a href="tel:01735698076" class="popover-action-btn btn-call-phone">
-                    <div class="btn-icon-circle"><i class="fa-solid fa-phone"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-title">সরাসরি ফোন কল</span>
-                        <span class="btn-number">01735-698076</span>
-                    </div>
-                </a>
-
-                <!-- 2. WhatsApp Call / Message -->
-                <a href="https://wa.me/8801735698076?text=%E0%A6%86%E0%A6%B8%E0%A6%B8%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%81%20%E0%A6%86%E0%A6%B2%E0%A6%BE%E0%A6%87%E0%A6%95%E0%A7%81%E0%A6%AE,%20%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF%20%E0%A6%9F%E0%A6%BF%E0%A6%89%E0%A6%B6%E0%A6%A8%E0%A7%87%E0%A6%B0%20%E0%A6%AC%E0%A6%BF%E0%A6%B7%E0%A6%AF%E0%A6%BC%E0%A7%87%20%E0%A6%95%E0%A6%A5%E0%A6%BE%20%E0%A6%AC%E0%A6%B2%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A7%A4" target="_blank" rel="noopener noreferrer" class="popover-action-btn btn-call-whatsapp">
-                    <div class="btn-icon-circle"><i class="fa-brands fa-whatsapp"></i></div>
-                    <div class="btn-text-wrap">
-                        <span class="btn-title">WhatsApp কল / মেসেজ</span>
-                        <span class="btn-number">01735-698076</span>
-                    </div>
-                </a>
-            </div>
+    <!-- Floating Call Widget (Bottom Right) -->
+    <div class="floating-call-bar" id="floatingCallBar">
+        <div class="floating-menu" id="floatingMenu">
+            <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:8px; font-weight:600;">তথ্য পূরণ না করতে চাইলে সরাসরি যোগাযোগ করুন:</p>
+            <a href="tel:01735698076" class="menu-action menu-phone">
+                <i class="fa-solid fa-phone"></i> সরাসরি ফোন: 01735-698076
+            </a>
+            <a href="https://wa.me/8801735698076?text=%E0%A6%86%E0%A6%B8%E0%A6%B8%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%81%20%E0%A6%86%E0%A6%B2%E0%A6%BE%E0%A6%87%E0%A6%95%E0%A7%81%E0%A6%AE,%20%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%8F%E0%A6%95%E0%A6%9F%E0%A6%BF%20%E0%A6%9F%E0%A6%BF%E0%A6%89%E0%A6%B6%E0%A6%A8%E0%A7%87%E0%A6%B0%20%E0%A6%AC%E0%A6%BF%E0%A6%B7%E0%A6%AF%E0%A6%BC%E0%A7%87%20%E0%A6%95%E0%A6%A5%E0%A6%BE%20%E0%A6%AC%E0%A6%B2%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A7%A4" target="_blank" rel="noopener noreferrer" class="menu-action menu-wa">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp চ্যাট ও কল
+            </a>
         </div>
-
-        <!-- Main Floating Trigger Button -->
-        <button type="button" class="floating-call-btn" id="floatingCallBtn" onclick="toggleCallPopover()" aria-label="তথ্য পূরণ না করতে চাইলে কল করুন">
-            <span class="call-pulse-ring"></span>
-            <span class="call-icon-box">
-                <i class="fa-solid fa-phone-volume"></i>
-            </span>
-            <span class="call-btn-text">তথ্য পূরণ না করতে চাইলে কল করুন</span>
+        <button type="button" class="floating-call-btn" id="callTriggerBtn" onclick="toggleCallMenu()">
+            <i class="fa-solid fa-phone"></i>
+            <span>তথ্য পূরণ না করতে চাইলে কল করুন</span>
         </button>
     </div>
 
-    <!-- ========================================================
-         CORE UI JAVASCRIPT (Runs immediately, zero dependencies)
-         ======================================================== -->
+    <!-- ZERO-LAG FAST JAVASCRIPT -->
     <script>
-        // 1. Quick Class Chip Selector
-        window.selectClassChip = function(el, val) {
-            var input = document.getElementById('classInput');
+        // 1. Bengali to English Digits Helper
+        function toEnDigits(str) {
+            if (!str) return '';
+            var bn = { '০':'0', '১':'1', '২':'2', '৩':'3', '৪':'4', '৫':'5', '৬':'6', '৭':'7', '৮':'8', '৯':'9' };
+            return String(str).replace(/[০-৯]/g, function(d) { return bn[d]; });
+        }
+
+        // 2. Chip selector (Sets value without breaking native input focus)
+        function selectChip(inputId, btn, val) {
+            var input = document.getElementById(inputId);
             if (input) {
                 input.value = val;
-                input.focus();
             }
-            document.querySelectorAll('#classChips .quick-chip').forEach(function(c) {
-                c.classList.remove('active');
-            });
-            if (el) el.classList.add('active');
-        };
-
-        // 2. Quick Subject Chip Selector
-        window.selectSubjectChip = function(el, val) {
-            var input = document.getElementById('subjectInput');
-            if (input) {
-                input.value = val;
-                input.focus();
+            if (btn && btn.parentElement) {
+                var siblings = btn.parentElement.querySelectorAll('.chip-btn');
+                siblings.forEach(function(s) { s.classList.remove('active'); });
+                btn.classList.add('active');
             }
-            document.querySelectorAll('#subjectChips .quick-chip').forEach(function(c) {
-                c.classList.remove('active');
-            });
-            if (el) el.classList.add('active');
-        };
+        }
 
-        // 3. Days Pill Selector
-        window.selectDayPill = function(el, val) {
+        // 3. Days pill selector
+        function selectDayPill(btn, val) {
             var hidden = document.getElementById('daysValue');
             if (hidden) hidden.value = val;
-            document.querySelectorAll('#daysPills .day-pill').forEach(function(p) {
-                p.classList.remove('active');
-            });
-            if (el) el.classList.add('active');
-        };
+            var siblings = document.querySelectorAll('#daysPills .pill-btn');
+            siblings.forEach(function(s) { s.classList.remove('active'); });
+            if (btn) btn.classList.add('active');
+        }
 
-        // 4. Salary Mode Toggle
-        window.toggleSalaryMode = function(mode) {
-            var negotiableCard = document.getElementById('radioSalaryNegotiableCard');
-            var fixedCard = document.getElementById('radioSalaryFixedCard');
-            var negotiableRadio = document.getElementById('salaryNegotiableRadio');
-            var fixedRadio = document.getElementById('salaryFixedRadio');
-            var salaryInputContainer = document.getElementById('salaryInputContainer');
-            var salaryAmountInput = document.getElementById('salaryAmountInput');
+        // 4. Salary mode change
+        function handleSalaryChange(mode) {
+            var cardNeg = document.getElementById('cardSalaryNegotiable');
+            var cardFix = document.getElementById('cardSalaryFixed');
+            var inputWrap = document.getElementById('salaryInputWrap');
+            var salaryInput = document.getElementById('salaryAmountInput');
 
             if (mode === 'negotiable') {
-                if (negotiableRadio) negotiableRadio.checked = true;
-                if (negotiableCard) negotiableCard.classList.add('active');
-                if (fixedCard) fixedCard.classList.remove('active');
-                if (salaryInputContainer) salaryInputContainer.style.display = 'none';
-                if (salaryAmountInput) salaryAmountInput.required = false;
+                if (cardNeg) cardNeg.classList.add('active');
+                if (cardFix) cardFix.classList.remove('active');
+                if (inputWrap) inputWrap.style.display = 'none';
+                if (salaryInput) salaryInput.required = false;
             } else {
-                if (fixedRadio) fixedRadio.checked = true;
-                if (fixedCard) fixedCard.classList.add('active');
-                if (negotiableCard) negotiableCard.classList.remove('active');
-                if (salaryInputContainer) salaryInputContainer.style.display = 'block';
-                if (salaryAmountInput) {
-                    salaryAmountInput.required = true;
-                    salaryAmountInput.focus();
+                if (cardFix) cardFix.classList.add('active');
+                if (cardNeg) cardNeg.classList.remove('active');
+                if (inputWrap) inputWrap.style.display = 'block';
+                if (salaryInput) {
+                    salaryInput.required = true;
+                    salaryInput.focus();
                 }
-            }
-        };
-
-        // 5. Bengali Digits Helper
-        window.toEnDigits = function(str) {
-            if (!str) return '';
-            var enDigits = { '০':'0', '১':'1', '২':'2', '৩':'3', '৪':'4', '৫':'5', '৬':'6', '৭':'7', '৮':'8', '৯':'9' };
-            return String(str).replace(/[০-৯]/g, function(d) { return enDigits[d]; });
-        };
-
-        window.escapeHtml = function(value) {
-            return String(value == null ? '' : value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        };
-
-        window.showToast = function(message, type) {
-            type = type || 'info';
-            var container = document.getElementById('tsbdToastContainer');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'tsbdToastContainer';
-                container.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
-                document.body.appendChild(container);
-            }
-
-            var toast = document.createElement('div');
-            var colors = {
-                success: { bg: '#10B981', icon: 'fa-circle-check' },
-                error: { bg: '#EF4444', icon: 'fa-circle-xmark' },
-                warning: { bg: '#F59E0B', icon: 'fa-triangle-exclamation' },
-                info: { bg: '#3B82F6', icon: 'fa-circle-info' }
-            };
-            var c = colors[type] || colors.info;
-
-            toast.style.cssText = 'background:#1E293B;color:#F8FAFC;border-left:4px solid ' + c.bg + ';padding:12px 18px;border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,0.3);display:flex;align-items:center;gap:10px;font-family:Noto Sans Bengali,sans-serif;font-size:14px;opacity:0;transform:translateY(20px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);pointer-events:auto;max-width:380px;';
-            toast.innerHTML = '<i class="fa-solid ' + c.icon + '" style="color:' + c.bg + ';font-size:18px;"></i> <span>' + message + '</span>';
-
-            container.appendChild(toast);
-            requestAnimationFrame(function() {
-                toast.style.opacity = '1';
-                toast.style.transform = 'translateY(0)';
-            });
-
-            setTimeout(function() {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(20px)';
-                setTimeout(function() { toast.remove(); }, 350);
-            }, 3500);
-        };
-
-        // 6. Mobile input live format
-        var phoneInput = document.getElementById('phoneInput');
-        var phoneError = document.getElementById('phoneError');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
-                var rawVal = e.target.value;
-                var digits = window.toEnDigits(rawVal).replace(/[^0-9]/g, '');
-                if (rawVal !== digits) {
-                    e.target.value = digits;
-                }
-
-                if (digits.length === 11) {
-                    if (/^01[3-9]\d{8}$/.test(digits)) {
-                        if (phoneError) phoneError.style.display = 'none';
-                        phoneInput.style.borderColor = '#10B981';
-                    } else {
-                        if (phoneError) phoneError.style.display = 'block';
-                        phoneInput.style.borderColor = '#EF4444';
-                    }
-                } else {
-                    phoneInput.style.borderColor = '';
-                    if (digits.length > 0 && digits.length < 11) {
-                        if (phoneError) phoneError.style.display = 'none';
-                    }
-                }
-            });
-        }
-
-        // 7. Navbar Drawer Interactions
-        var tsbdDrawer = document.getElementById("tsbdDrawer");
-        var tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
-        var tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
-        var tsbdClose = document.getElementById("tsbdClose");
-
-        function tsbdOpenDrawer() {
-            if (tsbdDrawer) {
-                tsbdDrawer.classList.add("open");
-                if (tsbdOverlay) tsbdOverlay.classList.add("open");
-                tsbdDrawer.setAttribute("aria-hidden", "false");
-                document.body.style.overflow = "hidden";
             }
         }
 
-        function tsbdCloseDrawer() {
-            if (tsbdDrawer) {
-                tsbdDrawer.classList.remove("open");
-                if (tsbdOverlay) tsbdOverlay.classList.remove("open");
-                tsbdDrawer.setAttribute("aria-hidden", "true");
-                document.body.style.overflow = "";
-            }
+        // 5. Floating Call Menu Toggle
+        function toggleCallMenu() {
+            var menu = document.getElementById('floatingMenu');
+            if (menu) menu.classList.toggle('open');
         }
-
-        if (tsbdMenuBtn) tsbdMenuBtn.addEventListener("click", tsbdOpenDrawer);
-        if (tsbdClose) tsbdClose.addEventListener("click", tsbdCloseDrawer);
-        if (tsbdOverlay) tsbdOverlay.addEventListener("click", tsbdCloseDrawer);
-
-        // 8. Reset / Post Another Button
-        var postAnotherBtn = document.getElementById('postAnotherBtn');
-        if (postAnotherBtn) {
-            postAnotherBtn.addEventListener('click', function() {
-                var form = document.getElementById('guardianPostForm');
-                if (form) form.reset();
-                window.toggleSalaryMode('negotiable');
-                document.querySelectorAll('.quick-chip').forEach(function(c) { c.classList.remove('active'); });
-                document.querySelectorAll('#daysPills .day-pill').forEach(function(p) { p.classList.remove('active'); });
-                var defaultDay = document.querySelector('#daysPills .day-pill');
-                if (defaultDay) defaultDay.classList.add('active');
-                var daysVal = document.getElementById('daysValue');
-                if (daysVal) daysVal.value = "৩ দিন";
-                var submitBtn = document.getElementById('submitBtn');
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>তথ্য জমা দিন ও টিউটর পান</span>';
-                }
-                var successCard = document.getElementById('successCard');
-                var formCard = document.getElementById('formCard');
-                if (successCard) successCard.style.display = 'none';
-                if (formCard) formCard.style.display = 'block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
-
-        // 9. Floating Call Popover Toggle
-        window.toggleCallPopover = function(forceState) {
-            var popover = document.getElementById('floatingCallPopover');
-            if (!popover) return;
-            if (typeof forceState === 'boolean') {
-                if (forceState) popover.classList.add('show');
-                else popover.classList.remove('show');
-            } else {
-                popover.classList.toggle('show');
-            }
-        };
 
         document.addEventListener('click', function(e) {
-            var container = document.getElementById('floatingCallContainer');
-            var popover = document.getElementById('floatingCallPopover');
-            if (popover && popover.classList.contains('show') && container && !container.contains(e.target)) {
-                popover.classList.remove('show');
+            var bar = document.getElementById('floatingCallBar');
+            var menu = document.getElementById('floatingMenu');
+            if (menu && menu.classList.contains('open') && bar && !bar.contains(e.target)) {
+                menu.classList.remove('open');
             }
         });
+
+        // 6. Reset Form
+        function resetForm() {
+            var form = document.getElementById('tuitionForm');
+            if (form) form.reset();
+            handleSalaryChange('negotiable');
+            document.querySelectorAll('.chip-btn').forEach(function(c) { c.classList.remove('active'); });
+            document.querySelectorAll('#daysPills .pill-btn').forEach(function(p) { p.classList.remove('active'); });
+            var defaultDay = document.querySelector('#daysPills .pill-btn');
+            if (defaultDay) defaultDay.classList.add('active');
+            document.getElementById('daysValue').value = '৩ দিন';
+
+            document.getElementById('successCard').style.display = 'none';
+            document.getElementById('formCard').style.display = 'block';
+            var submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>তথ্য জমা দিন ও টিউটর পান</span>';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 
-    <!-- ========================================================
-         LAZY FIREBASE SDK & FORM SUBMISSION (Zero-blocking Main Thread)
-         ======================================================== -->
+    <!-- FIREBASE DIRECT SUBMISSION (Dynamic, Zero Blocking) -->
     <script type="module">
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
             authDomain: "cms-of-jts.firebaseapp.com",
@@ -1725,256 +910,87 @@
             measurementId: "G-TRJNGCB98F"
         };
 
-        const ALLOWED_ADMIN_EMAILS = [
-            "banglaworld247@gmail.com",
-            "gdgourob32@gmail.com"
-        ];
-
-        function isAdminUser(user) {
-            if (!user || !user.email) return false;
-            return ALLOWED_ADMIN_EMAILS.includes(user.email.toLowerCase().trim());
-        }
-
-        // Lazy Firebase Firestore Instance (Loaded only when needed / in background)
-        let _fbInstance = null;
-        let _fbPromise = null;
-
-        async function getFirebaseDB() {
-            if (_fbInstance) return _fbInstance;
-            if (!_fbPromise) {
-                _fbPromise = (async () => {
-                    const [
-                        { initializeApp },
-                        { getFirestore, collection, addDoc, serverTimestamp }
-                    ] = await Promise.all([
+        let dbPromise = null;
+        async function getDb() {
+            if (!dbPromise) {
+                dbPromise = (async () => {
+                    const [{ initializeApp }, { getFirestore, collection, addDoc, serverTimestamp }] = await Promise.all([
                         import("https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"),
                         import("https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js")
                     ]);
                     const app = initializeApp(firebaseConfig);
                     const db = getFirestore(app);
-                    _fbInstance = { app, db, collection, addDoc, serverTimestamp };
-                    return _fbInstance;
+                    return { db, collection, addDoc, serverTimestamp };
                 })();
             }
-            return _fbPromise;
+            return dbPromise;
         }
 
-        // Background Preloader: Warms up Firestore silently when CPU is idle or on first user touch
-        function preloadFirebase() {
-            if (window._fbPreloading) return;
-            window._fbPreloading = true;
-            getFirebaseDB().catch(() => {});
-        }
-
-        // Trigger preload on idle (leaves first 1.5s completely lag-free for instant typing)
+        // Preload in idle
         if ('requestIdleCallback' in window) {
-            requestIdleCallback(preloadFirebase, { timeout: 2000 });
+            requestIdleCallback(() => getDb());
         } else {
-            setTimeout(preloadFirebase, 1500);
+            setTimeout(() => getDb(), 1000);
         }
 
-        // Or trigger on first focus / touch in the form
-        const guardianForm = document.getElementById('guardianPostForm');
-        guardianForm?.addEventListener('focusin', preloadFirebase, { once: true, passive: true });
-        guardianForm?.addEventListener('touchstart', preloadFirebase, { once: true, passive: true });
-
-        // Navbar UI Elements
-        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
-        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
-        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
-        const mobileUserWrap = document.getElementById('tsbdMobileUser');
-        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
-
-        desktopAvatar?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            desktopDropdown?.classList.toggle('show');
-        });
-
-        mobileUserToggle?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mobileUserWrap?.classList.toggle('open');
-            mobileDropdown?.classList.toggle('show');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
-                desktopDropdown.classList.remove('show');
-            }
-        });
-
-        function tsbdSetUser(user) {
-            const desktopUser = document.getElementById('tsbdDesktopUser');
-            const mobileUser = document.getElementById('tsbdMobileUser');
-            const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
-            const mobileAvatar = document.getElementById('tsbdMobileAvatar');
-            const mobileName = document.getElementById('tsbdMobileName');
-            const loginLink = document.getElementById('loginLink');
-            const loginLinkMobile = document.getElementById('loginLinkMobile');
-            const tutorRegLink = document.getElementById('tutorRegLink');
-            const tutorRegLinkMobile = document.getElementById('tutorRegLinkMobile');
-            const adminDashboardLink = document.getElementById('adminDashboardLink');
-            const adminDashboardLinkMobile = document.getElementById('adminDashboardLinkMobile');
-
-            const isAdmin = isAdminUser(user);
-            if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
-            if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
-
-            if (user) {
-                const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || localStorage.getItem('tutorPhotoURL') || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || (isAdmin ? 'Admin' : 'User'))}&background=6366F1&color=fff`;
-                if (desktopAvatar) desktopAvatar.src = photo;
-                if (mobileAvatar) mobileAvatar.src = photo;
-                if (mobileName) mobileName.textContent = user.displayName || user.email || localStorage.getItem('tutorDisplayName') || "লগইন আছেন";
-                if (desktopUser) desktopUser.style.display = "inline-flex";
-                if (mobileUser) mobileUser.style.display = "block";
-                if (loginLink) loginLink.style.display = "none";
-                if (loginLinkMobile) loginLinkMobile.style.display = "none";
-                if (tutorRegLink) tutorRegLink.style.display = "none";
-                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
-            } else {
-                if (desktopUser) desktopUser.style.display = "none";
-                if (mobileUser) mobileUser.style.display = "none";
-                if (loginLink) loginLink.style.display = "inline-flex";
-                if (loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
-                if (tutorRegLink) tutorRegLink.style.display = "inline-flex";
-                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
-            }
-        }
-
-        // Fast local cached user check (instant 0ms navbar response)
-        const cachedUserEmail = localStorage.getItem('tutorEmail');
-        const cachedUserName = localStorage.getItem('tutorDisplayName');
-        if (cachedUserEmail || cachedUserName) {
-            tsbdSetUser({ email: cachedUserEmail || '', displayName: cachedUserName || '' });
-        }
-
-        // Lazy Navbar Auth state check (runs after 2.5s idle so initial interaction has 0 lag)
-        setTimeout(async () => {
-            try {
-                const { app } = await getFirebaseDB();
-                const { getAuth, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js");
-                const auth = getAuth(app);
-                onAuthStateChanged(auth, (user) => {
-                    tsbdSetUser(user);
-                });
-
-                const logoutHandler = async () => {
-                    try {
-                        await signOut(auth);
-                        localStorage.clear();
-                        sessionStorage.clear();
-                        window.location.reload();
-                    } catch (e) {
-                        alert("লগআউট ব্যর্থ হয়েছে!");
-                    }
-                };
-                document.getElementById('tsbdDesktopLogout')?.addEventListener('click', logoutHandler);
-                document.getElementById('tsbdMobileLogout')?.addEventListener('click', logoutHandler);
-            } catch (e) {
-                // Non-critical background auth check
-            }
-        }, 2500);
-
-        // Form Submit Handler
-        const submitBtn = document.getElementById('submitBtn');
-        const formCard = document.getElementById('formCard');
-        const successCard = document.getElementById('successCard');
-        const receiptBox = document.getElementById('receiptBox');
-        const directWhatsAppBtn = document.getElementById('directWhatsAppBtn');
-
-        guardianForm?.addEventListener('submit', async (e) => {
+        // Form Submit
+        const form = document.getElementById('tuitionForm');
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const classInput = document.getElementById('classInput');
-            const subjectInput = document.getElementById('subjectInput');
-            const locationInput = document.getElementById('locationInput');
-            const timeInput = document.getElementById('timeInput');
-            const mediumSelect = document.getElementById('mediumSelect');
-            const daysValue = document.getElementById('daysValue');
-            const phoneInput = document.getElementById('phoneInput');
-            const fixedRadio = document.getElementById('salaryFixedRadio');
-            const salaryAmountInput = document.getElementById('salaryAmountInput');
-            const preferredTutorSelect = document.getElementById('preferredTutorSelect');
-            const notesInput = document.getElementById('notesInput');
-            const phoneError = document.getElementById('phoneError');
+            const classVal = document.getElementById('classInput').value.trim();
+            const subjectVal = document.getElementById('subjectInput').value.trim();
+            const locationVal = document.getElementById('locationInput').value.trim();
+            const timeVal = document.getElementById('timeInput').value.trim();
+            const mediumVal = document.getElementById('mediumSelect').value;
+            const daysVal = document.getElementById('daysValue').value;
+            const rawPhone = toEnDigits(document.getElementById('phoneInput').value.trim()).replace(/[^0-9]/g, '');
+            const prefTutor = document.getElementById('preferredTutorSelect').value;
+            const notes = document.getElementById('notesInput').value.trim();
 
-            const className = classInput ? classInput.value.trim() : '';
-            const subject = subjectInput ? subjectInput.value.trim() : '';
-            const location = locationInput ? locationInput.value.trim() : '';
-            const time = timeInput ? timeInput.value.trim() : '';
-            const medium = mediumSelect ? mediumSelect.value : 'Bangla Medium';
-            const days = daysValue ? daysValue.value : '৩ দিন';
-            const rawPhone = window.toEnDigits(phoneInput ? phoneInput.value.trim() : '').replace(/[^0-9]/g, '');
-            const preferredTutor = preferredTutorSelect ? preferredTutorSelect.value : 'Any';
-            const notes = notesInput ? notesInput.value.trim() : '';
-
+            const isFixed = document.querySelector('input[name="salaryMode"]:checked')?.value === 'fixed';
             let salary = "আলোচনা সাপেক্ষে";
-            let salaryType = "negotiable";
-            if (fixedRadio && fixedRadio.checked) {
-                const amount = salaryAmountInput ? salaryAmountInput.value.trim() : '';
-                if (!amount) {
-                    window.showToast("অনুগ্রহ করে স্যালারি বা বাজেটের পরিমাণ লিখুন", "warning");
-                    if (salaryAmountInput) salaryAmountInput.focus();
+            if (isFixed) {
+                const fixedVal = document.getElementById('salaryAmountInput').value.trim();
+                if (!fixedVal) {
+                    alert("অনুগ্রহ করে স্যালারির পরিমাণ লিখুন");
+                    document.getElementById('salaryAmountInput').focus();
                     return;
                 }
-                salary = amount.includes('৳') ? amount : `৳ ${amount}`;
-                salaryType = "fixed";
+                salary = fixedVal.includes('৳') ? fixedVal : `৳ ${fixedVal}`;
             }
 
-            if (!className) {
-                window.showToast("অনুগ্রহ করে ক্লাস বা শ্রেণী লিখুন", "warning");
-                if (classInput) classInput.focus();
-                return;
-            }
-            if (!subject) {
-                window.showToast("অনুগ্রহ করে বিষয় লিখুন", "warning");
-                if (subjectInput) subjectInput.focus();
-                return;
-            }
-            if (!location) {
-                window.showToast("অনুগ্রহ করে লোকেশন বা এলাকা লিখুন", "warning");
-                if (locationInput) locationInput.focus();
-                return;
-            }
-            if (!time) {
-                window.showToast("অনুগ্রহ করে সুবিধাজনক সময় লিখুন", "warning");
-                if (timeInput) timeInput.focus();
-                return;
-            }
+            // Phone validation
+            const phoneError = document.getElementById('phoneError');
             if (!rawPhone || !/^01[3-9]\d{8}$/.test(rawPhone)) {
-                if (phoneError) phoneError.style.display = 'block';
-                if (phoneInput) {
-                    phoneInput.style.borderColor = '#EF4444';
-                    phoneInput.focus();
-                }
-                window.showToast("অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন", "error");
+                phoneError.style.display = 'block';
+                document.getElementById('phoneInput').focus();
                 return;
             }
+            phoneError.style.display = 'none';
 
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>তথ্য সংরক্ষণ করা হচ্ছে...</span>`;
-            }
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>তথ্য সংরক্ষণ হচ্ছে...</span>';
 
             try {
-                // Ensure Firebase Firestore is ready (already preloaded in background)
-                const { db, collection, addDoc, serverTimestamp } = await getFirebaseDB();
-
+                const { db, collection, addDoc, serverTimestamp } = await getDb();
                 const refCode = "GRD-" + Math.floor(100000 + Math.random() * 900000);
 
-                const requestPayload = {
+                const data = {
                     refCode: refCode,
-                    className: className,
-                    subject: subject,
-                    location: location,
-                    time: time,
-                    category: medium,
-                    days: days,
+                    className: classVal,
+                    subject: subjectVal,
+                    location: locationVal,
+                    time: timeVal,
+                    category: mediumVal,
+                    days: daysVal,
                     salary: salary,
-                    salaryType: salaryType,
+                    salaryType: isFixed ? "fixed" : "negotiable",
                     phone: rawPhone,
                     guardianPhone: rawPhone,
                     guardianName: "সম্মানিত অভিভাবক",
-                    preferredTutor: preferredTutor,
+                    preferredTutor: prefTutor,
                     specialNotes: notes,
                     status: "new",
                     source: "ad_landing",
@@ -1982,68 +998,59 @@
                     createdAt: serverTimestamp()
                 };
 
-                await addDoc(collection(db, "tuitionRequests"), requestPayload);
+                await addDoc(collection(db, "tuitionRequests"), data);
 
-                const waMessageText = encodeURIComponent(
+                // WhatsApp message link
+                const waText = encodeURIComponent(
                     `আসসালামু আলাইকুম, আমি TSBD-তে নতুন টিউশন চাহিদা জমা দিয়েছি।\n` +
                     `📌 রেফারেন্স: #${refCode}\n` +
-                    `🎓 ক্লাস: ${className} (${medium})\n` +
-                    `📚 বিষয়: ${subject}\n` +
-                    `📍 লোকেশন: ${location}\n` +
+                    `🎓 ক্লাস: ${classVal} (${mediumVal})\n` +
+                    `📚 বিষয়: ${subjectVal}\n` +
+                    `📍 লোকেশন: ${locationVal}\n` +
                     `💰 স্যালারি: ${salary}\n` +
-                    `📅 দিন: ${days} | সময়: ${time}\n` +
+                    `📅 দিন: ${daysVal} | সময়: ${timeVal}\n` +
                     `📞 মোবাইল: ${rawPhone}\n\n` +
                     `অনুগ্রহ করে দ্রুত একজন দক্ষ টিউটর নিশ্চিত করুন।`
                 );
-                if (directWhatsAppBtn) {
-                    directWhatsAppBtn.href = `https://wa.me/8801735698076?text=${waMessageText}`;
-                }
+                document.getElementById('directWhatsAppBtn').href = `https://wa.me/8801735698076?text=${waText}`;
 
-                if (receiptBox) {
-                    receiptBox.innerHTML = `
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-hashtag"></i> রেফারেন্স কোড:</span>
-                            <span class="val" style="color:var(--primary);font-size:14.5px;">#${refCode}</span>
-                        </div>
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-graduation-cap"></i> ক্লাস ও মাধ্যম:</span>
-                            <span class="val">${window.escapeHtml(className)} (${window.escapeHtml(medium)})</span>
-                        </div>
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-book-open"></i> বিষয়:</span>
-                            <span class="val">${window.escapeHtml(subject)}</span>
-                        </div>
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-location-dot"></i> লোকেশন:</span>
-                            <span class="val">${window.escapeHtml(location)}</span>
-                        </div>
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-bangladeshi-taka-sign"></i> স্যালারি:</span>
-                            <span class="val" style="color:#059669;">${window.escapeHtml(salary)}</span>
-                        </div>
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-calendar-day"></i> দিন ও সময়:</span>
-                            <span class="val">${window.escapeHtml(days)}, ${window.escapeHtml(time)}</span>
-                        </div>
-                        <div class="receipt-row">
-                            <span class="label"><i class="fa-solid fa-phone"></i> যোগাযোগ নম্বর:</span>
-                            <span class="val" style="letter-spacing:0.5px;">${window.escapeHtml(rawPhone)}</span>
-                        </div>
-                    `;
-                }
+                // Receipt summary
+                document.getElementById('receiptContent').innerHTML = `
+                    <div class="receipt-row">
+                        <span class="receipt-label">রেফারেন্স কোড:</span>
+                        <span class="receipt-val" style="color:var(--primary);">#${refCode}</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">ক্লাস ও বিষয়:</span>
+                        <span class="receipt-val">${classVal} - ${subjectVal}</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">লোকেশন:</span>
+                        <span class="receipt-val">${locationVal}</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">স্যালারি:</span>
+                        <span class="receipt-val" style="color:#059669;">${salary}</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">দিন ও সময়:</span>
+                        <span class="receipt-val">${daysVal}, ${timeVal}</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">মোবাইল নম্বর:</span>
+                        <span class="receipt-val">${rawPhone}</span>
+                    </div>
+                `;
 
-                if (formCard) formCard.style.display = 'none';
-                if (successCard) successCard.style.display = 'block';
+                document.getElementById('formCard').style.display = 'none';
+                document.getElementById('successCard').style.display = 'block';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                window.showToast("আপনার তথ্য সফলভাবে সংরক্ষিত হয়েছে!", "success");
 
             } catch (err) {
-                console.error("Firestore submission error:", err);
-                window.showToast("ত্রুটি হয়েছে: " + err.message, "error");
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>আবার চেষ্টা করুন</span>`;
-                }
+                console.error("Submission error:", err);
+                alert("দুঃখিত, তথ্য সংরক্ষণ করতে ত্রুটি হয়েছে: " + err.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>আবার চেষ্টা করুন</span>';
             }
         });
     </script>
