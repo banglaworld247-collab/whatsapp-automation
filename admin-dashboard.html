@@ -1766,6 +1766,7 @@
         <div class="tabs">
             <button class="tab-btn" id="tab-btn-post" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
             <button class="tab-btn active" id="tab-btn-list" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
+            <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests')"><i class="fa-solid fa-user-graduate"></i> অভিভাবক রিকোয়েস্ট <span class="badge-count" id="count-requests" style="background:#10B981;color:#fff;">0</span></button>
             <button class="tab-btn" id="tab-btn-tutors" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></button>
             <button class="tab-btn" id="tab-btn-recycle" onclick="switchTab('recycle-bin')"><i class="fa-solid fa-trash-can"></i> রিসাইকেল বিন <span class="badge-count" id="count-recycle-bin" style="background:#EF4444;color:#fff;">0</span></button>
         </div>
@@ -1914,6 +1915,43 @@
 
             <div id="tuition-cards-container" class="tuition-cards-grid">
                 <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ডাটা লোড হচ্ছে...</div>
+            </div>
+        </div>
+
+        <!-- Section: Guardian Tuition Requests (অভিভাবকদের টিউশন রিকোয়েস্ট) -->
+        <div id="section-requests" class="section">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <h3 style="color:#10B981;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i class="fa-solid fa-user-graduate"></i> অভিভাবকদের টিউশন রিকোয়েস্ট (Guardian Leads)
+                        <span style="font-size:14px;color:var(--text-muted);font-weight:normal;">(মোট <span id="requests-total-count">0</span>টি)</span>
+                    </h3>
+                    <p style="color:var(--text-muted);font-size:13px;margin-top:4px;">
+                        বিজ্ঞাপন ও ল্যান্ডিং পেজ (tution-post.html) থেকে অভিভাবকরা যে সকল টিউশন রিকোয়েস্ট জমা দিয়েছেন তা এখানে রিয়েলটাইমে প্রদর্শিত হচ্ছে।
+                    </p>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <input type="text" id="requestsSearchInput" placeholder="রেফারেন্স, ক্লাস, বিষয়, ফোন বা এলাকা দিয়ে খুঁজুন..." 
+                           style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 14px;border-radius:8px;font-size:13px;min-width:270px;"
+                           oninput="filterGuardianRequests(this.value)">
+                    <button type="button" class="btn-card-action" onclick="loadGuardianRequests(true)" 
+                            style="background:#10B981;color:#fff;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+                        <i class="fa-solid fa-rotate-right"></i> রিফ্রেশ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Status Bar -->
+            <div class="filter-bar" style="margin-bottom:18px;">
+                <button type="button" class="filter-btn active" id="req-filter-all" onclick="filterRequestsByStatus('all')">সকল রিকোয়েস্ট</button>
+                <button type="button" class="filter-btn" id="req-filter-new" onclick="filterRequestsByStatus('new')">নতুন / New <span id="subcount-req-new" style="background:#10B981;color:#fff;border-radius:10px;padding:2px 7px;font-size:11px;margin-left:4px;">0</span></button>
+                <button type="button" class="filter-btn" id="req-filter-contacted" onclick="filterRequestsByStatus('contacted')">যোগাযোগ সম্পন্ন</button>
+                <button type="button" class="filter-btn" id="req-filter-assigned" onclick="filterRequestsByStatus('assigned')">টিউটর নিশ্চিত / Assigned</button>
+            </div>
+
+            <!-- Requests Grid Container -->
+            <div id="guardian-requests-container" class="tuition-cards-grid">
+                <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> রিকোয়েস্ট ডাটা লোড হচ্ছে...</div>
             </div>
         </div>
 
@@ -2919,6 +2957,10 @@ ${detailsUrl}`;
                 document.getElementById('section-recycle-bin')?.classList.add('active');
                 document.getElementById('tab-btn-recycle')?.classList.add('active');
                 renderRecycleBin();
+            } else if (tabName === 'requests') {
+                document.getElementById('section-requests')?.classList.add('active');
+                document.getElementById('tab-btn-requests')?.classList.add('active');
+                renderGuardianRequests();
             } else {
                 document.getElementById('section-list')?.classList.add('active');
                 document.getElementById('tab-btn-list')?.classList.add('active');
@@ -2934,8 +2976,10 @@ ${detailsUrl}`;
                 initWhatsAppConfig(); // Load WhatsApp remote config on verified admin auth
                 loadTuitions(); // Load data on verified admin login
                 updateTutorsBadgeCount(); // Lightweight server count only - full tutors data loads when Tutors tab is opened
+                listenGuardianRequests(); // Real-time listener for guardian tuition requests
             } else {
                 if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
+                if (unsubscribeRequests) { unsubscribeRequests(); unsubscribeRequests = null; }
                 localStorage.removeItem("userEmail");
                 tsbdSetUser(null);
                 loginContainer.style.display = 'flex';
@@ -4574,6 +4618,394 @@ ${detailsUrl}`;
                 alert('এরর: ' + error.message);
             }
         }
+
+        // ==========================================
+        // Guardian Tuition Requests (অভিভাবকদের রিকোয়েস্ট)
+        // ==========================================
+        let guardianRequestsList = [];
+        let unsubscribeRequests = null;
+        let activeReqFilter = 'all';
+        let reqSearchQuery = '';
+
+        function updateRequestsBadges() {
+            const total = guardianRequestsList.length;
+            const newCount = guardianRequestsList.filter(r => (r.status || 'new') === 'new').length;
+
+            const badge = document.getElementById('count-requests');
+            if (badge) {
+                badge.textContent = newCount > 0 ? newCount : total;
+                badge.title = `মোট ${total}টি রিকোয়েস্ট (${newCount}টি নতুন)`;
+                if (newCount > 0) {
+                    badge.style.background = '#EF4444';
+                    badge.style.color = '#FFFFFF';
+                } else {
+                    badge.style.background = '#10B981';
+                    badge.style.color = '#FFFFFF';
+                }
+            }
+
+            const totalElem = document.getElementById('requests-total-count');
+            if (totalElem) totalElem.textContent = total;
+
+            const subNew = document.getElementById('subcount-req-new');
+            if (subNew) subNew.textContent = newCount;
+        }
+
+        function listenGuardianRequests() {
+            if (unsubscribeRequests) {
+                unsubscribeRequests();
+                unsubscribeRequests = null;
+            }
+            try {
+                const collRef = collection(db, 'tuitionRequests');
+                unsubscribeRequests = onSnapshot(collRef, (snapshot) => {
+                    guardianRequestsList = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                    // Client-side sort descending by createdAt
+                    guardianRequestsList.sort((a, b) => {
+                        const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+                        const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+                        return tB - tA;
+                    });
+                    updateRequestsBadges();
+                    renderGuardianRequests();
+                }, (err) => {
+                    console.error("Guardian requests listener error:", err);
+                    const container = document.getElementById('guardian-requests-container');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="empty-state" style="color:#EF4444;text-align:center;padding:30px;grid-column:1/-1;">
+                                <i class="fa-solid fa-triangle-exclamation" style="font-size:28px;margin-bottom:8px;"></i>
+                                <p>রিকোয়েস্ট লোড করতে সমস্যা হয়েছে: ${safe(err.message)}</p>
+                            </div>
+                        `;
+                    }
+                });
+            } catch (err) {
+                console.error("Error attaching guardian requests listener:", err);
+            }
+        }
+
+        window.loadGuardianRequests = function(manual) {
+            listenGuardianRequests();
+            if (manual && typeof event !== 'undefined' && event?.currentTarget) {
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> রিফ্রেশ হচ্ছে...';
+                setTimeout(() => { btn.innerHTML = orig; }, 800);
+            }
+        };
+
+        window.filterRequestsByStatus = function(status) {
+            activeReqFilter = status;
+            ['all', 'new', 'contacted', 'assigned'].forEach(s => {
+                const b = document.getElementById(`req-filter-${s}`);
+                if (b) {
+                    if (s === status) b.classList.add('active');
+                    else b.classList.remove('active');
+                }
+            });
+            renderGuardianRequests();
+        };
+
+        window.filterGuardianRequests = function(val) {
+            reqSearchQuery = (val || '').toLowerCase().trim();
+            renderGuardianRequests();
+        };
+
+        function formatRequestDate(ts) {
+            if (!ts) return 'তারিখ উল্লেখ নেই';
+            let dateObj;
+            if (ts.toDate) dateObj = ts.toDate();
+            else if (ts.seconds) dateObj = new Date(ts.seconds * 1000);
+            else if (ts instanceof Date) dateObj = ts;
+            else dateObj = new Date(ts);
+
+            if (isNaN(dateObj.getTime())) return 'তারিখ উল্লেখ নেই';
+
+            const now = new Date();
+            const diffMs = now - dateObj;
+            const diffMin = Math.floor(diffMs / (1000 * 60));
+            const diffHr = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diffMin < 1) return 'এইমাত্র';
+            if (diffMin < 60) return `${diffMin} মিনিট আগে`;
+            if (diffHr < 24) return `${diffHr} ঘণ্টা আগে`;
+            if (diffDays === 1) return 'গতকাল';
+            if (diffDays < 7) return `${diffDays} দিন আগে`;
+
+            return dateObj.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' +
+                   dateObj.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function cleanPhoneForWhatsApp(phone) {
+            if (!phone) return '';
+            let p = String(phone).replace(/[^\d+]/g, '');
+            if (p.startsWith('+880')) return p.replace('+', '');
+            if (p.startsWith('880')) return p;
+            if (p.startsWith('01')) return '88' + p;
+            if (p.startsWith('1')) return '880' + p;
+            return p;
+        }
+
+        window.renderGuardianRequests = function() {
+            const container = document.getElementById('guardian-requests-container');
+            if (!container) return;
+
+            let filtered = guardianRequestsList.filter(req => {
+                const st = (req.status || 'new').toLowerCase();
+                if (activeReqFilter !== 'all' && st !== activeReqFilter) return false;
+
+                if (reqSearchQuery) {
+                    const text = `${req.refCode || ''} ${req.className || ''} ${req.subject || ''} ${req.location || ''} ${req.phone || ''} ${req.guardianPhone || ''} ${req.preferredTutor || ''} ${req.specialNotes || ''}`.toLowerCase();
+                    if (!text.includes(reqSearchQuery)) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:50px 20px;background:var(--panel-bg);border:1px dashed var(--border-color);border-radius:12px;color:var(--text-muted);grid-column:1/-1;">
+                        <i class="fa-solid fa-inbox" style="font-size:36px;margin-bottom:12px;opacity:0.6;"></i>
+                        <h4 style="color:#fff;margin-bottom:6px;">কোনো রিকোয়েস্ট পাওয়া যায়নি</h4>
+                        <p style="font-size:13px;">${reqSearchQuery ? 'সার্চ ফিল্টারে মিল পাওয়া যায়নি।' : 'অভিভাবক কর্তৃক নতুন কোনো আবেদন এখনো জমা হয়নি।'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach(req => {
+                const id = req.id;
+                const status = (req.status || 'new').toLowerCase();
+                const phone = req.phone || req.guardianPhone || '';
+                const waPhone = cleanPhoneForWhatsApp(phone);
+                const refCode = req.refCode || id.slice(0, 6);
+                const timeAgo = formatRequestDate(req.createdAt);
+
+                let statusBadge = '';
+                let borderLeftColor = '#10B981';
+                if (status === 'new') {
+                    statusBadge = '<span style="background:#10B981;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;"><i class="fa-solid fa-bolt"></i> নতুন (New)</span>';
+                    borderLeftColor = '#10B981';
+                } else if (status === 'contacted') {
+                    statusBadge = '<span style="background:#3B82F6;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;"><i class="fa-solid fa-phone-volume"></i> যোগাযোগ সম্পন্ন</span>';
+                    borderLeftColor = '#3B82F6';
+                } else if (status === 'assigned') {
+                    statusBadge = '<span style="background:#8B5CF6;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;"><i class="fa-solid fa-circle-check"></i> টিউটর নিশ্চিত</span>';
+                    borderLeftColor = '#8B5CF6';
+                } else {
+                    statusBadge = '<span style="background:#6B7280;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;">সম্পন্ন / Closed</span>';
+                    borderLeftColor = '#6B7280';
+                }
+
+                const waMessage = encodeURIComponent(
+                    `আসসালামু আলাইকুম। TSBD (Tuition Service BD) থেকে বলছি।\n` +
+                    `আপনার টিউশন রিকোয়েস্ট (#${refCode}) প্রসঙ্গে যোগাযোগ করছি:\n` +
+                    `শ্রেণী: ${req.className || 'উক্ত ক্লাস'}, বিষয়: ${req.subject || 'সকল বিষয়'}, এলাকা: ${req.location || 'উল্লেখিত এলাকা'}।\n` +
+                    `আমরা কি এ বিষয়ে কথা বলতে পারি?`
+                );
+
+                const card = document.createElement('div');
+                card.className = 'tuition-card';
+                card.style.borderLeft = `5px solid ${borderLeftColor}`;
+                card.innerHTML = `
+                    <div class="tuition-header" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                        <div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                                <span class="tuition-job-id" style="background:rgba(16,185,129,0.15);color:#34D399;font-weight:700;padding:2px 8px;border-radius:6px;font-size:12px;">#${safe(refCode)}</span>
+                                <span style="font-size:12px;color:var(--text-muted);"><i class="fa-solid fa-clock"></i> ${safe(timeAgo)}</span>
+                                ${req.source ? `<span style="font-size:11px;background:rgba(255,255,255,0.08);color:var(--text-muted);padding:1px 6px;border-radius:4px;">${safe(req.source)}</span>` : ''}
+                            </div>
+                            <h3 class="tuition-title" style="margin:4px 0 6px;font-size:17px;color:#F8FAFC;">
+                                📚 ${safe(req.className || 'শ্রেণী উল্লেখ নেই')} - ${safe(req.subject || 'সকল বিষয়')}
+                            </h3>
+                            <div class="tuition-meta" style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--text-muted);">
+                                <span><i class="fa-solid fa-location-dot" style="color:#EF4444;"></i> ${safe(req.location || 'লোকেশন উল্লেখ নেই')}</span>
+                                <span><i class="fa-solid fa-layer-group" style="color:#3B82F6;"></i> ${safe(req.category || 'Bangla Medium')}</span>
+                                <span><i class="fa-solid fa-calendar-days" style="color:#F59E0B;"></i> ${safe(req.days || '৩ দিন')}</span>
+                                <span><i class="fa-solid fa-clock" style="color:#10B981;"></i> ${safe(req.time || 'সন্ধ্যা')}</span>
+                                <span><i class="fa-solid fa-user-tag" style="color:#8B5CF6;"></i> পছন্দ: <strong>${safe(req.preferredTutor || 'Any')}</strong></span>
+                            </div>
+                        </div>
+                        <div style="text-align:right;flex-shrink:0;">
+                            <div>${statusBadge}</div>
+                            <div style="font-size:19px;font-weight:800;color:#34D399;margin-top:8px;">
+                                ${safe(req.salary || 'আলোচনা সাপেক্ষে')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guardian Contact & Status Action Row -->
+                    <div class="card-highlights-row" style="margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;">
+                        <div class="highlight-box" style="background:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:8px;padding:10px 14px;flex:1;min-width:260px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                                <div>
+                                    <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">অভিভাবকের যোগাযোগ</div>
+                                    <div style="font-size:15px;font-weight:700;color:#F8FAFC;margin-top:2px;display:flex;align-items:center;gap:6px;">
+                                        <i class="fa-solid fa-phone" style="color:#10B981;font-size:13px;"></i>
+                                        <span>${safe(phone || 'ফোন নম্বর নেই')}</span>
+                                    </div>
+                                </div>
+                                <div style="display:flex;gap:6px;align-items:center;">
+                                    ${phone ? `
+                                        <a href="tel:${safe(phone)}" class="btn-card-action" style="background:#059669;color:#fff;text-decoration:none;padding:5px 10px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:4px;">
+                                            <i class="fa-solid fa-phone"></i> কল দিন
+                                        </a>
+                                    ` : ''}
+                                    ${waPhone ? `
+                                        <a href="https://wa.me/${safe(waPhone)}?text=${waMessage}" target="_blank" rel="noopener" class="btn-card-action" style="background:#25D366;color:#fff;text-decoration:none;padding:5px 10px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:4px;">
+                                            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="highlight-box" style="background:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:8px;padding:10px 14px;flex:1;min-width:220px;">
+                            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">স্ট্যাটাস পরিবর্তন করুন</div>
+                            <select onchange="updateGuardianRequestStatus('${id}', this.value)" 
+                                    style="width:100%;background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer;outline:none;">
+                                <option value="new" ${status === 'new' ? 'selected' : ''}>🟢 নতুন / New</option>
+                                <option value="contacted" ${status === 'contacted' ? 'selected' : ''}>🔵 কথা হয়েছে / Contacted</option>
+                                <option value="assigned" ${status === 'assigned' ? 'selected' : ''}>🟣 টিউটর নিশ্চিত / Assigned</option>
+                                <option value="closed" ${status === 'closed' ? 'selected' : ''}>⚪ সম্পন্ন / Closed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    ${req.specialNotes ? `
+                        <div style="background:rgba(245,158,11,0.08);border-left:3px solid #F59E0B;padding:8px 12px;border-radius:4px;font-size:13px;color:#FDE68A;margin-bottom:12px;">
+                            <i class="fa-solid fa-note-sticky" style="margin-right:4px;"></i> <strong>বিশেষ নোট:</strong> ${safe(req.specialNotes)}
+                        </div>
+                    ` : ''}
+
+                    <!-- Action Buttons -->
+                    <div class="card-action-bar" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <button type="button" class="btn-card-action" onclick="convertRequestToTuition('${id}')" 
+                                style="background:linear-gradient(135deg, #10B981, #059669);color:#fff;font-weight:600;display:inline-flex;align-items:center;gap:6px;">
+                            <i class="fa-solid fa-file-circle-plus"></i> টিউশন পোস্ট হিসেবে তৈরি করুন
+                        </button>
+
+                        <button type="button" class="btn-card-action" onclick="copyRequestDetails('${id}')"
+                                style="background:rgba(255,255,255,0.08);color:#F3F4F6;display:inline-flex;align-items:center;gap:6px;">
+                            <i class="fa-solid fa-copy"></i> কপি বিবরণী
+                        </button>
+
+                        <button type="button" class="btn-card-action" onclick="deleteGuardianRequest('${id}')"
+                                style="background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.25);margin-left:auto;display:inline-flex;align-items:center;gap:6px;">
+                            <i class="fa-solid fa-trash"></i> মুছুন
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        window.updateGuardianRequestStatus = async function(reqId, newStatus) {
+            try {
+                await updateDoc(doc(db, 'tuitionRequests', reqId), {
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                });
+                const idx = guardianRequestsList.findIndex(r => r.id === reqId);
+                if (idx > -1) {
+                    guardianRequestsList[idx].status = newStatus;
+                    updateRequestsBadges();
+                    renderGuardianRequests();
+                }
+            } catch (err) {
+                console.error("Status update error:", err);
+                alert("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে: " + err.message);
+            }
+        };
+
+        window.deleteGuardianRequest = async function(reqId) {
+            const req = guardianRequestsList.find(r => r.id === reqId);
+            const ref = req?.refCode ? `#${req.refCode}` : 'এই রিকোয়েস্টটি';
+            if (!confirm(`${ref} কি আপনি স্থায়ীভাবে মুছে ফেলতে চান?`)) return;
+
+            try {
+                await deleteDoc(doc(db, 'tuitionRequests', reqId));
+                guardianRequestsList = guardianRequestsList.filter(r => r.id !== reqId);
+                updateRequestsBadges();
+                renderGuardianRequests();
+            } catch (err) {
+                console.error("Delete request error:", err);
+                alert("রিকোয়েস্ট মুছতে সমস্যা হয়েছে: " + err.message);
+            }
+        };
+
+        window.convertRequestToTuition = function(reqId) {
+            const req = guardianRequestsList.find(r => r.id === reqId);
+            if (!req) return;
+
+            // Switch to post tab
+            window.switchTab('post');
+
+            // Pre-fill form fields
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el && val !== undefined && val !== null) el.value = val;
+            };
+
+            setVal('t-class', req.className || '');
+            setVal('t-subject', req.subject || '');
+            setVal('t-location', req.location || '');
+            setVal('t-category', req.category || 'Bangla Medium');
+            setVal('t-days', req.days || '');
+            setVal('t-time', req.time || '');
+            setVal('t-salary', req.salary || '');
+            setVal('t-phone', req.phone || req.guardianPhone || '');
+
+            const prefTutor = (req.preferredTutor || '').toLowerCase();
+            const tutorSelect = document.getElementById('t-preferred-tutor');
+            if (tutorSelect) {
+                if (prefTutor.includes('female') || prefTutor.includes('মহিলা')) tutorSelect.value = 'Female';
+                else if (prefTutor.includes('male') || prefTutor.includes('পুরুষ')) tutorSelect.value = 'Male';
+                else tutorSelect.value = 'Any';
+            }
+
+            const notesEl = document.getElementById('t-notes');
+            if (notesEl) {
+                let noteText = '';
+                if (req.specialNotes) noteText += req.specialNotes + '\n';
+                noteText += `[অভিভাবক রিকোয়েস্ট Ref: #${req.refCode || reqId.slice(0, 6)}]`;
+                notesEl.value = noteText;
+            }
+
+            // Scroll to post form
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+
+            // Mark this request as contacted if currently new
+            if ((req.status || 'new') === 'new') {
+                updateGuardianRequestStatus(reqId, 'contacted');
+            }
+
+            alert(`রিকোয়েস্ট #${req.refCode || ''}-এর তথ্য ফর্মে পূরণ করা হয়েছে। যাচাই করে পোস্ট বাটনে চাপুন।`);
+        };
+
+        window.copyRequestDetails = function(reqId) {
+            const req = guardianRequestsList.find(r => r.id === reqId);
+            if (!req) return;
+
+            const text = 
+`📌 TSBD টিউশন রিকোয়েস্ট #${req.refCode || reqId.slice(0, 6)}
+🎓 ক্লাস: ${req.className || 'উল্লেখ নেই'} (${req.category || 'Bangla Medium'})
+📚 বিষয়: ${req.subject || 'সকল বিষয়'}
+📍 এলাকা: ${req.location || 'উল্লেখ নেই'}
+📅 দিন: ${req.days || '৩ দিন'} | সময়: ${req.time || 'সন্ধ্যা'}
+💰 বেতন: ${req.salary || 'আলোচনা সাপেক্ষে'}
+👤 টিউটর চয়েস: ${req.preferredTutor || 'Any'}
+📞 ফোন: ${req.phone || req.guardianPhone || 'নেই'}
+${req.specialNotes ? `📝 নোট: ${req.specialNotes}\n` : ''}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('টিউশনের বিবরণ কপি করা হয়েছে!');
+            }).catch(() => {
+                prompt('কপি করতে নিচের টেক্সট নির্বাচন করুন:', text);
+            });
+        };
     </script>
 </body>
 
