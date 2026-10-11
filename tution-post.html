@@ -933,7 +933,7 @@
                         মোবাইল নম্বর <span class="required-star">*</span>
                         <span class="sub-hint">(টিউটর কল দেওয়ার জন্য)</span>
                     </label>
-                    <input type="tel" id="phoneInput" class="form-control" placeholder="01XXXXXXXXX" maxlength="11" required>
+                    <input type="tel" id="phoneInput" class="form-control" placeholder="01XXXXXXXXX" maxlength="20" required>
                     <div id="phoneError" style="display:none; color:var(--danger); font-size:12.5px; margin-top:5px; font-weight:600;">
                         <i class="fa-solid fa-circle-exclamation"></i> অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)
                     </div>
@@ -1184,83 +1184,66 @@
         }
     </script>
 
-    <!-- FIREBASE DIRECT SUBMISSION (Lazy, Zero Blocking) -->
+    <!-- FIREBASE DIRECT SUBMISSION -->
     <script type="module">
-        const firebaseConfig = {
-            apiKey: "AIzaSyB_22O8J69EUb8rF4FXZrjM-AHgPwOQAtA",
-            authDomain: "cms-of-jts.firebaseapp.com",
-            projectId: "cms-of-jts",
-            storageBucket: "cms-of-jts.firebasestorage.app",
-            messagingSenderId: "300970842151",
-            appId: "1:300970842151:web:9885ce2a591cf5f4eed602",
-            measurementId: "G-TRJNGCB98F"
-        };
+        import { db, collection, addDoc, serverTimestamp } from "./js/firebase-config.js";
 
-        let dbPromise = null;
-        async function getDb() {
-            if (!dbPromise) {
-                dbPromise = (async () => {
-                    const [{ initializeApp }, { getFirestore, collection, addDoc, serverTimestamp }] = await Promise.all([
-                        import("https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"),
-                        import("https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js")
-                    ]);
-                    const app = initializeApp(firebaseConfig);
-                    const db = getFirestore(app);
-                    return { db, collection, addDoc, serverTimestamp };
-                })();
-            }
-            return dbPromise;
-        }
-
-        // Preload in idle
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => getDb());
-        } else {
-            setTimeout(() => getDb(), 1200);
-        }
-
-        // Form Submit
+        // Form Submit Handler
         const form = document.getElementById('tuitionForm');
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const classVal = document.getElementById('classInput').value.trim();
-            const subjectVal = document.getElementById('subjectInput').value.trim();
-            const locationVal = document.getElementById('locationInput').value.trim();
-            const timeVal = document.getElementById('timeInput').value.trim();
-            const mediumVal = document.getElementById('mediumSelect').value;
-            const daysVal = document.getElementById('daysValue').value;
-            const rawPhone = toEnDigits(document.getElementById('phoneInput').value.trim()).replace(/[^0-9]/g, '');
-            const prefTutor = document.getElementById('preferredTutorSelect').value;
-            const notes = document.getElementById('notesInput').value.trim();
+            const classVal = (document.getElementById('classInput')?.value || '').trim();
+            const subjectVal = (document.getElementById('subjectInput')?.value || '').trim();
+            const locationVal = (document.getElementById('locationInput')?.value || '').trim();
+            const timeVal = (document.getElementById('timeInput')?.value || '').trim();
+            const mediumVal = document.getElementById('mediumSelect')?.value || 'Bangla Medium';
+            const daysVal = document.getElementById('daysValue')?.value || '৩ দিন';
+            const prefTutor = document.getElementById('preferredTutorSelect')?.value || 'Any';
+            const notes = (document.getElementById('notesInput')?.value || '').trim();
 
+            // Smart phone number extraction & normalization
+            let rawPhone = toEnDigits(document.getElementById('phoneInput')?.value || '').replace(/[^0-9]/g, '');
+            if (rawPhone.startsWith('8801')) {
+                rawPhone = rawPhone.substring(2);
+            } else if (rawPhone.length === 10 && rawPhone.startsWith('1')) {
+                rawPhone = '0' + rawPhone;
+            }
+
+            const phoneError = document.getElementById('phoneError');
+            if (!rawPhone || !/^01[3-9]\d{8}$/.test(rawPhone)) {
+                if (phoneError) phoneError.style.display = 'block';
+                var phoneEl = document.getElementById('phoneInput');
+                if (phoneEl) {
+                    phoneEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    phoneEl.focus();
+                }
+                return;
+            }
+            if (phoneError) phoneError.style.display = 'none';
+
+            // Salary
             const isFixed = document.querySelector('input[name="salaryMode"]:checked')?.value === 'fixed';
             let salary = "আলোচনা সাপেক্ষে";
+            let salaryType = "negotiable";
             if (isFixed) {
-                const fixedVal = document.getElementById('salaryAmountInput').value.trim();
+                const fixedVal = (document.getElementById('salaryAmountInput')?.value || '').trim();
                 if (!fixedVal) {
                     alert("অনুগ্রহ করে স্যালারির পরিমাণ লিখুন");
-                    document.getElementById('salaryAmountInput').focus();
+                    document.getElementById('salaryAmountInput')?.focus();
                     return;
                 }
                 salary = fixedVal.includes('৳') ? fixedVal : `৳ ${fixedVal}`;
+                salaryType = "fixed";
             }
-
-            // Phone validation
-            const phoneError = document.getElementById('phoneError');
-            if (!rawPhone || !/^01[3-9]\d{8}$/.test(rawPhone)) {
-                phoneError.style.display = 'block';
-                document.getElementById('phoneInput').focus();
-                return;
-            }
-            phoneError.style.display = 'none';
 
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>তথ্য সংরক্ষণ হচ্ছে...</span>';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>তথ্য সংরক্ষণ হচ্ছে...</span>';
+            }
 
             try {
-                const { db, collection, addDoc, serverTimestamp } = await getDb();
                 const refCode = "GRD-" + Math.floor(100000 + Math.random() * 900000);
 
                 const data = {
@@ -1272,7 +1255,7 @@
                     category: mediumVal,
                     days: daysVal,
                     salary: salary,
-                    salaryType: isFixed ? "fixed" : "negotiable",
+                    salaryType: salaryType,
                     phone: rawPhone,
                     guardianPhone: rawPhone,
                     guardianName: "সম্মানিত অভিভাবক",
@@ -1298,45 +1281,55 @@
                     `📞 মোবাইল: ${rawPhone}\n\n` +
                     `অনুগ্রহ করে দ্রুত একজন দক্ষ টিউটর নিশ্চিত করুন।`
                 );
-                document.getElementById('directWhatsAppBtn').href = `https://wa.me/8801735698076?text=${waText}`;
+                const waBtn = document.getElementById('directWhatsAppBtn');
+                if (waBtn) {
+                    waBtn.href = `https://wa.me/8801735698076?text=${waText}`;
+                }
 
                 // Receipt summary
-                document.getElementById('receiptContent').innerHTML = `
-                    <div class="receipt-row">
-                        <span class="receipt-label">রেফারেন্স কোড:</span>
-                        <span class="receipt-val" style="color:var(--primary);">#${refCode}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">ক্লাস ও বিষয়:</span>
-                        <span class="receipt-val">${classVal} - ${subjectVal}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">লোকেশন:</span>
-                        <span class="receipt-val">${locationVal}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">স্যালারি:</span>
-                        <span class="receipt-val" style="color:#059669;">${salary}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">দিন ও সময়:</span>
-                        <span class="receipt-val">${daysVal}, ${timeVal}</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">মোবাইল নম্বর:</span>
-                        <span class="receipt-val">${rawPhone}</span>
-                    </div>
-                `;
+                const receiptEl = document.getElementById('receiptContent');
+                if (receiptEl) {
+                    receiptEl.innerHTML = `
+                        <div class="receipt-row">
+                            <span class="receipt-label">রেফারেন্স কোড:</span>
+                            <span class="receipt-val" style="color:var(--primary);">#${refCode}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">ক্লাস ও বিষয়:</span>
+                            <span class="receipt-val">${classVal} - ${subjectVal}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">লোকেশন:</span>
+                            <span class="receipt-val">${locationVal}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">স্যালারি:</span>
+                            <span class="receipt-val" style="color:#059669;">${salary}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">দিন ও সময়:</span>
+                            <span class="receipt-val">${daysVal}, ${timeVal}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">মোবাইল নম্বর:</span>
+                            <span class="receipt-val">${rawPhone}</span>
+                        </div>
+                    `;
+                }
 
-                document.getElementById('formCard').style.display = 'none';
-                document.getElementById('successCard').style.display = 'block';
+                const formCard = document.getElementById('formCard');
+                const successCard = document.getElementById('successCard');
+                if (formCard) formCard.style.display = 'none';
+                if (successCard) successCard.style.display = 'block';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (err) {
                 console.error("Submission error:", err);
-                alert("দুঃখিত, তথ্য সংরক্ষণ করতে ত্রুটি হয়েছে: " + err.message);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>আবার চেষ্টা করুন</span>';
+                alert("দুঃখিত, তথ্য সংরক্ষণ করতে ত্রুটি হয়েছে: " + (err.message || err));
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>আবার চেষ্টা করুন</span>';
+                }
             }
         });
     </script>
