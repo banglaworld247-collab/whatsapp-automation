@@ -2433,7 +2433,98 @@
             closeWhatsAppModal();
         };
 
-        function renderWhatsAppPhoneHtml(rawPhone, name = 'শিক্ষক', context = '', customMsg = '') {
+        function copyTextToClipboard(text) {
+            if (!text) return Promise.resolve(false);
+            const str = String(text).trim();
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(str).then(() => true).catch(() => fallbackCopy(str));
+            }
+            return Promise.resolve(fallbackCopy(str));
+
+            function fallbackCopy(val) {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = val;
+                    ta.style.position = 'fixed';
+                    ta.style.left = '-9999px';
+                    ta.style.top = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    const res = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    return res;
+                } catch (e) {
+                    console.warn('Fallback copy failed', e);
+                    return false;
+                }
+            }
+        }
+        window.copyTextToClipboard = copyTextToClipboard;
+
+        window.handleApplicantWhatsAppClick = function (event, guardianPhone) {
+            if (guardianPhone) {
+                copyTextToClipboard(guardianPhone);
+                if (typeof showAdminToast === 'function') {
+                    showAdminToast(`📋 অভিভাবকের ফোন নম্বর (${guardianPhone}) ক্লিপবোর্ডে কপি করা হয়েছে!`, "success");
+                }
+            }
+        };
+
+        window.contactApplicantWhatsAppDirect = async function (tuitionId, tutorPhone, tutorName, guardianPhone) {
+            let tuition = allTuitions.find(t => t.id === tuitionId);
+            if (!tuition) {
+                try {
+                    const snap = await getDoc(doc(db, "tuitions", tuitionId));
+                    if (snap.exists()) tuition = snap.data();
+                } catch (e) { }
+            }
+            tuition = tuition || {};
+
+            const gPhone = guardianPhone || tuition.guardianPhone || tuition.phone || '';
+            if (gPhone) {
+                copyTextToClipboard(gPhone);
+                if (typeof showAdminToast === 'function') {
+                    showAdminToast(`📋 অভিভাবকের ফোন নম্বর (${gPhone}) ক্লিপবোর্ডে কপি করা হয়েছে!`, "success");
+                }
+            }
+
+            const msg = formatApplicantWhatsAppMessage(tuition, tuitionId, tutorName);
+            const cleanDigits = String(tutorPhone).replace(/[^0-9]/g, '');
+            let waDigits = cleanDigits;
+            if (waDigits.startsWith('01')) waDigits = '88' + waDigits;
+            else if (waDigits.startsWith('+8801')) waDigits = waDigits.substring(1);
+
+            const waUrl = `https://wa.me/${waDigits}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        };
+
+        window.copyApplicantWhatsAppTemplate = async function (tuitionId, tutorName, guardianPhone) {
+            let tuition = allTuitions.find(t => t.id === tuitionId);
+            if (!tuition) {
+                try {
+                    const snap = await getDoc(doc(db, "tuitions", tuitionId));
+                    if (snap.exists()) tuition = snap.data();
+                } catch (e) { }
+            }
+            tuition = tuition || {};
+
+            const msg = formatApplicantWhatsAppMessage(tuition, tuitionId, tutorName);
+            await copyTextToClipboard(msg);
+            if (typeof showAdminToast === 'function') {
+                showAdminToast(`📋 আবেদন মেসেজ টেমপ্লেট সফলভাবে কপি হয়েছে!`, "success");
+            }
+
+            if (guardianPhone) {
+                setTimeout(() => {
+                    if (typeof showAdminToast === 'function') {
+                        showAdminToast(`💡 অভিভাবকের ফোন নম্বর: ${guardianPhone}`, "success");
+                    }
+                }, 1500);
+            }
+        };
+
+        function renderWhatsAppPhoneHtml(rawPhone, name = 'শিক্ষক', context = '', customMsg = '', guardianPhone = '') {
             if (!rawPhone) return '<span style="color:var(--text-muted);">প্রদান করা হয়নি</span>';
             const cleanDigits = String(rawPhone).replace(/[^0-9]/g, '');
             if (!cleanDigits) return safe(rawPhone);
@@ -2445,10 +2536,12 @@
             const defaultMsg = `আসসালামু আলাইকুম ${name}, TSBD (Tuition Service BD) থেকে যোগাযোগ করা হচ্ছে। ${context ? `(${context})` : ''}`;
             const finalMsg = customMsg || defaultMsg;
             const waLink = `https://wa.me/${waDigits}?text=${encodeURIComponent(finalMsg)}`;
+            const safeGPhone = String(guardianPhone || '').replace(/'/g, "\\'");
+            const clickAttr = safeGPhone ? `onclick="handleApplicantWhatsAppClick(event, '${safeGPhone}')"` : '';
 
             return `
                 <div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                    <a href="${waLink}" target="_blank" rel="noopener" title="হোয়াটসঅ্যাপে চ্যাট করুন (${safe(rawPhone)})" 
+                    <a href="${waLink}" target="_blank" rel="noopener" ${clickAttr} title="হোয়াটসঅ্যাপে চ্যাট করুন (${safe(rawPhone)})" 
                        style="color:#4ADE80; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:13px; background:rgba(34,197,94,0.12); padding:4px 9px; border-radius:6px; border:1px solid rgba(34,197,94,0.35); box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:all 0.2s ease; white-space:nowrap;">
                         <i class="fa-brands fa-whatsapp" style="font-size:15px; color:#22C55E;"></i> ${safe(rawPhone)}
                     </a>
@@ -2460,33 +2553,23 @@
         }
 
         function formatApplicantWhatsAppMessage(tuition, tuitionId, tutorName = 'শিক্ষক') {
-            const origin = window.location.origin;
-            const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-            const detailsUrl = `${origin}${path}/tuition-details.html?id=${tuitionId}`;
+            const detailsUrl = `https://tsbd.pages.dev/tuition-details.html?id=${tuitionId}`;
 
-            const jobId = tuition.jobId || 'N/A';
+            const jobId = tuition.jobId || (tuitionId ? String(tuitionId).slice(0, 5) : 'N/A');
             const cls = tuition.className || tuition.class || 'N/A';
             const cat = tuition.category || 'Bangla Medium';
             const sub = tuition.subject || tuition.subjects || 'N/A';
             const loc = tuition.location || 'N/A';
             const sal = tuition.salary || 'আলোচনা সাপেক্ষে';
-            const days = tuition.days || '৩ দিন / সপ্তাহ';
+            const days = tuition.days || '৩ দিন';
             const time = tuition.time || 'সন্ধ্যা';
             const pref = tuition.preferredTutor || 'Any';
             const gender = tuition.studentGender ? ` (${tuition.studentGender} Student)` : '';
             const notes = tuition.specialNotes ? `\n📝 *শর্ত / নোট:* ${tuition.specialNotes}` : '';
 
-            // Calculate commission with exact Taka amount (using highest range if salary is a range)
-            const salaryNum = parseSalary(sal);
-            const commVal = tuition.commission || tuition.commissionPolicy || '40%';
-            let commText = commVal;
-            const commPercent = parseInt(String(commVal).replace(/\D/g, ""), 10);
-            if (!isNaN(salaryNum) && salaryNum > 0 && !isNaN(commPercent) && commPercent > 0) {
-                const commTaka = Math.round(salaryNum * (commPercent / 100));
-                commText = `${commPercent}% (${commTaka.toLocaleString('bn-BD')} টাকা)`;
-            } else if (commVal === '0%') {
-                commText = 'কোনো কমিশন নেই (০%)';
-            }
+            let commVal = tuition.commission || tuition.commissionPolicy || tuition.offer?.commission || '50%';
+            let commText = String(commVal).trim();
+            if (/^\d+$/.test(commText)) commText = `${commText}%`;
 
             return `আসসালামু আলাইকুম ${tutorName}, TSBD (Tuition Service BD) থেকে যোগাযোগ করা হচ্ছে। (Job ID #${jobId} আবেদন)
 
@@ -4095,6 +4178,15 @@ ${detailsUrl}`;
 
                 const tuitionData = tuitionSnap.data();
 
+                // Automatically copy guardian phone number to clipboard when viewing applicants
+                const gPhone = String(tuitionData.guardianPhone || tuitionData.phone || '').trim();
+                if (gPhone) {
+                    copyTextToClipboard(gPhone);
+                    if (typeof showAdminToast === 'function') {
+                        showAdminToast(`📋 অভিভাবকের ফোন নম্বর (${gPhone}) ক্লিপবোর্ডে কপি করা হয়েছে!`, "success");
+                    }
+                }
+
                 // Complete tuition information
                 let html = `
                     <h4 style="color:var(--accent);margin-bottom:10px;"><i class="fa-solid fa-circle-info"></i> টিউশনের সম্পূর্ণ তথ্য</h4>
@@ -4163,7 +4255,7 @@ ${detailsUrl}`;
                             </div>
                             <table class="data-table" style="margin-top:10px;">
                                 <tr><th>Tutor Name</th><td><strong>${safe(tData.name)}</strong></td></tr>
-                                <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`, assignedWaMsg)}</td></tr>
+                                <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tData.phone, tData.name, `Job ID #${tuitionData.jobId}`, assignedWaMsg, tuitionData.guardianPhone)}</td></tr>
                                 <tr><th>Messenger</th><td>${msngrLinkHtml}</td></tr>
                                 <tr><th>Institution</th><td>${safe(tData.institution || tData.institute || 'N/A')}${tData.department ? ` (${safe(tData.department)})` : ''}</td></tr>
                                 ${isRegistered ? `
@@ -4321,6 +4413,7 @@ ${detailsUrl}`;
 
                         const escapedName = String(tutorName).replace(/'/g, "\\'");
                         const escapedPhone = String(tutorPhone).replace(/'/g, "\\'");
+                        const escapedGuardianPhone = String(tuitionData.guardianPhone || tuitionData.phone || '').replace(/'/g, "\\'");
 
                         const applicantWaMsg = formatApplicantWhatsAppMessage(tuitionData, tuitionId, tutorName);
 
@@ -4337,7 +4430,7 @@ ${detailsUrl}`;
                                     <tr><th>Name</th><td><strong>${safe(tutorName)}</strong></td></tr>
                                     <tr><th>Institution</th><td>${safe(ad.institute || ad.institution || 'N/A')}</td></tr>
                                     <tr><th>Department</th><td>${safe(department || 'N/A')}</td></tr>
-                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`, applicantWaMsg)}</td></tr>
+                                    <tr><th>Phone</th><td>${renderWhatsAppPhoneHtml(tutorPhone, tutorName, `Job ID #${tuitionData.jobId} আবেদন`, applicantWaMsg, tuitionData.guardianPhone)}</td></tr>
                                     <tr><th>Address</th><td>${safe(ad.address || 'N/A')}</td></tr>
                                     <tr><th>Gender</th><td>${safe(ad.gender || 'N/A')}</td></tr>
                                     <tr><th>Experience</th><td>${safe(experience || 'N/A')}</td></tr>
@@ -4348,6 +4441,12 @@ ${detailsUrl}`;
                                 </table>
 
                                 <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                                    <button type="button" class="btn-wa-applicant" onclick="contactApplicantWhatsAppDirect('${tuitionId}', '${escapedPhone}', '${escapedName}', '${escapedGuardianPhone}')" style="background:#25D366;color:#FFF;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:7px;cursor:pointer;border:none;box-shadow:0 3px 10px rgba(37,211,102,0.35);transition:all 0.2s ease;">
+                                        <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> WhatsApp বার্তা পাঠান (অভিভাবকের নম্বর কপি হবে)
+                                    </button>
+                                    <button type="button" class="btn-copy-template" onclick="copyApplicantWhatsAppTemplate('${tuitionId}', '${escapedName}', '${escapedGuardianPhone}')" style="background:rgba(255,255,255,0.08);color:#E2E8F0;border:1px solid rgba(255,255,255,0.2);padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+                                        <i class="fa-solid fa-copy"></i> মেসেজ টেমপ্লেট কপি করুন
+                                    </button>
                                     ${isThisTutorAssigned ? `
                                         <button type="button" class="btn-warning" onclick="unassignTutor('${tuitionId}')" style="padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
                                             <i class="fa-solid fa-user-minus"></i> নিয়োগ বাতিল করে টিউশন ওপেন করুন
