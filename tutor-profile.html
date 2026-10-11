@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>টিউটর প্রোফাইল | TSBD (Tuition Service BD)</title>
+    <meta name="description" content="TSBD টিউটর প্রোফাইল - আপনার ব্যক্তিগত তথ্য, শিক্ষাগত যোগ্যতা, টিউশন প্রেফারেন্স দেখুন এবং সহজেই আপডেট করুন।">
+
+    <!-- Google Fonts: Noto Sans Bengali & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --primary: #4F46E5;
+            --primary-light: #EEF2FF;
+            --primary-hover: #4338CA;
+            --accent: #3B82F6;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --border-hover: #CBD5E1;
+            --success: #10B981;
+            --success-light: #ECFDF5;
+            --warning: #F59E0B;
+            --warning-light: #FFFBEB;
+            --danger: #EF4444;
+            --danger-light: #FEF2F2;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.07);
+            --shadow-lg: 0 10px 25px -4px rgba(15, 23, 42, 0.09);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, button, input, select, textarea {
+            font-family: 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .fa, .fa-solid, .fa-regular, .fa-brands, [class*=" fa-"], [class^="fa-"] {
+            font-family: "Font Awesome 6 Free" !important;
+        }
+        .fa-brands {
+            font-family: "Font Awesome 6 Brands" !important;
+        }
+
+        html, body {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: max(30px, env(safe-area-inset-bottom));
+        }
+
+        /* ===== TSBD NAVBAR ===== */
+        .tsbd-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            width: 100%;
+            margin: 0 0 24px 0;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .tsbd-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        .tsbd-logo {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1F2937;
+            font-weight: 800;
+            font-size: 21px;
+            letter-spacing: -0.5px;
+        }
+        .tsbd-logo-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: linear-gradient(135deg, #6366F1, #3B82F6);
+            font-size: 13.5px;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+        }
+        .tsbd-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tsbd-nav-link {
+            border: 0;
+            background: transparent;
+            text-decoration: none;
+            color: #4B5563;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s ease;
+        }
+        .tsbd-nav-link:hover {
+            background: #F3F4F6;
+            color: #4F46E5;
+        }
+        .tsbd-nav-link.active {
+            background: rgba(99, 102, 241, 0.12);
+            color: #4F46E5;
+            font-weight: 700;
+        }
+        
+        /* User Avatar & Dropdown */
+        .tsbd-user {
+            position: relative;
+            display: none;
+            align-items: center;
+            margin-left: 4px;
+        }
+        .tsbd-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #6366F1;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tsbd-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .tsbd-avatar-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 170px;
+            background: #ffffff;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+        .tsbd-avatar-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .tsbd-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 6px;
+            color: #1F2937;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.15s ease;
+        }
+        .tsbd-dropdown-item:hover {
+            background: #F3F4F6;
+            color: var(--primary);
+        }
+        .tsbd-avatar-dropdown .tsbd-logout {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 6px;
+            color: #EF4444;
+            font-size: 13.5px;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: 0.15s ease;
+            white-space: nowrap;
+        }
+        .tsbd-avatar-dropdown .tsbd-logout:hover {
+            background: #FEF2F2;
+        }
+        
+        /* Mobile Drawer */
+        .tsbd-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #E5E7EB;
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #1F2937;
+            align-items: center;
+            justify-content: center;
+        }
+        .tsbd-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1090;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.25s ease;
+            touch-action: none;
+        }
+        .tsbd-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(85vw, 320px);
+            height: 100%;
+            background: #fff;
+            z-index: 1100;
+            padding: 20px;
+            box-shadow: -10px 0 30px rgba(15, 23, 42, 0.15);
+            transform: translateX(100%);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .tsbd-drawer.open { transform: translateX(0); }
+        .tsbd-drawer-overlay.open { opacity: 1; visibility: visible; }
+        .tsbd-drawer-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .tsbd-close {
+            background: transparent;
+            border: 0;
+            font-size: 20px;
+            color: #4B5563;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+        }
+        .tsbd-close:hover { background: #F3F4F6; }
+        .tsbd-mobile-user-wrap {
+            margin-top: 10px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+        .tsbd-mobile-user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 0;
+        }
+        .tsbd-mobile-dropdown {
+            display: none;
+            padding-top: 8px;
+        }
+        .tsbd-mobile-dropdown.show { display: block; }
+
+        @media (max-width: 860px) {
+            .tsbd-nav-links { display: none; }
+            .tsbd-menu-btn { display: inline-flex; }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .profile-container {
+            max-width: 1080px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 16px 40px;
+        }
+
+        /* Loading View */
+        .state-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            text-align: center;
+            gap: 14px;
+        }
+        .spinner-ring {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(99, 102, 241, 0.15);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Auth Gate (Login prompt) */
+        .auth-gate-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 44px 28px;
+            text-align: center;
+            max-width: 520px;
+            margin: 40px auto;
+            box-shadow: var(--shadow-md);
+        }
+        .gate-icon-circle {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: grid;
+            place-items: center;
+            font-size: 28px;
+            margin: 0 auto 18px;
+        }
+        .gate-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .gate-desc {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin-bottom: 24px;
+        }
+        .btn-google-login {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #FFFFFF;
+            color: #374151;
+            border: 1px solid #D1D5DB;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+        .btn-google-login:hover {
+            background: #F9FAFB;
+            border-color: #9CA3AF;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        /* ===== PROFILE HEADER / HERO CARD ===== */
+        .profile-hero {
+            background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #1E3A8A 100%);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 22px;
+        }
+        .hero-decor-shape {
+            position: absolute;
+            right: -30px;
+            top: -40px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0) 70%);
+            pointer-events: none;
+        }
+        .hero-main-row {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+        .avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .hero-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            background: #EEF2FF;
+            display: block;
+        }
+        .verified-badge {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: var(--success);
+            color: #FFFFFF;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 13px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        }
+        .hero-info {
+            flex: 1;
+            min-width: 250px;
+        }
+        .hero-name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+        .hero-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.3px;
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .pill-verified {
+            background: rgba(16, 185, 129, 0.22);
+            color: #34D399;
+            border: 1px solid rgba(52, 211, 153, 0.4);
+        }
+        .pill-pending {
+            background: rgba(245, 158, 11, 0.22);
+            color: #FBBF24;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+        }
+        .hero-headline {
+            font-size: 14.5px;
+            color: #C7D2FE;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .hero-contact-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .contact-chip {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #F1F5F9;
+        }
+        .hero-actions-col {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn-hero {
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-hero-primary {
+            background: #FFFFFF;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .btn-hero-primary:hover {
+            background: #EEF2FF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-hero-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .btn-hero-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Quick Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.16);
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.14);
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            color: #A5B4FC;
+            flex-shrink: 0;
+        }
+        .stat-info .stat-label {
+            font-size: 12px;
+            color: #C7D2FE;
+        }
+        .stat-info .stat-val {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        /* ===== NAVIGATION TABS ===== */
+        .profile-tabs {
+            display: flex;
+            gap: 8px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 6px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
+        }
+        .tab-badge {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 1px 7px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+        }
+        .tab-btn:not(.active) .tab-badge {
+            background: var(--border-color);
+            color: var(--text-dark);
+        }
+
+        /* ===== TAB CONTENT SECTIONS ===== */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Section Styles */
+        .info-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s ease;
+        }
+        .info-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title i {
+            color: var(--primary);
+        }
+        .btn-card-edit {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.15s ease;
+        }
+        .btn-card-edit:hover {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        /* Data Grid Details */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .data-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .data-label {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .data-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            word-break: break-word;
+        }
+
+        /* Tag / Chip styling */
+        .chips-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .chip-badge {
+            background: #F1F5F9;
+            color: #334155;
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .chip-badge.highlight {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: rgba(99, 102, 241, 0.25);
+        }
+
+        /* Verification docs card */
+        .doc-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+        .doc-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .doc-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            background: var(--primary-light);
+            color: var(--primary);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .doc-meta {
+            flex: 1;
+            min-width: 0;
+        }
+        .doc-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+        .doc-link {
+            font-size: 12.5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .doc-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== EDIT FORM STYLES ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group.full-col {
+            grid-column: 1 / -1;
+        }
+        .form-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .form-label .req {
+            color: var(--danger);
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 14.5px;
+            color: var(--text-dark);
+            background: #FFFFFF;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+        .form-input:read-only {
+            background: #F1F5F9;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 85px;
+        }
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Interactive Choice Chips */
+        .selectable-chips-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .chip-choice {
+            cursor: pointer;
+            user-select: none;
+        }
+        .chip-choice input[type="checkbox"] {
+            display: none;
+        }
+        .chip-choice span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            background: #F1F5F9;
+            color: #475569;
+            border: 1.5px solid var(--border-color);
+            transition: all 0.15s ease;
+        }
+        .chip-choice input[type="checkbox"]:checked + span {
+            background: var(--primary);
+            color: #FFFFFF;
+            border-color: var(--primary);
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+        }
+        .add-custom-chip-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
+        .btn-add-chip {
+            background: #EEF2FF;
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.15s ease;
+        }
+        .btn-add-chip:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Form Actions Row */
+        .form-actions-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #4F46E5, #3B82F6);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 28px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-save:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+        }
+        .btn-save:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+        .btn-cancel {
+            background: #F1F5F9;
+            color: #475569;
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+        .btn-cancel:hover {
+            background: #E2E8F0;
+        }
+
+        /* ===== APPLICATIONS TAB STYLES ===== */
+        .apps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .app-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-left: 4.5px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            flex-wrap: wrap;
+        }
+        .app-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .app-card.status-Pending { border-left-color: #F59E0B; }
+        .app-card.status-Assigned { border-left-color: #10B981; }
+        .app-card.status-Shortlisted { border-left-color: #3B82F6; }
+        .app-card.status-Closed { border-left-color: #94A3B8; }
+
+        .app-main-info h4 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .app-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .app-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .app-status-badge {
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+        .status-badge-Pending { background: #FEF3C7; color: #D97706; }
+        .status-badge-Assigned { background: #D1FAE5; color: #059669; }
+        .status-badge-Shortlisted { background: #DBEAFE; color: #1D4ED8; }
+        .status-badge-Closed { background: #F1F5F9; color: #64748B; }
+
+        .btn-view-tuition {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.15s ease;
+        }
+        .btn-view-tuition:hover {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        /* Empty state */
+        .empty-state {
+            background: #FFFFFF;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 44px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .empty-icon {
+            font-size: 42px;
+            color: #CBD5E1;
+            margin-bottom: 12px;
+        }
+
+        /* Toast notification */
+        .toast-box {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            background: #1E293B;
+            color: #FFFFFF;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.25s ease;
+        }
+        .toast-box.success { background: #065F46; }
+        .toast-box.error { background: #991B1B; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== TSBD TOP NAVBAR ===== -->
+    <nav class="tsbd-navbar">
+        <div class="tsbd-nav-inner">
+            <a class="tsbd-logo" href="tuitions-offers.html">
+                <span class="tsbd-logo-mark">TS</span>
+                <span>TSBD</span>
+            </a>
+            <div class="tsbd-nav-links">
+                <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+                <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+                <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+                <a class="tsbd-nav-link active" id="profileNavLink" href="tutor-profile.html"><i class="fa-solid fa-user"></i> আমার প্রোফাইল</a>
+                <a class="tsbd-nav-link" id="tutorRegLink" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+                <a class="tsbd-nav-link" id="adminDashboardLink" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+                <a class="tsbd-nav-link" id="loginLink" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+                
+                <div class="tsbd-user" id="tsbdDesktopUser">
+                    <img class="tsbd-avatar" id="tsbdDesktopAvatar" alt="Profile" title="প্রোফাইল">
+                    <div class="tsbd-avatar-dropdown" id="tsbdAvatarDropdown">
+                        <a class="tsbd-dropdown-item" href="tutor-profile.html"><i class="fa-solid fa-user" style="color:var(--primary);"></i> আমার প্রোফাইল</a>
+                        <button class="tsbd-logout" id="tsbdDesktopLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                    </div>
+                </div>
+            </div>
+            <button class="tsbd-menu-btn" id="tsbdMenuBtn" type="button" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="tsbd-drawer-overlay" id="tsbdDrawerOverlay"></div>
+    <aside class="tsbd-drawer" id="tsbdDrawer" aria-hidden="true">
+        <div class="tsbd-drawer-head">
+            <a class="tsbd-logo" href="tuitions-offers.html">
+                <span class="tsbd-logo-mark">TS</span>
+                <span>TSBD</span>
+            </a>
+            <button class="tsbd-close" id="tsbdClose" type="button" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <a class="tsbd-nav-link" href="tuitions-offers.html"><i class="fa-solid fa-list"></i> টিউশন অফার</a>
+        <a class="tsbd-nav-link" href="tutors.html"><i class="fa-solid fa-chalkboard-user"></i> টিউটরস</a>
+        <a class="tsbd-nav-link" href="partner.html"><i class="fa-solid fa-handshake"></i> পার্টনার প্রোগ্রাম</a>
+        <a class="tsbd-nav-link active" href="tutor-profile.html"><i class="fa-solid fa-user"></i> আমার প্রোফাইল</a>
+        <a class="tsbd-nav-link" id="tutorRegLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-user-plus"></i> টিউটর রেজিস্ট্রেশন</a>
+        <a class="tsbd-nav-link" id="adminDashboardLinkMobile" href="admin-dashboard.html" style="display:none;"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</a>
+        <a class="tsbd-nav-link" id="loginLinkMobile" href="tutor-registration.html"><i class="fa-solid fa-right-to-bracket"></i> লগইন</a>
+        <div id="tsbdMobileUser" class="tsbd-mobile-user-wrap" style="display:none;">
+            <div class="tsbd-mobile-user-row" id="tsbdMobileUserToggle">
+                <img class="tsbd-avatar" id="tsbdMobileAvatar" alt="Profile">
+                <span style="font-size:14px;font-weight:600;color:#374151" id="tsbdMobileName">Signed in</span>
+                <i class="fa-solid fa-chevron-down" style="font-size:12px;color:#9CA3AF;margin-left:auto;"></i>
+            </div>
+            <div class="tsbd-mobile-dropdown" id="tsbdMobileDropdown">
+                <a class="tsbd-dropdown-item" href="tutor-profile.html"><i class="fa-solid fa-user" style="color:var(--primary);"></i> আমার প্রোফাইল</a>
+                <button class="tsbd-logout" id="tsbdMobileLogout" type="button"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT CONTAINER ===== -->
+    <main class="profile-container">
+        <!-- 1. LOADING VIEW -->
+        <div id="loadingView" class="state-loader">
+            <div class="spinner-ring"></div>
+            <p style="font-weight:600;color:var(--text-muted);">প্রোফাইল লোড হচ্ছে...</p>
+        </div>
+
+        <!-- 2. AUTH GATE (Unauthenticated) -->
+        <div id="authGateView" class="auth-gate-card" style="display:none;">
+            <div class="gate-icon-circle">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+            <h2 class="gate-title">টিউটর প্রোফাইলে লগইন করুন</h2>
+            <p class="gate-desc">
+                আপনার টিউটর প্রোফাইল দেখতে, যোগাযোগের তথ্য ও টিউশন প্রেফারেন্স এডিট করতে এবং চাকরির আবেদনসমূহ দেখতে গুগল অ্যাকাউন্ট দিয়ে লগইন করুন।
+            </p>
+            <button type="button" id="googleSignInBtn" class="btn-google-login">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24Z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.94 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+                </svg>
+                <span>Google দিয়ে লগইন করুন</span>
+            </button>
+            <div style="margin-top:20px;font-size:13.5px;color:var(--text-muted);">
+                এখনো রেজিস্ট্রেশন করেননি? <a href="tutor-registration.html" style="color:var(--primary);font-weight:700;text-decoration:none;">এখানে রেজিস্ট্রেশন করুন</a>
+            </div>
+        </div>
+
+        <!-- 3. UNREGISTERED USER NOTIFICATION -->
+        <div id="notRegisteredView" class="auth-gate-card" style="display:none;">
+            <div class="gate-icon-circle" style="background:#FEF3C7;color:#D97706;">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2 class="gate-title">রেজিস্ট্রেশন প্রয়োজন</h2>
+            <p class="gate-desc">
+                আপনি <strong id="loggedUserEmail"></strong> দিয়ে লগইন করেছেন, কিন্তু আপনার কোনো টিউটর প্রোফাইল তৈরি করা নেই। এখনই সহজ ৩ ধাপে রেজিস্ট্রেশন সম্পন্ন করুন।
+            </p>
+            <a href="tutor-registration.html" class="btn-save" style="text-decoration:none;display:inline-flex;margin:0 auto;">
+                <i class="fa-solid fa-arrow-right"></i> টিউটর রেজিস্ট্রেশন ফর্মে যান
+            </a>
+        </div>
+
+        <!-- 4. LOGGED IN TUTOR PROFILE DASHBOARD -->
+        <div id="profileDashboard" style="display:none;">
+            <!-- Hero Banner -->
+            <section class="profile-hero">
+                <div class="hero-decor-shape"></div>
+                <div class="hero-main-row">
+                    <div class="avatar-wrap">
+                        <img id="tutorHeroAvatar" class="hero-avatar" src="" alt="Avatar">
+                        <div id="tutorVerifiedBadge" class="verified-badge" title="ভেরিফাইড টিউটর"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                    <div class="hero-info">
+                        <div class="hero-name-row">
+                            <h1 id="tutorHeroName" class="hero-name">নাম লোড হচ্ছে...</h1>
+                            <span id="tutorStatusPill" class="status-pill pill-verified">
+                                <i class="fa-solid fa-shield-halved"></i> ভেরিফাইড
+                            </span>
+                        </div>
+                        <div class="hero-headline">
+                            <span id="tutorHeroInst"><i class="fa-solid fa-graduation-cap"></i> বিশ্ববিদ্যালয়/কলেজ</span>
+                            <span>•</span>
+                            <span id="tutorHeroDept"><i class="fa-solid fa-book-open"></i> বিভাগ</span>
+                        </div>
+                        <div class="hero-contact-chips">
+                            <div class="contact-chip"><i class="fa-solid fa-phone" style="color:#34D399;"></i> <span id="tutorHeroPhone"></span></div>
+                            <div class="contact-chip"><i class="fa-solid fa-envelope" style="color:#60A5FA;"></i> <span id="tutorHeroEmail"></span></div>
+                            <div class="contact-chip"><i class="fa-solid fa-location-dot" style="color:#F87171;"></i> <span id="tutorHeroAddress"></span></div>
+                        </div>
+                    </div>
+                    <div class="hero-actions-col">
+                        <button type="button" class="btn-hero btn-hero-primary" onclick="switchProfileTab('edit')">
+                            <i class="fa-solid fa-pen-to-square"></i> তথ্য এডিট করুন
+                        </button>
+                        <a href="tuitions-offers.html" class="btn-hero btn-hero-secondary">
+                            <i class="fa-solid fa-briefcase"></i> নতুন টিউশন খুঁজুন
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats summary -->
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-label">পড়ানোর অভিজ্ঞতা</div>
+                            <div id="statExp" class="stat-val">১+ বছর</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-label">প্রত্যাশিত বেতন</div>
+                            <div id="statSalary" class="stat-val">আলোচনা সাপেক্ষে</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-label">সপ্তাহে দিন</div>
+                            <div id="statDays" class="stat-val">৩-৪ দিন</div>
+                        </div>
+                    </div>
+                    <div class="stat-item" style="cursor:pointer;" onclick="switchProfileTab('apps')">
+                        <div class="stat-icon" style="background:rgba(99, 102, 241, 0.3);color:#fff;"><i class="fa-solid fa-paper-plane"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-label">মোট চাকরির আবেদন</div>
+                            <div id="statAppsCount" class="stat-val">০টি আবেদন</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Tabs -->
+            <div class="profile-tabs">
+                <button type="button" class="tab-btn active" id="tabBtn-overview" onclick="switchProfileTab('overview')">
+                    <i class="fa-solid fa-id-card"></i> প্রোফাইল বিবরণ
+                </button>
+                <button type="button" class="tab-btn" id="tabBtn-edit" onclick="switchProfileTab('edit')">
+                    <i class="fa-solid fa-pen-to-square"></i> তথ্য পরিবর্তন / এডিট
+                </button>
+                <button type="button" class="tab-btn" id="tabBtn-apps" onclick="switchProfileTab('apps')">
+                    <i class="fa-solid fa-list-check"></i> আমার আবেদনসমূহ <span class="tab-badge" id="appsTabBadge">0</span>
+                </button>
+            </div>
+
+            <!-- ===== TAB 1: OVERVIEW ===== -->
+            <div id="tabPane-overview" class="tab-pane active">
+                <!-- Personal & Contact Info -->
+                <div class="info-card">
+                    <div class="card-header-row">
+                        <h3 class="card-title"><i class="fa-solid fa-user-circle"></i> ব্যক্তিগত ও যোগাযোগ তথ্য</h3>
+                        <button type="button" class="btn-card-edit" onclick="switchProfileTab('edit')"><i class="fa-solid fa-pen"></i> পরিবর্তন করুন</button>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <span class="data-label">পুরো নাম</span>
+                            <span class="data-value" id="viewName">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">মোবাইল নম্বর (WhatsApp সচল)</span>
+                            <span class="data-value" id="viewPhone">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">ইমেইল ঠিকানা</span>
+                            <span class="data-value" id="viewEmail">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">জেন্ডার (Gender)</span>
+                            <span class="data-value" id="viewGender">-</span>
+                        </div>
+                        <div class="data-item" style="grid-column:1/-1;">
+                            <span class="data-label">বর্তমান বসবাসের ঠিকানা</span>
+                            <span class="data-value" id="viewAddress">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Info -->
+                <div class="info-card">
+                    <div class="card-header-row">
+                        <h3 class="card-title"><i class="fa-solid fa-graduation-cap"></i> শিক্ষাগত যোগ্যতা</h3>
+                        <button type="button" class="btn-card-edit" onclick="switchProfileTab('edit')"><i class="fa-solid fa-pen"></i> পরিবর্তন করুন</button>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <span class="data-label">বিশ্ববিদ্যালয় / কলেজ / প্রতিষ্ঠান</span>
+                            <span class="data-value" id="viewInst" style="color:var(--primary);">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">বিভাগ / ডিপার্টমেন্ট</span>
+                            <span class="data-value" id="viewDept">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">বর্তমান শিক্ষাবর্ষ / ডিগ্রি</span>
+                            <span class="data-value" id="viewDegree">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tuition Preferences -->
+                <div class="info-card">
+                    <div class="card-header-row">
+                        <h3 class="card-title"><i class="fa-solid fa-sliders"></i> টিউশন প্রেফারেন্স</h3>
+                        <button type="button" class="btn-card-edit" onclick="switchProfileTab('edit')"><i class="fa-solid fa-pen"></i> পরিবর্তন করুন</button>
+                    </div>
+                    
+                    <div style="margin-bottom:16px;">
+                        <span class="data-label">পছন্দের এলাকা (Preferred Locations)</span>
+                        <div class="chips-wrap" id="viewLocationsList">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:16px;">
+                        <span class="data-label">পড়াতে চান এমন বিষয়সমূহ (Preferred Subjects)</span>
+                        <div class="chips-wrap" id="viewSubjectsList">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <span class="data-label">পড়ানোর অভিজ্ঞতা</span>
+                            <span class="data-value" id="viewExperience">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">প্রত্যাশিত বেতন</span>
+                            <span class="data-value" id="viewSalary">-</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">সপ্তাহে দিন</span>
+                            <span class="data-value" id="viewDays">-</span>
+                        </div>
+                    </div>
+
+                    <div id="viewBioSection" style="margin-top:16px;display:none;">
+                        <span class="data-label">নিজের সম্পর্কে সংক্ষিপ্ত বিবরণ (About / Bio)</span>
+                        <p id="viewBio" style="font-size:14.5px;color:#334155;line-height:1.6;margin-top:4px;background:#F8FAFC;padding:12px;border-radius:8px;border:1px solid var(--border-color);"></p>
+                    </div>
+                </div>
+
+                <!-- Verification Documents Info -->
+                <div class="info-card">
+                    <div class="card-header-row">
+                        <h3 class="card-title"><i class="fa-solid fa-file-shield"></i> ভেরিফিকেশন ও ডকুমেন্টস</h3>
+                    </div>
+                    <div class="doc-preview-grid">
+                        <div class="doc-box">
+                            <div class="doc-icon"><i class="fa-solid fa-id-card"></i></div>
+                            <div class="doc-meta">
+                                <div class="doc-name">Student ID / NID Card</div>
+                                <div id="viewNidDoc">
+                                    <span style="font-size:12px;color:var(--text-muted);">লোড হচ্ছে...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doc-box">
+                            <div class="doc-icon"><i class="fa-solid fa-award"></i></div>
+                            <div class="doc-meta">
+                                <div class="doc-name">Marksheet / Certificate</div>
+                                <div id="viewMsDoc">
+                                    <span style="font-size:12px;color:var(--text-muted);">লোড হচ্ছে...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: EDIT PROFILE FORM ===== -->
+            <div id="tabPane-edit" class="tab-pane">
+                <form id="editProfileForm" class="info-card">
+                    <div class="card-header-row">
+                        <div>
+                            <h3 class="card-title"><i class="fa-solid fa-pen-to-square"></i> তথ্য পরিবর্তন ও আপডেট</h3>
+                            <p style="font-size:13px;color:var(--text-muted);margin-top:2px;">সকল তথ্য নির্ভুলভাবে প্রদান করুন যাতে অভিভাবকরা সহজে আপনার সাথে যোগাযোগ করতে পারেন।</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="editName">আপনার পুরো নাম <span class="req">*</span></label>
+                            <input type="text" id="editName" class="form-input" required placeholder="যেমন: তানভীর আহমেদ">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editPhone">মোবাইল নম্বর (WhatsApp সচল) <span class="req">*</span></label>
+                            <input type="tel" id="editPhone" class="form-input" maxlength="11" required placeholder="017XXXXXXXX">
+                            <span class="input-hint">অবশ্যই ১১ ডিজিটের সঠিক ও সচল নম্বর দিন।</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editEmail">ইমেইল ঠিকানা</label>
+                            <input type="email" id="editEmail" class="form-input" readonly title="ইমেইল পরিবর্তন করা যাবে না">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editGender">জেন্ডার (Gender) <span class="req">*</span></label>
+                            <select id="editGender" class="form-select" required>
+                                <option value="Male">পুরুষ শিক্ষক (Male)</option>
+                                <option value="Female">মহিলা শিক্ষিকা (Female)</option>
+                                <option value="Other">অন্যান্য (Other)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editInstitution">বিশ্ববিদ্যালয় / কলেজ / প্রতিষ্ঠান <span class="req">*</span></label>
+                            <input type="text" id="editInstitution" class="form-input" required placeholder="যেমন: ঢাকা বিশ্ববিদ্যালয় / যশোর এম এম কলেজ">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editDepartment">বিভাগ / ডিপার্টমেন্ট <span class="req">*</span></label>
+                            <input type="text" id="editDepartment" class="form-input" required placeholder="যেমন: গণিত / CSE / ইংরেজি">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editDegree">শিক্ষাবর্ষ / বর্তমান স্ট্যাটাস</label>
+                            <input type="text" id="editDegree" class="form-input" placeholder="যেমন: অনার্স ৩য় বর্ষ / মাস্টার্স">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editAddress">বর্তমান ঠিকানা / এলাকা <span class="req">*</span></label>
+                            <input type="text" id="editAddress" class="form-input" required placeholder="যেমন: উপশহর, যশোর সদর">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editExperience">পড়ানোর অভিজ্ঞতা <span class="req">*</span></label>
+                            <input type="text" id="editExperience" class="form-input" required placeholder="যেমন: ২ বছর ধরে পড়াচ্ছি / এসএসসি ও এইচএসসি ব্যাচ">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editSalary">প্রত্যাশিত ন্যূনতম বেতন</label>
+                            <input type="text" id="editSalary" class="form-input" placeholder="যেমন: ৩,৫০০ - ৫,০০০ টাকা">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editDays">সপ্তাহে দিন</label>
+                            <input type="text" id="editDays" class="form-input" placeholder="যেমন: ৩ দিন / ৪ দিন">
+                        </div>
+
+                        <!-- Preferred Locations -->
+                        <div class="form-group full-col">
+                            <label class="form-label">পছন্দের এলাকা (পড়াতে সক্ষম এমন এলাকা নির্বাচন করুন) <span class="req">*</span></label>
+                            <div class="selectable-chips-grid" id="editLocationsChips">
+                                <!-- Locations checkboxes injected -->
+                            </div>
+                            <div class="add-custom-chip-row">
+                                <input type="text" id="customLocationInput" class="form-input" placeholder="অন্য কোনো এলাকা যোগ করতে এখানে লিখুন..." style="max-width:320px;">
+                                <button type="button" class="btn-add-chip" onclick="addCustomLocation()"><i class="fa-solid fa-plus"></i> যোগ করুন</button>
+                            </div>
+                        </div>
+
+                        <!-- Preferred Subjects -->
+                        <div class="form-group full-col">
+                            <label class="form-label">পছন্দের বিষয়সমূহ (যে যে বিষয় পড়াতে চান) <span class="req">*</span></label>
+                            <div class="selectable-chips-grid" id="editSubjectsChips">
+                                <!-- Subjects checkboxes injected -->
+                            </div>
+                            <div class="add-custom-chip-row">
+                                <input type="text" id="customSubjectInput" class="form-input" placeholder="অন্য কোনো বিষয় যোগ করতে এখানে লিখুন..." style="max-width:320px;">
+                                <button type="button" class="btn-add-chip" onclick="addCustomSubject()"><i class="fa-solid fa-plus"></i> যোগ করুন</button>
+                            </div>
+                        </div>
+
+                        <!-- Bio / Description -->
+                        <div class="form-group full-col">
+                            <label class="form-label" for="editBio">নিজের সম্পর্কে সংক্ষিপ্ত বিবরণ (About / Bio)</label>
+                            <textarea id="editBio" class="form-textarea" placeholder="আপনার পড়ানোর কৌশল, প্রিয় বিষয় বা বিশেষ কোনো অর্জন উল্লেখ করতে পারেন..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Form Action Buttons -->
+                    <div class="form-actions-bar">
+                        <button type="button" class="btn-cancel" onclick="switchProfileTab('overview')">বাতিল করুন</button>
+                        <button type="submit" id="saveProfileSubmitBtn" class="btn-save">
+                            <i class="fa-solid fa-floppy-disk"></i> পরিবর্তন সংরক্ষণ করুন
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ===== TAB 3: MY APPLICATIONS ===== -->
+            <div id="tabPane-apps" class="tab-pane">
+                <div class="info-card">
+                    <div class="card-header-row">
+                        <div>
+                            <h3 class="card-title"><i class="fa-solid fa-paper-plane"></i> আমার চাকরির আবেদনসমূহ</h3>
+                            <p style="font-size:13px;color:var(--text-muted);margin-top:2px;">আপনি যে সকল টিউশনে আবেদন করেছেন তার তালিকা ও বর্তমান অগ্রগতি।</p>
+                        </div>
+                        <button type="button" class="btn-card-edit" onclick="loadMyApplications(true)">
+                            <i class="fa-solid fa-rotate-right"></i> রিফ্রেশ
+                        </button>
+                    </div>
+
+                    <div id="appsListContainer" class="apps-list">
+                        <div class="state-loader" style="min-height:180px;">
+                            <div class="spinner-ring" style="width:32px;height:32px;"></div>
+                            <span style="font-size:13px;color:var(--text-muted);">আবেদনসমূহ লোড হচ্ছে...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Toast Notification -->
+    <div id="profileToast" class="toast-box">
+        <i id="toastIcon" class="fa-solid fa-circle-check"></i>
+        <span id="toastText">মেসেজ</span>
+    </div>
+
+    <!-- ==========================================
+         FIREBASE & PROFILE CONTROLLER
+         ========================================== -->
+    <script type="module">
+        import {
+            auth,
+            db,
+            isAdminUser,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+            collection,
+            query,
+            where,
+            orderBy,
+            getDocs,
+            onAuthStateChanged,
+            signInWithPopup,
+            GoogleAuthProvider,
+            signOut,
+            serverTimestamp
+        } from "./js/firebase-config.js";
+
+        // Global State
+        let currentUser = null;
+        let tutorDocId = null;
+        let tutorData = null;
+        let myApplications = [];
+
+        const DEFAULT_LOCATIONS = [
+            "উপশহর",
+            "দড়াটানা",
+            "চৌরাস্তা",
+            "চাঁচড়া",
+            "নিউ মার্কেট",
+            "পালবাড়ি",
+            "পুলিশ লাইন",
+            "কাঁঠালতলা",
+            "ভার্সিটি এলাকা (JUST)",
+            "ঘোপ",
+            "বেজপাড়া",
+            "শহরের বাইরে"
+        ];
+
+        const DEFAULT_SUBJECTS = [
+            "সকল বিষয়",
+            "গণিত",
+            "ইংরেজি",
+            "পদার্থবিজ্ঞান",
+            "রসায়ন",
+            "জীববিজ্ঞান",
+            "উচ্চতর গণিত",
+            "আইসিটি (ICT)",
+            "বাংলা মাধ্যম",
+            "English Version",
+            "Class 1-5",
+            "Class 6-8",
+            "Class 9-10 (SSC)",
+            "HSC Science"
+        ];
+
+        let activeLocationsSet = new Set(DEFAULT_LOCATIONS);
+        let activeSubjectsSet = new Set(DEFAULT_SUBJECTS);
+
+        // Toast Helper
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('profileToast');
+            const toastText = document.getElementById('toastText');
+            const toastIcon = document.getElementById('toastIcon');
+            if (!toast) return;
+
+            toastText.textContent = msg;
+            toast.className = `toast-box ${type}`;
+            if (type === 'success') {
+                toastIcon.className = 'fa-solid fa-circle-check';
+            } else {
+                toastIcon.className = 'fa-solid fa-triangle-exclamation';
+            }
+
+            toast.style.display = 'inline-flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3600);
+        }
+
+        // Phone Validation
+        function isValidBDPhone(phone) {
+            return /^01[3-9]\d{8}$/.test(String(phone).replace(/[^\d]/g, ''));
+        }
+
+        // Tab Switching
+        window.switchProfileTab = function(tabName) {
+            ['overview', 'edit', 'apps'].forEach(t => {
+                const btn = document.getElementById(`tabBtn-${t}`);
+                const pane = document.getElementById(`tabPane-${t}`);
+                if (btn) btn.classList.toggle('active', t === tabName);
+                if (pane) pane.classList.toggle('active', t === tabName);
+            });
+
+            if (tabName === 'apps') {
+                loadMyApplications();
+            }
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        };
+
+        // Custom chip handlers
+        window.addCustomLocation = function() {
+            const input = document.getElementById('customLocationInput');
+            const val = input?.value?.trim();
+            if (!val) return;
+            activeLocationsSet.add(val);
+            renderEditLocationsChips([val]);
+            input.value = '';
+        };
+
+        window.addCustomSubject = function() {
+            const input = document.getElementById('customSubjectInput');
+            const val = input?.value?.trim();
+            if (!val) return;
+            activeSubjectsSet.add(val);
+            renderEditSubjectsChips([val]);
+            input.value = '';
+        };
+
+        // Render Chip Checkboxes in Edit Form
+        function renderEditLocationsChips(selectedArray = []) {
+            const container = document.getElementById('editLocationsChips');
+            if (!container) return;
+            const currentSelected = new Set(
+                Array.from(container.querySelectorAll('input:checked')).map(cb => cb.value).concat(selectedArray)
+            );
+
+            container.innerHTML = Array.from(activeLocationsSet).map(loc => {
+                const isChecked = currentSelected.has(loc);
+                return `
+                    <label class="chip-choice">
+                        <input type="checkbox" name="locChip" value="${loc}" ${isChecked ? 'checked' : ''}>
+                        <span><i class="fa-solid fa-location-dot" style="font-size:11px;"></i> ${loc}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function renderEditSubjectsChips(selectedArray = []) {
+            const container = document.getElementById('editSubjectsChips');
+            if (!container) return;
+            const currentSelected = new Set(
+                Array.from(container.querySelectorAll('input:checked')).map(cb => cb.value).concat(selectedArray)
+            );
+
+            container.innerHTML = Array.from(activeSubjectsSet).map(sub => {
+                const isChecked = currentSelected.has(sub);
+                return `
+                    <label class="chip-choice">
+                        <input type="checkbox" name="subChip" value="${sub}" ${isChecked ? 'checked' : ''}>
+                        <span><i class="fa-solid fa-book" style="font-size:11px;"></i> ${sub}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // AUTH STATE & LOAD PROFILE
+        // ==========================================
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            updateNavbarUser(user);
+
+            const loadingView = document.getElementById('loadingView');
+            const authGateView = document.getElementById('authGateView');
+            const notRegisteredView = document.getElementById('notRegisteredView');
+            const profileDashboard = document.getElementById('profileDashboard');
+
+            if (!user) {
+                loadingView.style.display = 'none';
+                authGateView.style.display = 'block';
+                notRegisteredView.style.display = 'none';
+                profileDashboard.style.display = 'none';
+                return;
+            }
+
+            // User is signed in with Firebase. Now check for existing tutor doc
+            try {
+                tutorDocId = user.uid;
+                let docSnap = await getDoc(doc(db, "tutors", user.uid));
+
+                // Fallback query by email if doc id is not user.uid
+                if (!docSnap.exists() && user.email) {
+                    const emailQuery = query(collection(db, "tutors"), where("email", "==", user.email));
+                    const emailSnap = await getDocs(emailQuery);
+                    if (!emailSnap.empty) {
+                        docSnap = emailSnap.docs[0];
+                        tutorDocId = docSnap.id;
+                    }
+                }
+
+                if (!docSnap.exists()) {
+                    // Authenticated, but not registered in /tutors
+                    loadingView.style.display = 'none';
+                    authGateView.style.display = 'none';
+                    const emailEl = document.getElementById('loggedUserEmail');
+                    if (emailEl) emailEl.textContent = user.email || 'এই অ্যাকাউন্ট';
+                    notRegisteredView.style.display = 'block';
+                    profileDashboard.style.display = 'none';
+                    return;
+                }
+
+                tutorData = docSnap.data();
+                populateProfileUI(tutorData);
+
+                loadingView.style.display = 'none';
+                authGateView.style.display = 'none';
+                notRegisteredView.style.display = 'none';
+                profileDashboard.style.display = 'block';
+
+                // Load applications in background
+                loadMyApplications();
+
+            } catch (err) {
+                console.error("Error loading tutor profile:", err);
+                loadingView.style.display = 'none';
+                showToast("প্রোফাইল লোড করতে সমস্যা হয়েছে: " + err.message, "error");
+            }
+        });
+
+        // Google Sign In trigger
+        document.getElementById('googleSignInBtn')?.addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (err) {
+                console.error("Sign-in error:", err);
+                showToast("লগইন ব্যর্থ হয়েছে: " + err.message, "error");
+            }
+        });
+
+        // ==========================================
+        // POPULATE PROFILE DATA INTO UI
+        // ==========================================
+        function populateProfileUI(data) {
+            const photoUrl = currentUser?.photoURL || data.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'Tutor')}&background=4F46E5&color=fff`;
+            
+            // Hero
+            const heroAvatar = document.getElementById('tutorHeroAvatar');
+            if (heroAvatar) heroAvatar.src = photoUrl;
+
+            document.getElementById('tutorHeroName').textContent = data.name || currentUser?.displayName || 'নাম নেই';
+            document.getElementById('tutorHeroInst').innerHTML = `<i class="fa-solid fa-graduation-cap"></i> ${data.institution || 'প্রতিষ্ঠান উল্লেখ নেই'}`;
+            document.getElementById('tutorHeroDept').innerHTML = `<i class="fa-solid fa-book-open"></i> ${data.department || 'বিভাগ উল্লেখ নেই'}`;
+            document.getElementById('tutorHeroPhone').textContent = data.phone || 'ফোন নেই';
+            document.getElementById('tutorHeroEmail').textContent = data.email || currentUser?.email || 'ইমেইল নেই';
+            document.getElementById('tutorHeroAddress').textContent = data.address || 'ঠিকানা নেই';
+
+            // Verification Pill
+            const isVerified = Boolean(data.whatsappVerified || data.nidUrl || data.isVerified);
+            const statusPill = document.getElementById('tutorStatusPill');
+            const verifiedBadge = document.getElementById('tutorVerifiedBadge');
+            if (statusPill) {
+                if (isVerified) {
+                    statusPill.className = 'status-pill pill-verified';
+                    statusPill.innerHTML = '<i class="fa-solid fa-shield-halved"></i> ভেরিফাইড টিউটর';
+                    if (verifiedBadge) verifiedBadge.style.display = 'grid';
+                } else {
+                    statusPill.className = 'status-pill pill-pending';
+                    statusPill.innerHTML = '<i class="fa-solid fa-clock"></i> পেন্ডিং ভেরিফিকেশন';
+                    if (verifiedBadge) verifiedBadge.style.display = 'none';
+                }
+            }
+
+            // Quick Stats
+            document.getElementById('statExp').textContent = data.experience || 'অভিজ্ঞতা উল্লেখ নেই';
+            document.getElementById('statSalary').textContent = data.salary ? `${data.salary} BDT` : 'আলোচনা সাপেক্ষে';
+            document.getElementById('statDays').textContent = data.days || '৩-৪ দিন / সপ্তাহ';
+
+            // Overview Tab
+            document.getElementById('viewName').textContent = data.name || '-';
+            document.getElementById('viewPhone').textContent = data.phone || '-';
+            document.getElementById('viewEmail').textContent = data.email || currentUser?.email || '-';
+            document.getElementById('viewGender').textContent = data.gender === 'Female' ? 'মহিলা (Female)' : (data.gender === 'Male' ? 'পুরুষ (Male)' : (data.gender || '-'));
+            document.getElementById('viewAddress').textContent = data.address || '-';
+            document.getElementById('viewInst').textContent = data.institution || '-';
+            document.getElementById('viewDept').textContent = data.department || '-';
+            document.getElementById('viewDegree').textContent = data.degree || 'অনার্স / স্নাতক';
+            document.getElementById('viewExperience').textContent = data.experience || '-';
+            document.getElementById('viewSalary').textContent = data.salary ? `${data.salary} BDT` : 'আলোচনা সাপেক্ষে';
+            document.getElementById('viewDays').textContent = data.days || '-';
+
+            // Bio
+            const bioSec = document.getElementById('viewBioSection');
+            const bioEl = document.getElementById('viewBio');
+            if (data.bio && bioSec && bioEl) {
+                bioEl.textContent = data.bio;
+                bioSec.style.display = 'block';
+            } else if (bioSec) {
+                bioSec.style.display = 'none';
+            }
+
+            // Locations Chips (Overview)
+            const locWrap = document.getElementById('viewLocationsList');
+            if (locWrap) {
+                const locs = Array.isArray(data.locations) ? data.locations : (data.locations ? [data.locations] : []);
+                if (locs.length > 0) {
+                    locWrap.innerHTML = locs.map(l => `<span class="chip-badge highlight"><i class="fa-solid fa-location-dot"></i> ${l}</span>`).join('');
+                } else {
+                    locWrap.innerHTML = '<span style="font-size:13px;color:var(--text-muted);">কোনো নির্দিষ্ট এলাকা নির্বাচন করা নেই।</span>';
+                }
+                // Add any saved locations to the active set for edit form
+                locs.forEach(l => activeLocationsSet.add(l));
+            }
+
+            // Subjects Chips (Overview)
+            const subWrap = document.getElementById('viewSubjectsList');
+            if (subWrap) {
+                const subs = Array.isArray(data.subjects) ? data.subjects : (data.subjects ? [data.subjects] : []);
+                if (subs.length > 0) {
+                    subWrap.innerHTML = subs.map(s => `<span class="chip-badge"><i class="fa-solid fa-book-bookmark"></i> ${s}</span>`).join('');
+                } else {
+                    subWrap.innerHTML = '<span style="font-size:13px;color:var(--text-muted);">কোনো বিষয় নির্বাচন করা নেই।</span>';
+                }
+                subs.forEach(s => activeSubjectsSet.add(s));
+            }
+
+            // Documents (Overview)
+            const nidEl = document.getElementById('viewNidDoc');
+            if (nidEl) {
+                if (data.nidUrl) {
+                    nidEl.innerHTML = `<a href="${data.nidUrl}" target="_blank" rel="noopener" class="doc-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> ডকুমেন্ট দেখুন</a>`;
+                } else {
+                    nidEl.innerHTML = `<span style="font-size:12px;color:var(--text-muted);">ডকুমেন্ট আপলোড করা নেই</span>`;
+                }
+            }
+            const msEl = document.getElementById('viewMsDoc');
+            if (msEl) {
+                if (data.msUrl) {
+                    msEl.innerHTML = `<a href="${data.msUrl}" target="_blank" rel="noopener" class="doc-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> ডকুমেন্ট দেখুন</a>`;
+                } else {
+                    msEl.innerHTML = `<span style="font-size:12px;color:var(--text-muted);">ডকুমেন্ট আপলোড করা নেই</span>`;
+                }
+            }
+
+            // Pre-populate Edit Form
+            document.getElementById('editName').value = data.name || '';
+            document.getElementById('editPhone').value = data.phone || '';
+            document.getElementById('editEmail').value = data.email || currentUser?.email || '';
+            document.getElementById('editGender').value = data.gender || 'Male';
+            document.getElementById('editInstitution').value = data.institution || '';
+            document.getElementById('editDepartment').value = data.department || '';
+            document.getElementById('editDegree').value = data.degree || '';
+            document.getElementById('editAddress').value = data.address || '';
+            document.getElementById('editExperience').value = data.experience || '';
+            document.getElementById('editSalary').value = data.salary || '';
+            document.getElementById('editDays').value = data.days || '';
+            document.getElementById('editBio').value = data.bio || '';
+
+            // Render Edit Form Checkboxes
+            renderEditLocationsChips(Array.isArray(data.locations) ? data.locations : []);
+            renderEditSubjectsChips(Array.isArray(data.subjects) ? data.subjects : []);
+        }
+
+        // ==========================================
+        // SAVE / UPDATE PROFILE HANDLER
+        // ==========================================
+        const editForm = document.getElementById('editProfileForm');
+        editForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentUser || !tutorDocId) {
+                showToast("সেশন পাওয়া যায়নি। অনুগ্রহ করে পুনরায় লগইন করুন।", "error");
+                return;
+            }
+
+            const phoneVal = document.getElementById('editPhone').value.trim();
+            if (!isValidBDPhone(phoneVal)) {
+                showToast("সঠিক ১১ ডিজিটের বাংলাদেশি মোবাইল নম্বর প্রদান করুন (যেমন: 01712345678)।", "error");
+                document.getElementById('editPhone').focus();
+                return;
+            }
+
+            // Extract checked locations & subjects
+            const selectedLocations = Array.from(
+                document.querySelectorAll('input[name="locChip"]:checked')
+            ).map(cb => cb.value);
+
+            if (selectedLocations.length === 0) {
+                showToast("কমপক্ষে একটি পছন্দের এলাকা নির্বাচন করুন।", "error");
+                return;
+            }
+
+            const selectedSubjects = Array.from(
+                document.querySelectorAll('input[name="subChip"]:checked')
+            ).map(cb => cb.value);
+
+            if (selectedSubjects.length === 0) {
+                showToast("কমপক্ষে একটি বিষয় নির্বাচন করুন।", "error");
+                return;
+            }
+
+            const submitBtn = document.getElementById('saveProfileSubmitBtn');
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> সংরক্ষণ হচ্ছে...';
+
+            const updatedData = {
+                name: document.getElementById('editName').value.trim(),
+                phone: phoneVal,
+                gender: document.getElementById('editGender').value,
+                institution: document.getElementById('editInstitution').value.trim(),
+                department: document.getElementById('editDepartment').value.trim(),
+                degree: document.getElementById('editDegree').value.trim(),
+                address: document.getElementById('editAddress').value.trim(),
+                experience: document.getElementById('editExperience').value.trim(),
+                salary: document.getElementById('editSalary').value.trim(),
+                days: document.getElementById('editDays').value.trim(),
+                bio: document.getElementById('editBio').value.trim(),
+                locations: selectedLocations,
+                subjects: selectedSubjects,
+                uid: currentUser.uid,
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                // Update Firestore document
+                await setDoc(doc(db, "tutors", tutorDocId), updatedData, { merge: true });
+
+                // Update local state
+                tutorData = { ...tutorData, ...updatedData };
+                populateProfileUI(tutorData);
+
+                showToast("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!", "success");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+
+                // Return to overview tab
+                switchProfileTab('overview');
+
+            } catch (err) {
+                console.error("Save error:", err);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+                showToast("সংরক্ষণ করতে সমস্যা হয়েছে: " + err.message, "error");
+            }
+        });
+
+        // ==========================================
+        // LOAD MY APPLICATIONS
+        // ==========================================
+        async function loadMyApplications(manual = false) {
+            const container = document.getElementById('appsListContainer');
+            if (!container) return;
+
+            if (manual) {
+                container.innerHTML = `
+                    <div class="state-loader" style="min-height:180px;">
+                        <div class="spinner-ring" style="width:32px;height:32px;"></div>
+                        <span style="font-size:13px;color:var(--text-muted);">রিফ্রেশ হচ্ছে...</span>
+                    </div>
+                `;
+            }
+
+            try {
+                let apps = [];
+                // 1. Query by tutorUid
+                const q1 = query(collection(db, "applications"), where("tutorUid", "==", tutorDocId));
+                const snap1 = await getDocs(q1);
+                snap1.forEach(d => apps.push({ id: d.id, ...d.data() }));
+
+                // 2. Also check if stored with uid == user.uid
+                if (apps.length === 0 && currentUser?.uid && currentUser.uid !== tutorDocId) {
+                    const q2 = query(collection(db, "applications"), where("tutorUid", "==", currentUser.uid));
+                    const snap2 = await getDocs(q2);
+                    snap2.forEach(d => apps.push({ id: d.id, ...d.data() }));
+                }
+
+                // 3. Fallback query by email if tutorUid differed
+                if (apps.length === 0 && currentUser?.email) {
+                    const q3 = query(collection(db, "applications"), where("email", "==", currentUser.email));
+                    const snap3 = await getDocs(q3);
+                    snap3.forEach(d => apps.push({ id: d.id, ...d.data() }));
+                }
+
+                // Deduplicate by id
+                const uniqueMap = new Map();
+                apps.forEach(a => uniqueMap.set(a.id, a));
+                myApplications = Array.from(uniqueMap.values());
+
+                // Sort descending by appliedAt
+                myApplications.sort((a, b) => {
+                    const tA = a.appliedAt?.seconds || 0;
+                    const tB = b.appliedAt?.seconds || 0;
+                    return tB - tA;
+                });
+
+                // Update tab badge & stats
+                const count = myApplications.length;
+                document.getElementById('appsTabBadge').textContent = count;
+                document.getElementById('statAppsCount').textContent = `${count}টি আবেদন`;
+
+                if (count === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fa-solid fa-inbox"></i></div>
+                            <h4 style="color:var(--text-dark);font-size:16px;margin-bottom:6px;">এখনো কোনো টিউশনে আবেদন করেননি</h4>
+                            <p style="font-size:13.5px;margin-bottom:16px;">আপনার যোগ্যতার সাথে মানানসই নতুন টিউশন খুঁজে এখনই আবেদন করুন।</p>
+                            <a href="tuitions-offers.html" class="btn-save" style="text-decoration:none;display:inline-flex;margin:0 auto;font-size:14px;padding:10px 20px;">
+                                <i class="fa-solid fa-magnifying-glass"></i> টিউশন অফার দেখুন
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = myApplications.map(app => {
+                    const status = app.status || 'Pending';
+                    let statusLabel = status;
+                    if (status.toLowerCase() === 'pending') statusLabel = 'অপেক্ষমান (Pending)';
+                    else if (status.toLowerCase() === 'assigned') statusLabel = 'নিযুক্ত (Assigned)';
+                    else if (status.toLowerCase() === 'shortlisted') statusLabel = 'বাছাইকৃত (Shortlisted)';
+                    else if (status.toLowerCase() === 'closed') statusLabel = 'বন্ধ (Closed)';
+
+                    let dateStr = 'তারিখ উল্লেখ নেই';
+                    if (app.appliedAt?.toDate) {
+                        dateStr = app.appliedAt.toDate().toLocaleDateString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric' });
+                    }
+
+                    return `
+                        <div class="app-card status-${status}">
+                            <div class="app-main-info">
+                                <h4>
+                                    ${app.className ? `${app.className} - ` : ''}${app.subject || 'টিউশন আবেদন'}
+                                    <span style="font-size:12px;background:#F1F5F9;color:#64748B;padding:2px 8px;border-radius:6px;margin-left:6px;font-weight:normal;">Ref: #${app.tuitionId ? app.tuitionId.slice(0, 6) : app.id.slice(0, 6)}</span>
+                                </h4>
+                                <div class="app-meta">
+                                    <span><i class="fa-solid fa-calendar-days" style="color:var(--primary);"></i> আবেদনের তারিখ: ${dateStr}</span>
+                                    ${app.location ? `<span><i class="fa-solid fa-location-dot" style="color:#EF4444;"></i> ${app.location}</span>` : ''}
+                                    ${app.salary ? `<span><i class="fa-solid fa-money-bill-wave" style="color:#10B981;"></i> ${app.salary}</span>` : ''}
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <span class="app-status-badge status-badge-${status}">${statusLabel}</span>
+                                ${app.tuitionId ? `
+                                    <a href="tuition-details.html?id=${app.tuitionId}" class="btn-view-tuition" title="টিউশনের বিস্তারিত দেখুন">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> জব দেখুন
+                                    </a>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error("Error loading applications:", err);
+                container.innerHTML = `
+                    <div class="empty-state" style="color:var(--danger);">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:28px;margin-bottom:8px;"></i>
+                        <p>আবেদন লোড করতে সমস্যা হয়েছে: ${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ==========================================
+        // NAVBAR & DRAWER HELPERS
+        // ==========================================
+        const tsbdDrawer = document.getElementById("tsbdDrawer");
+        const tsbdOverlay = document.getElementById("tsbdDrawerOverlay");
+        const tsbdMenuBtn = document.getElementById("tsbdMenuBtn");
+        const tsbdClose = document.getElementById("tsbdClose");
+
+        function tsbdOpenDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.add("open"); tsbdOverlay.classList.add("open"); tsbdDrawer.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden"; } }
+        function tsbdCloseDrawer() { if (tsbdDrawer) { tsbdDrawer.classList.remove("open"); tsbdOverlay.classList.remove("open"); tsbdDrawer.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; } }
+        tsbdMenuBtn?.addEventListener("click", tsbdOpenDrawer);
+        tsbdClose?.addEventListener("click", tsbdCloseDrawer);
+        tsbdOverlay?.addEventListener("click", tsbdCloseDrawer);
+
+        const desktopAvatar = document.getElementById('tsbdDesktopAvatar');
+        const desktopDropdown = document.getElementById('tsbdAvatarDropdown');
+        const mobileUserToggle = document.getElementById('tsbdMobileUserToggle');
+        const mobileDropdown = document.getElementById('tsbdMobileDropdown');
+
+        desktopAvatar?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            desktopDropdown?.classList.toggle('show');
+        });
+
+        mobileUserToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileDropdown?.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (desktopDropdown && !desktopDropdown.contains(e.target) && e.target !== desktopAvatar) {
+                desktopDropdown.classList.remove('show');
+            }
+        });
+
+        function updateNavbarUser(user) {
+            const desktopUser = document.getElementById("tsbdDesktopUser");
+            const mobileUser = document.getElementById("tsbdMobileUser");
+            const desktopAvatar = document.getElementById("tsbdDesktopAvatar");
+            const mobileAvatar = document.getElementById("tsbdMobileAvatar");
+            const mobileName = document.getElementById("tsbdMobileName");
+            const loginLink = document.getElementById("loginLink");
+            const loginLinkMobile = document.getElementById("loginLinkMobile");
+            const tutorRegLink = document.getElementById("tutorRegLink");
+            const tutorRegLinkMobile = document.getElementById("tutorRegLinkMobile");
+            const adminDashboardLink = document.getElementById("adminDashboardLink");
+            const adminDashboardLinkMobile = document.getElementById("adminDashboardLinkMobile");
+
+            const isAdmin = isAdminUser(user);
+            if (adminDashboardLink) adminDashboardLink.style.display = isAdmin ? "inline-flex" : "none";
+            if (adminDashboardLinkMobile) adminDashboardLinkMobile.style.display = isAdmin ? "inline-flex" : "none";
+
+            if (user) {
+                const photo = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || 'Tutor')}&background=4F46E5&color=fff`;
+                if (desktopAvatar) desktopAvatar.src = photo;
+                if (mobileAvatar) mobileAvatar.src = photo;
+                if (mobileName) mobileName.textContent = user.displayName || user.email || "লগইন আছেন";
+                if (desktopUser) desktopUser.style.display = "inline-flex";
+                if (mobileUser) mobileUser.style.display = "block";
+                if (loginLink) loginLink.style.display = "none";
+                if (loginLinkMobile) loginLinkMobile.style.display = "none";
+                if (tutorRegLink) tutorRegLink.style.display = "none";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "none";
+            } else {
+                if (desktopUser) desktopUser.style.display = "none";
+                if (mobileUser) mobileUser.style.display = "none";
+                if (loginLink) loginLink.style.display = "inline-flex";
+                if (loginLinkMobile) loginLinkMobile.style.display = "inline-flex";
+                if (tutorRegLink) tutorRegLink.style.display = "inline-flex";
+                if (tutorRegLinkMobile) tutorRegLinkMobile.style.display = "inline-flex";
+            }
+        }
+
+        async function tsbdLogout() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("tutorPhotoURL");
+                localStorage.removeItem("tutorDisplayName");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("tutorPhone");
+                sessionStorage.clear();
+                window.location.reload();
+            } catch (e) {
+                console.error("Logout error:", e);
+                alert("Logout failed. Please try again.");
+            }
+        }
+        document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
+        document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
+    </script>
+</body>
+</html>
