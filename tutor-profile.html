@@ -1777,7 +1777,8 @@
         // POPULATE PROFILE DATA INTO UI
         // ==========================================
         function populateProfileUI(data) {
-            const photoUrl = currentUser?.photoURL || data.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'Tutor')}&background=4F46E5&color=fff`;
+            const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'Tutor')}&background=4F46E5&color=fff`;
+            const photoUrl = currentUser?.photoURL || (currentUser?.providerData && currentUser?.providerData[0]?.photoURL) || data.photoURL || data.photoUrl || (data.email ? `https://unavatar.io/${encodeURIComponent(data.email)}?fallback=${encodeURIComponent(fallbackPhoto)}` : fallbackPhoto);
             
             // Hero
             const heroAvatar = document.getElementById('tutorHeroAvatar');
@@ -1953,6 +1954,7 @@
                 bio: document.getElementById('editBio').value.trim(),
                 locations: selectedLocations,
                 subjects: selectedSubjects,
+                photoURL: currentUser?.photoURL || (currentUser?.providerData && currentUser?.providerData[0]?.photoURL) || tutorData?.photoURL || tutorData?.photoUrl || '',
                 uid: currentUser.uid,
                 updatedAt: serverTimestamp()
             };

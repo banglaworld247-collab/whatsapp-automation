@@ -1331,6 +1331,9 @@
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    if (photo && (!data.photoURL || data.photoURL !== photo)) {
+                        setDoc(doc(db, "tutors", docSnap.id), { photoURL: photo }, { merge: true }).catch(() => {});
+                    }
                     const savedPhone = String(data.phone || "").trim();
 
                     if (!isValidBDPhone(savedPhone)) {
@@ -1497,6 +1500,7 @@
                     institution: institutionInput.value.trim(),
                     department: departmentInput.value.trim(),
                     email: currentUser.email || "",
+                    photoURL: currentUser.photoURL || (currentUser.providerData && currentUser.providerData[0]?.photoURL) || "",
                     phone,
                     address: addressInput.value.trim(),
                     gender,

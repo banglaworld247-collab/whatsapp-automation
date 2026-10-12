@@ -986,7 +986,10 @@
             orderBy, 
             onSnapshot, 
             onAuthStateChanged, 
-            signOut 
+            signOut,
+            doc,
+            getDoc,
+            updateDoc
         } from "./js/firebase-config.js";
         import { toBnDigits, formatDate, isFemaleGender, isMaleGender, escapeHtml } from "./js/utils.js";
 
@@ -1091,18 +1094,34 @@
         document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
         document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const photo = user.photoURL || (user.providerData && user.providerData[0]?.photoURL) || '';
                 if (photo) localStorage.setItem("tutorPhotoURL", photo);
                 if (user.displayName || user.email) localStorage.setItem("tutorDisplayName", user.displayName || user.email);
                 if (user.email) localStorage.setItem("userEmail", user.email);
                 tsbdSetUser(user);
+
+                // Auto-sync Google/Gmail profile photo to tutor profile in Firestore if not already saved
+                if (photo) {
+                    try {
+                        const tutorRef = doc(db, "tutors", user.uid);
+                        const tutorSnap = await getDoc(tutorRef);
+                        if (tutorSnap.exists() && (!tutorSnap.data().photoURL || tutorSnap.data().photoURL !== photo)) {
+                            await updateDoc(tutorRef, { photoURL: photo });
+                        }
+                    } catch (e) {
+                        // ignore permission or network error
+                    }
+                }
             } else {
                 localStorage.removeItem("tutorPhotoURL");
                 localStorage.removeItem("tutorDisplayName");
                 localStorage.removeItem("userEmail");
                 tsbdSetUser(null);
+            }
+            if (filteredTutors && filteredTutors.length > 0) {
+                renderTutorPage();
             }
         });
 
@@ -1190,6 +1209,47 @@
             applyFilters();
         });
 
+        function getTutorAvatar(tutor, isFemale, size = 128) {
+            const name = tutor.name || "অভিজ্ঞ শিক্ষক";
+            const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${isFemale ? 'F472B6' : '6366F1'}&color=fff&size=${size}`;
+
+            // 1. Direct photo from Firestore (Google/Gmail photoURL, photoUrl, etc)
+            let photo = tutor.photoURL || tutor.photoUrl || tutor.photo || tutor.avatar || tutor.profilePic || '';
+            if (photo && typeof photo === 'string' && photo.trim()) {
+                photo = photo.trim();
+                if (photo.includes('googleusercontent.com') && photo.includes('=s96-c')) {
+                    photo = photo.replace('=s96-c', `=s${size}-c`);
+                }
+                return { avatarUrl: photo, fallbackAvatar };
+            }
+
+            // 2. Check if logged-in auth user matches this tutor profile
+            const curUser = auth.currentUser;
+            if (curUser) {
+                const isMatch = (tutor.id && curUser.uid === tutor.id) ||
+                                (tutor.uid && curUser.uid === tutor.uid) ||
+                                (tutor.email && curUser.email && tutor.email.toLowerCase().trim() === curUser.email.toLowerCase().trim());
+                if (isMatch) {
+                    let myPhoto = curUser.photoURL || (curUser.providerData && curUser.providerData[0]?.photoURL);
+                    if (myPhoto) {
+                        if (myPhoto.includes('googleusercontent.com') && myPhoto.includes('=s96-c')) {
+                            myPhoto = myPhoto.replace('=s96-c', `=s${size}-c`);
+                        }
+                        return { avatarUrl: myPhoto, fallbackAvatar };
+                    }
+                }
+            }
+
+            // 3. Fallback to unavatar using tutor's Gmail / email if available
+            const email = (tutor.email || '').toLowerCase().trim();
+            if (email && email.includes('@')) {
+                const unavatarUrl = `https://unavatar.io/${encodeURIComponent(email)}?fallback=${encodeURIComponent(fallbackAvatar)}`;
+                return { avatarUrl: unavatarUrl, fallbackAvatar };
+            }
+
+            return { avatarUrl: fallbackAvatar, fallbackAvatar };
+        }
+
         function renderTutorPage() {
             loadingMessage.style.display = 'none';
             tutorGrid.style.display = 'grid';
@@ -1229,8 +1289,7 @@
                 const genderTagClass = isFemale ? 'tag-female' : 'tag-male';
                 const genderIcon = isFemale ? 'fa-venus' : 'fa-mars';
 
-                const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${isFemale ? 'F472B6' : '6366F1'}&color=fff&size=128`;
-                const avatarUrl = tutor.photoURL || fallbackAvatar;
+                const { avatarUrl, fallbackAvatar } = getTutorAvatar(tutor, isFemale, 128);
                 const experience = tutor.experience ? `${tutor.experience}` : 'অভিজ্ঞ';
                 
                 const subjects = Array.isArray(tutor.subjects) && tutor.subjects.length > 0 
@@ -1346,8 +1405,7 @@
             const baseInst = tutor.institution || "নামকরা বিশ্ববিদ্যালয়";
             const institution = tutor.department ? `${baseInst} (${tutor.department})` : baseInst;
             const isFemale = isFemaleGender(tutor.gender);
-            const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${isFemale ? 'F472B6' : '6366F1'}&color=fff&size=160`;
-            const avatarUrl = tutor.photoURL || fallbackAvatar;
+            const { avatarUrl, fallbackAvatar } = getTutorAvatar(tutor, isFemale, 160);
 
             const subjectsList = Array.isArray(tutor.subjects) && tutor.subjects.length > 0 
                 ? tutor.subjects.map(s => `<span class="chip" style="font-size:12.5px;padding:3px 9px;">${escapeHtml(s)}</span>`).join('') 
