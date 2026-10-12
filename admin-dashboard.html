@@ -4178,15 +4178,6 @@ ${detailsUrl}`;
 
                 const tuitionData = tuitionSnap.data();
 
-                // Automatically copy guardian phone number to clipboard when viewing applicants
-                const gPhone = String(tuitionData.guardianPhone || tuitionData.phone || '').trim();
-                if (gPhone) {
-                    copyTextToClipboard(gPhone);
-                    if (typeof showAdminToast === 'function') {
-                        showAdminToast(`📋 অভিভাবকের ফোন নম্বর (${gPhone}) ক্লিপবোর্ডে কপি করা হয়েছে!`, "success");
-                    }
-                }
-
                 // Complete tuition information
                 let html = `
                     <h4 style="color:var(--accent);margin-bottom:10px;"><i class="fa-solid fa-circle-info"></i> টিউশনের সম্পূর্ণ তথ্য</h4>
