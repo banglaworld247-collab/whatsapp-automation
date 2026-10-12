@@ -2153,15 +2153,18 @@
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; flex-wrap:wrap; gap:6px;">
                                 <label style="font-size:12px; color:var(--text-muted); margin:0;">কাস্টম হোয়াটসঅ্যাপ বার্তা (Custom Message):</label>
                                 <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
-                                    <button type="button" onclick="insertTutorScheduleTemplate('update')" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;">
-                                        <i class="fa-solid fa-wand-magic-sparkles"></i> ডেমো আপডেট টেমপ্লেট
+                                    <button type="button" onclick="insertTutorScheduleTemplate(1)" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;" title="আসসালামু আলাইকুম ভাই&#10;কেমন আছেন?&#10;ভাই, টিউশনে গিয়েছিলেন।?">
+                                        ১. টিউশনে গিয়েছিলেন?
                                     </button>
-                                    <button type="button" onclick="insertTutorScheduleTemplate('commission')" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;">
-                                        <i class="fa-solid fa-receipt"></i> কমিশন রিমাইন্ডার
+                                    <button type="button" onclick="insertTutorScheduleTemplate(2)" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;" title="আসসালামু আলাইকুম ভাই&#10;কেমন আছেন?&#10;ভাই, অবিভাবক কি টিউশন কনফর্ম করেছেন?">
+                                        ২. টিউশন কনফর্ম করেছেন?
+                                    </button>
+                                    <button type="button" onclick="insertTutorScheduleTemplate(3)" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;" title="আসসালামু আলাইকুম ভাই&#10;কেমন আছেন?&#10;ভাই, অবিভাবক কি বেতন দিয়েছেন?">
+                                        ৩. বেতন দিয়েছেন?
                                     </button>
                                 </div>
                             </div>
-                            <textarea id="editTutorWaCustomMsg" rows="3" placeholder="নির্ধারিত তারিখ ও সময়ে টিউটরের হোয়াটসঅ্যাপে যে কাস্টম বার্তা পাঠানো হবে..." style="background:#0F172A; border:1px solid #334155; color:#F8FAFC; padding:9px 12px; border-radius:6px; width:100%; font-size:13px; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
+                            <textarea id="editTutorWaCustomMsg" rows="3" placeholder="কাস্টম বার্তা লিখুন অথবা উপরের যেকোনো টেমপ্লেটে ক্লিক করুন..." style="background:#0F172A; border:1px solid #334155; color:#F8FAFC; padding:9px 12px; border-radius:6px; width:100%; font-size:13px; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
                         </div>
 
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.1);">
@@ -3759,10 +3762,9 @@ ${detailsUrl}`;
             const timeEl = document.getElementById('editTutorWaScheduleTime');
             if (timeEl) timeEl.value = sched.scheduledTime || '10:00';
 
-            const defaultMsg = `আসসালামু আলাইকুম ${assignedName || 'শিক্ষক'},\nTSBD-এর Job ID #${item.jobId || ''} (${item.className || ''}, ${item.subject || ''}) টিউশনটিতে আপনার ডেমো ক্লাসের আপডেট কী? অভিভাবকের সাথে কি কথা হয়েছে? দয়া করে জানাবেন।\n- TSBD`;
             const msgEl = document.getElementById('editTutorWaCustomMsg');
             if (msgEl) {
-                msgEl.value = sched.message || defaultMsg;
+                msgEl.value = sched.message || '';
             }
 
             // Update status badge
@@ -3848,19 +3850,15 @@ ${detailsUrl}`;
         }
 
         window.insertTutorScheduleTemplate = function(type) {
-            if (!currentEditingTuition) return;
-            const item = currentEditingTuition;
-            const tName = item.assignedTutorName || 'শিক্ষক';
-            const jId = item.jobId || item.id || '';
-            const cls = item.className || item.class || '';
-            const sub = item.subject || item.subjects || '';
             const msgEl = document.getElementById('editTutorWaCustomMsg');
             if (!msgEl) return;
 
-            if (type === 'update') {
-                msgEl.value = `আসসালামু আলাইকুম ${tName},\nTSBD-এর Job ID #${jId} (${cls}, ${sub}) টিউশনটিতে আপনার ডেমো ক্লাসের আপডেট কী? অভিভাবকের সাথে কি কথা হয়েছে? দয়া করে জানাবেন।\n- TSBD`;
-            } else if (type === 'commission') {
-                msgEl.value = `আসসালামু আলাইকুম ${tName},\nTSBD-এর Job ID #${jId} (${cls}) টিউশনটির মিডিয়া কমিশনের অবশিষ্ট টাকা নির্ধারিত সময়ে পরিশোধ করার জন্য অনুরোধ করা হচ্ছে।\nবিকাশ/নগদ: 01735698076\nধন্যবাদ, TSBD`;
+            if (type === 1 || type === '1') {
+                msgEl.value = "আসসালামু আলাইকুম ভাই\nকেমন আছেন?\nভাই, টিউশনে গিয়েছিলেন।?";
+            } else if (type === 2 || type === '2') {
+                msgEl.value = "আসসালামু আলাইকুম ভাই\nকেমন আছেন?\nভাই, অবিভাবক কি টিউশন কনফর্ম করেছেন?";
+            } else if (type === 3 || type === '3') {
+                msgEl.value = "আসসালামু আলাইকুম ভাই\nকেমন আছেন?\nভাই, অবিভাবক কি বেতন দিয়েছেন?";
             }
         };
 
