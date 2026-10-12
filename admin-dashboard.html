@@ -4441,12 +4441,6 @@ ${detailsUrl}`;
                                 </table>
 
                                 <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                                    <button type="button" class="btn-wa-applicant" onclick="contactApplicantWhatsAppDirect('${tuitionId}', '${escapedPhone}', '${escapedName}', '${escapedGuardianPhone}')" style="background:#25D366;color:#FFF;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:7px;cursor:pointer;border:none;box-shadow:0 3px 10px rgba(37,211,102,0.35);transition:all 0.2s ease;">
-                                        <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> WhatsApp বার্তা পাঠান (অভিভাবকের নম্বর কপি হবে)
-                                    </button>
-                                    <button type="button" class="btn-copy-template" onclick="copyApplicantWhatsAppTemplate('${tuitionId}', '${escapedName}', '${escapedGuardianPhone}')" style="background:rgba(255,255,255,0.08);color:#E2E8F0;border:1px solid rgba(255,255,255,0.2);padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
-                                        <i class="fa-solid fa-copy"></i> মেসেজ টেমপ্লেট কপি করুন
-                                    </button>
                                     ${isThisTutorAssigned ? `
                                         <button type="button" class="btn-warning" onclick="unassignTutor('${tuitionId}')" style="padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
                                             <i class="fa-solid fa-user-minus"></i> নিয়োগ বাতিল করে টিউশন ওপেন করুন
