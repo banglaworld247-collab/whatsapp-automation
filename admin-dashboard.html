@@ -3992,6 +3992,33 @@ ${detailsUrl}`;
             }
         }
 
+        function getDhakaTimeIsoString() {
+            try {
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'Asia/Dhaka',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                const parts = formatter.formatToParts(new Date());
+                let year = '', month = '', day = '', hour = '', minute = '';
+                for (const p of parts) {
+                    if (p.type === 'year') year = p.value;
+                    if (p.type === 'month') month = p.value;
+                    if (p.type === 'day') day = p.value;
+                    if (p.type === 'hour') hour = p.value === '24' ? '00' : p.value;
+                    if (p.type === 'minute') minute = p.value;
+                }
+                return `${year}-${month}-${day}T${hour}:${minute}`;
+            } catch (e) {
+                const now = new Date();
+                return now.toISOString().slice(0, 16);
+            }
+        }
+
         // ==========================================
         // Scheduled WhatsApp to Assigned Tutor Background Engine
         // ==========================================
@@ -4001,13 +4028,8 @@ ${detailsUrl}`;
             isCheckingScheduledWa = true;
 
             try {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const currentDateTimeStr = `${year}-${month}-${day}T${hours}:${minutes}`;
+                // Exact Asia/Dhaka (GMT+6) current time
+                const currentDateTimeStr = getDhakaTimeIsoString();
 
                 for (const t of allTuitions) {
                     const sched = t.scheduledTutorWa;
@@ -4018,7 +4040,7 @@ ${detailsUrl}`;
                     if (!schedDate) continue;
 
                     const schedDateTimeStr = `${schedDate}T${schedTime}`;
-                    // Trigger if scheduled time has arrived or passed
+                    // Trigger if scheduled time in Dhaka time has arrived or passed
                     if (currentDateTimeStr >= schedDateTimeStr) {
                         const phone = sched.targetPhone || t.assignedTutorPhone;
                         const name = sched.targetName || t.assignedTutorName || 'শিক্ষক';

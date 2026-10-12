@@ -133,6 +133,9 @@ async function processQueue() {
         try {
             const jid = formatRecipientJid(task.to);
             const res = await sock.sendMessage(jid, { text: String(task.message) });
+            if (res?.key?.id) {
+                cacheSentMessage(res.key.id, res.message || { conversation: String(task.message) });
+            }
             queueStats.sent++;
             console.log(`✉️ [Queue] মেসেজ সফলভাবে পাঠানো হয়েছে: ${jid} (ID: ${res.key?.id})`);
             if (task.resolve) task.resolve({ success: true, msgId: res.key?.id });
@@ -159,6 +162,16 @@ function queueMessage(to, message) {
     });
 }
 
+const sentMessageCache = new Map();
+function cacheSentMessage(id, msgObj) {
+    if (!id) return;
+    if (sentMessageCache.size > 1000) {
+        const firstKey = sentMessageCache.keys().next().value;
+        sentMessageCache.delete(firstKey);
+    }
+    sentMessageCache.set(id, msgObj);
+}
+
 // Initialize WhatsApp connection
 async function connectToWhatsApp() {
     try {
@@ -175,7 +188,11 @@ async function connectToWhatsApp() {
             printQRInTerminal: true,
             auth: state,
             browser: ['TSBD Tuition Portal', 'Chrome', '1.0.0'],
-            syncFullHistory: false
+            syncFullHistory: false,
+            getMessage: async (key) => {
+                if (!key || !key.id) return undefined;
+                return sentMessageCache.get(key.id) || undefined;
+            }
         });
 
         sock.ev.on('creds.update', saveCreds);
