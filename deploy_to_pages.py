@@ -69,13 +69,26 @@ def main():
             'base64': True
         })
 
+    # Helper for robust HTTP requests with retries
+    import time
+    def fetch_with_retry(req, timeout=45, max_retries=3):
+        for attempt in range(1, max_retries + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    return r.read().decode('utf-8')
+            except Exception as e:
+                print(f"  [Attempt {attempt}/{max_retries}] Network warning: {e}")
+                if attempt == max_retries:
+                    raise
+                time.sleep(2 * attempt)
+
     # 3. Get JWT
     req = urllib.request.Request(
         f'https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/pages/projects/{PROJECT}/upload-token',
         headers={'Authorization': f'Bearer {API_TOKEN}'}
     )
-    with urllib.request.urlopen(req) as r:
-        jwt = json.loads(r.read().decode('utf-8'))['result']['jwt']
+    raw_jwt = fetch_with_retry(req)
+    jwt = json.loads(raw_jwt)['result']['jwt']
 
     print("🔑 Upload JWT obtained successfully.")
 
@@ -86,16 +99,14 @@ def main():
         headers={'Authorization': f'Bearer {jwt}', 'Content-Type': 'application/json'},
         method='POST'
     )
-    with urllib.request.urlopen(req_missing) as r:
-        missing = json.loads(r.read().decode('utf-8'))['result']
+    missing = json.loads(fetch_with_retry(req_missing))['result']
         
     print(f"Missing hashes at edge: {len(missing)} of {len(hashes)}")
 
     # 5. Upload missing
     if missing:
         to_upload = [item for item in upload_payload if item['key'] in missing]
-        # Upload in chunks of 20 items if necessary
-        chunk_size = 20
+        chunk_size = 5
         for i in range(0, len(to_upload), chunk_size):
             chunk = to_upload[i:i + chunk_size]
             req_upload = urllib.request.Request(
@@ -104,9 +115,8 @@ def main():
                 headers={'Authorization': f'Bearer {jwt}', 'Content-Type': 'application/json'},
                 method='POST'
             )
-            with urllib.request.urlopen(req_upload) as r:
-                up_res = json.loads(r.read().decode('utf-8'))
-                print(f"  Uploaded chunk {i // chunk_size + 1}: {up_res.get('result', {})}")
+            up_res = json.loads(fetch_with_retry(req_upload))
+            print(f"  Uploaded chunk {i // chunk_size + 1}: {up_res.get('result', {})}")
 
     # 6. Upsert hashes
     req_upsert = urllib.request.Request(
@@ -115,8 +125,7 @@ def main():
         headers={'Authorization': f'Bearer {jwt}', 'Content-Type': 'application/json'},
         method='POST'
     )
-    with urllib.request.urlopen(req_upsert) as r:
-        print(f"Upsert hashes: {json.loads(r.read().decode('utf-8')).get('success')}")
+    print(f"Upsert hashes: {json.loads(fetch_with_retry(req_upsert)).get('success')}")
 
     # 7. Create Deployment (Multipart form)
     boundary = f"----WebKitFormBoundary{uuid.uuid4().hex}"
