@@ -1804,6 +1804,54 @@
             border: 1px solid rgba(148, 163, 184, 0.25);
         }
 
+        .fu-onhold-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #94A3B8;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .fu-onhold-badge:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: #F59E0B;
+            color: #FBBF24;
+        }
+
+        .fu-onhold-badge.is-held {
+            background: rgba(239, 68, 68, 0.18);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #FCA5A5;
+        }
+
+        .fu-onhold-badge input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: #EF4444;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .followup-card.is-on-hold {
+            opacity: 0.72;
+            background: #080d1e;
+            border-color: rgba(148, 163, 184, 0.2);
+            border-left-color: #64748B !important;
+        }
+
+        .followup-card.is-on-hold:hover {
+            opacity: 1;
+            border-color: #64748B;
+        }
+
         /* Row 2: Middle Strip (Tutor + Date Action) */
         .fu-middle-strip {
             background: rgba(15, 23, 42, 0.65);
@@ -4274,6 +4322,7 @@ ${detailsUrl}`;
                 followUpDate: actDateVal,
                 actionDate: actDateVal,
                 tracking: {
+                    ...(currentEditingTuition?.tracking || {}),
                     queueAction: document.getElementById('editQueueAction').value,
                     actionDate: actDateVal,
                     paidAmount: paidAmountVal,
@@ -4311,8 +4360,26 @@ ${detailsUrl}`;
                    '';
         }
 
+        function isFollowUpPaidOrCompleted(item) {
+            if (!item) return false;
+            if (isTuitionPaidOrCompleted(item)) return true;
+            if (item.tracking?.isPaidFull || item.isPaidFull) return true;
+            const q = normStatus(item.tracking?.queueAction || item.queueAction);
+            if (q === normStatus('সফল হয়েছে') || q === normStatus('সফল') || q.includes('সফল')) return true;
+            const s = normStatus(item.status);
+            if (s === normStatus('completed') || s === normStatus('paid')) return true;
+            const salary = parseSalary(item.salary || item.offer?.salary);
+            const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+            const estCommissionAmount = Math.round((salary * commPercent) / 100);
+            const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+            if (estCommissionAmount > 0 && paidAmount >= estCommissionAmount) return true;
+            return false;
+        }
+
         function isFollowUpItem(item) {
             if (!item || item.deleted || item.isDeleted || item.status === 'deleted') return false;
+            // Exclude already paid / successful ("সফল") tuitions
+            if (isFollowUpPaidOrCompleted(item)) return false;
             const hasAssignedTutor = Boolean(item.assignedTutor || item.assignedTutorName || item.assignedTutorPhone);
             const hasFollowUpDate = Boolean(getTuitionFollowUpDate(item));
             return hasAssignedTutor || hasFollowUpDate;
@@ -4441,8 +4508,37 @@ ${detailsUrl}`;
                 item.queueAction = cleanText;
 
                 showAdminToast(cleanText ? `📝 অ্যাকশন / Queue Status সংরক্ষিত: "${cleanText}"` : "অ্যাকশন টেক্সট মুছে ফেলা হয়েছে", "success");
+                updateFollowUpCounts();
+                renderFollowUpList();
             } catch (err) {
                 alert("Queue Status সেভ করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
+
+        window.toggleFollowUpOnHold = async function (tuitionId, isHold) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
+
+            try {
+                await updateDoc(doc(db, "tuitions", tuitionId), {
+                    "tracking.onHold": isHold,
+                    onHold: isHold
+                });
+
+                if (!item.tracking) item.tracking = {};
+                item.tracking.onHold = isHold;
+                item.onHold = isHold;
+
+                showAdminToast(
+                    isHold 
+                        ? "⏸️ On Hold করা হয়েছে — আইটেমটি তালিকায় সবার নিচে স্থানান্তরিত হয়েছে।" 
+                        : "▶️ On Hold থেকে সরানো হয়েছে — আইটেমটি স্বাভাবিক তালিকায় ফিরে এসেছে।", 
+                    "info"
+                );
+                renderFollowUpList();
+            } catch (err) {
+                alert("On Hold স্ট্যাটাস পরিবর্তন করতে সমস্যা হয়েছে: " + err.message);
                 console.error(err);
             }
         };
@@ -4636,11 +4732,22 @@ ${detailsUrl}`;
 
             container.innerHTML = '';
 
+            // Sort: Active items first, On Hold items sent to the bottom
+            list.sort((a, b) => {
+                const aHold = Boolean(a.onHold || a.tracking?.onHold);
+                const bHold = Boolean(b.onHold || b.tracking?.onHold);
+                if (aHold !== bHold) {
+                    return aHold ? 1 : -1;
+                }
+                return 0;
+            });
+
             const totalCount = list.length;
             const pagedList = list.slice(0, followUpDisplayLimit);
 
             pagedList.forEach(item => {
                 const id = item.id;
+                const isOnHold = Boolean(item.onHold || item.tracking?.onHold);
                 const assignedName = item.assignedTutorName || 'অ্যাসাইন করা হয়নি';
                 const assignedPhone = item.assignedTutorPhone || '';
                 const cleanPhone = String(assignedPhone).replace(/[^0-9]/g, '');
@@ -4681,7 +4788,7 @@ ${detailsUrl}`;
                 ` : '<span style="color:#94A3B8;font-size:12px;">নম্বর নেই</span>';
 
                 const card = document.createElement('div');
-                card.className = `followup-card ${statusBorderClass}`;
+                card.className = `followup-card ${statusBorderClass} ${isOnHold ? 'is-on-hold' : ''}`;
                 card.id = `followup-card-${id}`;
                 card.innerHTML = `
                     <div class="fu-header-row">
@@ -4699,6 +4806,10 @@ ${detailsUrl}`;
                                 <i class="fa-solid fa-bangladeshi-taka-sign"></i> ${formatSalaryDisplay(item.salary || item.offer?.salary)}
                             </span>
                             ${dateTagHtml}
+                            <label class="fu-onhold-badge ${isOnHold ? 'is-held' : ''}" title="টিউটর সাথে সাথে উত্তর না দিলে On Hold করুন (আইটেমটি তালিকায় সবার নিচে চলে যাবে)">
+                                <input type="checkbox" ${isOnHold ? 'checked' : ''} onchange="toggleFollowUpOnHold('${id}', this.checked)">
+                                <span><i class="fa-solid fa-pause"></i> On Hold</span>
+                            </label>
                         </div>
                     </div>
 
