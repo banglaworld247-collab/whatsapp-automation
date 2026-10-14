@@ -4425,6 +4425,28 @@ ${detailsUrl}`;
             }
         };
 
+        window.saveQueueActionDirect = async function (tuitionId, actionText) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
+            const cleanText = (actionText || '').trim();
+
+            try {
+                await updateDoc(doc(db, "tuitions", tuitionId), {
+                    "tracking.queueAction": cleanText,
+                    queueAction: cleanText
+                });
+
+                if (!item.tracking) item.tracking = {};
+                item.tracking.queueAction = cleanText;
+                item.queueAction = cleanText;
+
+                showAdminToast(cleanText ? `📝 অ্যাকশন / Queue Status সংরক্ষিত: "${cleanText}"` : "অ্যাকশন টেক্সট মুছে ফেলা হয়েছে", "success");
+            } catch (err) {
+                alert("Queue Status সেভ করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
+
         window.sendFollowUpManualWa = async function (tuitionId) {
             const item = allTuitions.find(t => t.id === tuitionId);
             if (!item) return;
@@ -4705,6 +4727,21 @@ ${detailsUrl}`;
                             <button type="button" onclick="openEditModal('${id}')" class="btn-fu-edit-detail" title="টিউশনের বিস্তারিত এডিট করুন">
                                 <i class="fa-solid fa-pen-to-square"></i> এডিট
                             </button>
+                            <div class="fu-queue-inline" style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                <span style="font-size:11.5px;color:#FBBF24;font-weight:700;" title="অ্যাকশন / Queue Status">
+                                    <i class="fa-solid fa-list-check" style="color:#F59E0B;"></i> অ্যাকশন / Queue Status (কাস্টম টেক্সট লিখুন):
+                                </span>
+                                <input type="text" id="queue-action-${id}" list="queueActionList" 
+                                       value="${safe(item.tracking?.queueAction || item.queueAction || '')}"
+                                       placeholder="কাস্টম টেক্সট লিখুন..." 
+                                       onkeydown="if(event.key==='Enter'){event.preventDefault();saveQueueActionDirect('${id}', this.value);}"
+                                       onchange="saveQueueActionDirect('${id}', this.value)"
+                                       style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 8px;border-radius:6px;font-size:12px;outline:none;min-width:140px;max-width:220px;"
+                                       title="অ্যাকশন / Queue Status (কাস্টম টেক্সট লিখুন)">
+                                <button type="button" onclick="saveQueueActionDirect('${id}', document.getElementById('queue-action-${id}').value)" 
+                                        style="background:rgba(245,158,11,0.2);color:#FBBF24;border:1px solid rgba(245,158,11,0.4);padding:4px 8px;border-radius:5px;font-size:11.5px;cursor:pointer;font-weight:600;white-space:nowrap;"
+                                        title="স্ট্যাটাস সেভ করুন">সেভ</button>
+                            </div>
                         </div>
                     </div>
 
