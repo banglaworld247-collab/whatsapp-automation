@@ -1657,6 +1657,149 @@
             .btn-view-apps {
                 grid-column: span 1;
             }
+        /* Follow-up Tab & Card Styles */
+        .followup-cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .followup-card {
+            background: #0F172A;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 22px;
+            align-items: start;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .followup-card:hover {
+            border-color: rgba(59, 130, 246, 0.45);
+            box-shadow: 0 6px 22px rgba(59, 130, 246, 0.12);
+        }
+
+        .followup-info-side {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .followup-msg-side {
+            background: rgba(30, 41, 59, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .followup-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 8px 14px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .followup-meta-item {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .btn-tmpl {
+            font-size: 11.5px;
+            padding: 5px 10px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93C5FD;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-tmpl:hover {
+            background: #2563EB;
+            color: #fff;
+            border-color: #3B82F6;
+            transform: translateY(-1px);
+        }
+
+        .btn-quick-date {
+            font-size: 11.5px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #E2E8F0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+
+        .btn-quick-date:hover {
+            background: #3B82F6;
+            color: #fff;
+            border-color: #3B82F6;
+        }
+
+        .btn-send-wa {
+            background: #25D366;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 2px 10px rgba(37, 211, 102, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-send-wa:hover {
+            background: #22C55E;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45);
+        }
+
+        .btn-send-api {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-send-api:hover {
+            background: #2563EB;
+            color: #fff;
+        }
+
+        @media (max-width: 992px) {
+            .followup-card {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1770,6 +1913,7 @@
         <div class="tabs">
             <button class="tab-btn" id="tab-btn-post" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
             <button class="tab-btn active" id="tab-btn-list" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
+            <button class="tab-btn" id="tab-btn-followup" onclick="switchTab('followup')"><i class="fa-solid fa-clock-rotate-left"></i> ফলো-আপ <span class="badge-count" id="count-followup" style="background:#2563EB;color:#fff;">0</span></button>
             <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests')"><i class="fa-solid fa-user-graduate"></i> অভিভাবক রিকোয়েস্ট <span class="badge-count" id="count-requests" style="background:#10B981;color:#fff;">0</span></button>
             <button class="tab-btn" id="tab-btn-tutors" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></button>
             <button class="tab-btn" id="tab-btn-recycle" onclick="switchTab('recycle-bin')"><i class="fa-solid fa-trash-can"></i> রিসাইকেল বিন <span class="badge-count" id="count-recycle-bin" style="background:#EF4444;color:#fff;">0</span></button>
@@ -1919,6 +2063,48 @@
 
             <div id="tuition-cards-container" class="tuition-cards-grid">
                 <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ডাটা লোড হচ্ছে...</div>
+            </div>
+        </div>
+
+        <!-- Section: Tutor Follow-up Management (টিউটর ফলো-আপ) -->
+        <div id="section-followup" class="section">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <h3 style="color:#60A5FA;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i class="fa-solid fa-clock-rotate-left"></i> টিউটর ফলো-আপ ড্যাশবোর্ড (Follow-up Dashboard)
+                        <span style="font-size:14px;color:var(--text-muted);font-weight:normal;">(মোট <span id="followup-total-count">0</span>টি)</span>
+                    </h3>
+                    <p style="color:var(--text-muted);font-size:13px;margin-top:4px;">
+                        নিয়োজিত টিউটরদের অগ্রগতির খোঁজ নিয়ে সরাসরি হোয়াটসঅ্যাপে বার্তা পাঠান এবং পরবর্তী ফলো-আপের তারিখ আপডেট করুন।
+                    </p>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <input type="text" id="followUpSearchInput" placeholder="টিউটরের নাম, লোকেশন, ফোন বা জব আইডি দিয়ে খুঁজুন..." 
+                           style="background:var(--bg-dark);color:#fff;border:1px solid var(--border-color);padding:8px 14px;border-radius:8px;font-size:13px;min-width:280px;"
+                           oninput="filterFollowUpList(this.value)">
+                    <button type="button" class="btn-card-action" onclick="renderFollowUpList()" 
+                            style="background:#2563EB;color:#fff;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+                        <i class="fa-solid fa-rotate-right"></i> রিফ্রেশ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sub-tabs: Today Follow-up, Tomorrow, All -->
+            <div class="filter-bar" style="margin-bottom:18px;">
+                <button type="button" class="filter-btn active" id="followup-subtab-today" onclick="setFollowUpSubTab('today')">
+                    <i class="fa-solid fa-calendar-day"></i> আজকের ফলো-আপ <span class="badge-count" id="followup-count-today">0</span>
+                </button>
+                <button type="button" class="filter-btn" id="followup-subtab-tomorrow" onclick="setFollowUpSubTab('tomorrow')">
+                    <i class="fa-solid fa-calendar-week"></i> আগামীকালের ফলো-আপ <span class="badge-count" id="followup-count-tomorrow">0</span>
+                </button>
+                <button type="button" class="filter-btn" id="followup-subtab-all" onclick="setFollowUpSubTab('all')">
+                    <i class="fa-solid fa-list-check"></i> সব ফলো-আপ <span class="badge-count" id="followup-count-all">0</span>
+                </button>
+            </div>
+
+            <!-- Follow-up Items Container -->
+            <div id="followup-list-container" class="followup-cards-container">
+                <div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> ফলো-আপ ডাটা লোড হচ্ছে...</div>
             </div>
         </div>
 
@@ -2099,7 +2285,7 @@
                     </div>
                 </div>
 
-                <h4 class="modal-sec-title">২. প্রোগ্রেস ও টিউটরকে অটোমেটিক হোয়াটসঅ্যাপ শিডিউল</h4>
+                <h4 class="modal-sec-title">২. প্রোগ্রেস ও টিউটর ফলো-আপ</h4>
                 <div class="modal-grid">
                     <div class="form-group">
                         <label>অ্যাকশন / Queue Status (কাস্টম টেক্সট লিখুন):</label>
@@ -2117,65 +2303,8 @@
                         </datalist>
                     </div>
                     <div class="form-group">
-                        <label>অ্যাকশন তারিখ (Action Date):</label>
+                        <label>পরবর্তী ফলো-আপ / অ্যাকশন তারিখ (Next Follow-up Date):</label>
                         <input type="date" id="editActionDate">
-                    </div>
-
-                    <!-- Scheduled WhatsApp Follow-up Section for Assigned Tutor -->
-                    <div class="form-group full-width" style="background: rgba(30,41,59,0.7); border: 1px solid rgba(59,130,246,0.3); border-radius: 10px; padding: 14px; margin-top: 6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                            <label style="font-weight:700; color:#60A5FA; font-size:14px; display:inline-flex; align-items:center; gap:7px; margin:0;">
-                                <i class="fa-brands fa-whatsapp" style="color:#25D366; font-size:18px;"></i> নিয়োজিত টিউটরকে স্বয়ংক্রিয় হোয়াটসঅ্যাপ বার্তা (Auto WhatsApp Follow-up)
-                            </label>
-                            <span id="editTutorScheduleStatusBadge" style="font-size:11.5px; padding:3px 9px; border-radius:12px; font-weight:700; background:rgba(148,163,184,0.15); color:#94A3B8;">
-                                <i class="fa-solid fa-circle-pause"></i> নিষ্ক্রিয়
-                            </span>
-                        </div>
-
-                        <!-- Assigned Tutor Notice/Badge -->
-                        <div id="editAssignedTutorInfo" style="font-size:12.5px; color:#E2E8F0; background:rgba(15,23,42,0.6); padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; border:1px solid rgba(255,255,255,0.06);">
-                            <span><i class="fa-solid fa-user-check" style="color:#34D399;"></i> নিয়োজিত টিউটর: <strong id="editAssignedTutorNameDisplay">কোনো টিউটর নেই</strong></span>
-                            <span id="editAssignedTutorPhoneDisplay" style="color:#93C5FD; font-family:monospace; font-weight:600;">-</span>
-                        </div>
-
-                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:12px;">
-                            <div>
-                                <label style="font-size:12px; color:var(--text-muted); margin-bottom:4px; display:block;">বার্তা পাঠানোর তারিখ (Date):</label>
-                                <input type="date" id="editTutorWaScheduleDate" style="background:#0F172A; border:1px solid #334155; color:#F8FAFC; padding:8px 10px; border-radius:6px; width:100%;">
-                            </div>
-                            <div>
-                                <label style="font-size:12px; color:var(--text-muted); margin-bottom:4px; display:block;">বার্তা পাঠানোর সময় (Time):</label>
-                                <input type="time" id="editTutorWaScheduleTime" style="background:#0F172A; border:1px solid #334155; color:#F8FAFC; padding:8px 10px; border-radius:6px; width:100%;">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom:10px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; flex-wrap:wrap; gap:6px;">
-                                <label style="font-size:12px; color:var(--text-muted); margin:0;">কাস্টম হোয়াটসঅ্যাপ বার্তা (Custom Message):</label>
-                                <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
-                                    <button type="button" onclick="insertTutorScheduleTemplate(1)" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;" title="আসসালামু আলাইকুম ভাই&#10;কেমন আছেন?&#10;ভাই, টিউশনে গিয়েছিলেন।?">
-                                        ১. টিউশনে গিয়েছিলেন?
-                                    </button>
-                                    <button type="button" onclick="insertTutorScheduleTemplate(2)" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;" title="আসসালামু আলাইকুম ভাই&#10;কেমন আছেন?&#10;ভাই, অবিভাবক কি টিউশন কনফর্ম করেছেন?">
-                                        ২. টিউশন কনফর্ম করেছেন?
-                                    </button>
-                                    <button type="button" onclick="insertTutorScheduleTemplate(3)" style="font-size:11.5px; padding:3px 8px; background:rgba(255,255,255,0.08); color:#CBD5E1; border:1px solid rgba(255,255,255,0.15); border-radius:4px; cursor:pointer;" title="আসসালামু আলাইকুম ভাই&#10;কেমন আছেন?&#10;ভাই, অবিভাবক কি বেতন দিয়েছেন?">
-                                        ৩. বেতন দিয়েছেন?
-                                    </button>
-                                </div>
-                            </div>
-                            <textarea id="editTutorWaCustomMsg" rows="3" placeholder="কাস্টম বার্তা লিখুন অথবা উপরের যেকোনো টেমপ্লেটে ক্লিক করুন..." style="background:#0F172A; border:1px solid #334155; color:#F8FAFC; padding:9px 12px; border-radius:6px; width:100%; font-size:13px; font-family:inherit; resize:vertical; box-sizing:border-box;"></textarea>
-                        </div>
-
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.1);">
-                            <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; color:#F8FAFC; margin:0;">
-                                <input type="checkbox" id="editTutorWaAutoSend" style="width:17px; height:17px; accent-color:#2563EB; cursor:pointer;">
-                                <span>নির্ধারিত তারিখ ও সময়ে স্বয়ংক্রিয়ভাবে পাঠান (Enable Auto-send)</span>
-                            </label>
-                            <button type="button" id="btnSendTutorWaNow" onclick="sendTutorWaMessageNow()" style="background:#25D366; color:#FFF; border:none; padding:7px 15px; border-radius:6px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(37,211,102,0.3); transition:all 0.2s ease;">
-                                <i class="fa-brands fa-whatsapp" style="font-size:15px;"></i> এখনই পাঠান (Send Now)
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -3078,6 +3207,10 @@ ${detailsUrl}`;
             if (tabName === 'post') {
                 document.getElementById('section-post')?.classList.add('active');
                 document.getElementById('tab-btn-post')?.classList.add('active');
+            } else if (tabName === 'followup') {
+                document.getElementById('section-followup')?.classList.add('active');
+                document.getElementById('tab-btn-followup')?.classList.add('active');
+                renderFollowUpList();
             } else if (tabName === 'tutors') {
                 document.getElementById('section-tutors')?.classList.add('active');
                 document.getElementById('tab-btn-tutors')?.classList.add('active');
@@ -3411,7 +3544,9 @@ ${detailsUrl}`;
 
                 calculateProfitAnalytics();
                 updateTabCounts();
+                updateFollowUpCounts();
                 renderTuitionCards();
+                renderFollowUpList();
                 renderRecycleBin();
             }, (error) => {
                 listContainer.innerHTML = `<p class="loading" style="color:red;">ডাটা লোড করতে সমস্যা হয়েছে: ${error.message}</p>`;
@@ -3485,10 +3620,14 @@ ${detailsUrl}`;
             const today = getTodayString();
             const tomorrow = getTomorrowString();
 
-            const isMatchToday = (item) => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today || 
-                (item.scheduledTutorWa?.enabled && item.scheduledTutorWa?.scheduledDate === today && item.scheduledTutorWa?.status === 'pending');
-            const isMatchTomorrow = (item) => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow || 
-                (item.scheduledTutorWa?.enabled && item.scheduledTutorWa?.scheduledDate === tomorrow && item.scheduledTutorWa?.status === 'pending');
+            const isMatchToday = (item) => {
+                const fDate = getTuitionFollowUpDate(item);
+                return fDate === today || (fDate && fDate < today) || (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today;
+            };
+            const isMatchTomorrow = (item) => {
+                const fDate = getTuitionFollowUpDate(item);
+                return fDate === tomorrow || (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow;
+            };
 
             const countAll = allTuitions.length;
             const countToday = allTuitions.filter(isMatchToday).length;
@@ -3506,6 +3645,8 @@ ${detailsUrl}`;
             if (document.getElementById('recycle-total-count')) document.getElementById('recycle-total-count').innerText = countRecycle;
             const emptyBtn = document.getElementById('btn-empty-recycle');
             if (emptyBtn) emptyBtn.style.display = countRecycle > 0 ? 'inline-flex' : 'none';
+
+            updateFollowUpCounts();
         }
 
         window.setTuitionFilter = function (filterKey, btnElement) {
@@ -3528,10 +3669,14 @@ ${detailsUrl}`;
             const today = getTodayString();
             const tomorrow = getTomorrowString();
 
-            const isMatchToday = (item) => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today || 
-                (item.scheduledTutorWa?.enabled && item.scheduledTutorWa?.scheduledDate === today && item.scheduledTutorWa?.status === 'pending');
-            const isMatchTomorrow = (item) => (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow || 
-                (item.scheduledTutorWa?.enabled && item.scheduledTutorWa?.scheduledDate === tomorrow && item.scheduledTutorWa?.status === 'pending');
+            const isMatchToday = (item) => {
+                const fDate = getTuitionFollowUpDate(item);
+                return fDate === today || (fDate && fDate < today) || (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today;
+            };
+            const isMatchTomorrow = (item) => {
+                const fDate = getTuitionFollowUpDate(item);
+                return fDate === tomorrow || (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow;
+            };
 
             let filtered = [...allTuitions];
 
@@ -3595,17 +3740,16 @@ ${detailsUrl}`;
                 }
 
                 let waScheduleBadge = '';
-                if (item.scheduledTutorWa?.enabled) {
-                    if (item.scheduledTutorWa.status === 'sent') {
-                        waScheduleBadge = `<span class="plan-alert-tag" style="background:rgba(34,197,94,0.18);color:#4ADE80;border:1px solid rgba(34,197,94,0.4);"><i class="fa-brands fa-whatsapp"></i> WA Sent</span>`;
-                    } else if (item.scheduledTutorWa.scheduledDate) {
-                        const isToday = item.scheduledTutorWa.scheduledDate === today;
-                        const isTomorrow = item.scheduledTutorWa.scheduledDate === tomorrow;
-                        const bgStyle = isToday 
-                            ? 'background:rgba(239,68,68,0.2);color:#F87171;border:1px solid rgba(239,68,68,0.4);' 
-                            : (isTomorrow ? 'background:rgba(245,158,11,0.2);color:#FBBF24;border:1px solid rgba(245,158,11,0.4);' : 'background:rgba(37,99,235,0.2);color:#60A5FA;border:1px solid rgba(37,99,235,0.4);');
-                        waScheduleBadge = `<span class="plan-alert-tag" style="${bgStyle}"><i class="fa-brands fa-whatsapp"></i> WA: ${isToday ? 'আজ' : (isTomorrow ? 'আগামীকাল' : item.scheduledTutorWa.scheduledDate)} ${item.scheduledTutorWa.scheduledTime || ''}</span>`;
-                    }
+                const fDate = getTuitionFollowUpDate(item);
+                if (item.lastFollowUpStatus === 'sent' || item.scheduledTutorWa?.status === 'sent') {
+                    waScheduleBadge = `<span class="plan-alert-tag" style="background:rgba(34,197,94,0.18);color:#4ADE80;border:1px solid rgba(34,197,94,0.4);"><i class="fa-brands fa-whatsapp"></i> ফলো-আপ সম্পন্ন</span>`;
+                } else if (fDate) {
+                    const isToday = fDate <= today;
+                    const isTomorrow = fDate === tomorrow;
+                    const bgStyle = isToday 
+                        ? 'background:rgba(239,68,68,0.2);color:#F87171;border:1px solid rgba(239,68,68,0.4);' 
+                        : (isTomorrow ? 'background:rgba(245,158,11,0.2);color:#FBBF24;border:1px solid rgba(245,158,11,0.4);' : 'background:rgba(37,99,235,0.2);color:#60A5FA;border:1px solid rgba(37,99,235,0.4);');
+                    waScheduleBadge = `<span class="plan-alert-tag" style="${bgStyle}"><i class="fa-solid fa-clock-rotate-left"></i> ফলো-আপ: ${isToday ? 'আজ' : (isTomorrow ? 'আগামীকাল' : fDate)}</span>`;
                 }
 
                 // Count applicants directly from tuition document
@@ -3645,7 +3789,7 @@ ${detailsUrl}`;
                                 ${waScheduleBadge || planAlertBadge}
                             </div>
                             <div style="font-weight:600; color:#F8FAFC; margin-bottom:2px;">📍 ${safe(queueAction)}</div>
-                            <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-arrow-right"></i> Next: ${item.scheduledTutorWa?.enabled && item.scheduledTutorWa?.status === 'pending' ? `হোয়াটসঅ্যাপ ফলো-আপ (${item.scheduledTutorWa.scheduledDate} ${item.scheduledTutorWa.scheduledTime || ''})` : safe(nextPlanAction)}</div>
+                            <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-arrow-right"></i> Next: ${fDate ? `ফলো-আপ (${fDate})` : safe(nextPlanAction)}</div>
                         </div>
                     </div>
 
@@ -3723,65 +3867,12 @@ ${detailsUrl}`;
             const tracking = item.tracking || {};
             document.getElementById('editQueueAction').value = tracking.queueAction || item.queueAction || '';
 
-            const actDate = tracking.actionDate || item.actionDate || '';
+            // Set action / follow-up date if set
+            const actDate = item.followUpDate || tracking.actionDate || item.actionDate || '';
             if (window.actionDatePicker) {
                 window.actionDatePicker.setDate(actDate || null, true);
             } else {
                 document.getElementById('editActionDate').value = actDate;
-            }
-
-            // Display assigned tutor info in the scheduled WA section
-            const tutorInfoSpan = document.getElementById('editAssignedTutorNameDisplay');
-            const tutorPhoneSpan = document.getElementById('editAssignedTutorPhoneDisplay');
-            const statusBadge = document.getElementById('editTutorScheduleStatusBadge');
-
-            const assignedName = item.assignedTutorName || '';
-            const assignedPhone = item.assignedTutorPhone || '';
-
-            if (item.assignedTutor || assignedName || assignedPhone) {
-                if (tutorInfoSpan) tutorInfoSpan.innerHTML = `<strong>${safe(assignedName || 'অ্যাসাইন করা শিক্ষক')}</strong>`;
-                if (tutorPhoneSpan) tutorPhoneSpan.textContent = assignedPhone ? `📞 ${assignedPhone}` : '(নম্বর পাওয়া যায়নি)';
-            } else {
-                if (tutorInfoSpan) tutorInfoSpan.innerHTML = `<span style="color:#F59E0B;"><i class="fa-solid fa-triangle-exclamation"></i> কোনো টিউটর এখনও নিয়োগ (Assign) করা নেই</span>`;
-                if (tutorPhoneSpan) tutorPhoneSpan.textContent = '';
-            }
-
-            // Populate scheduled WhatsApp fields
-            const sched = item.scheduledTutorWa || {};
-            const autoSendChk = document.getElementById('editTutorWaAutoSend');
-            if (autoSendChk) autoSendChk.checked = Boolean(sched.enabled);
-
-            const schedDate = sched.scheduledDate || '';
-            if (window.tutorScheduleDatePicker) {
-                window.tutorScheduleDatePicker.setDate(schedDate || null, true);
-            } else {
-                const dateEl = document.getElementById('editTutorWaScheduleDate');
-                if (dateEl) dateEl.value = schedDate;
-            }
-
-            const timeEl = document.getElementById('editTutorWaScheduleTime');
-            if (timeEl) timeEl.value = sched.scheduledTime || '10:00';
-
-            const msgEl = document.getElementById('editTutorWaCustomMsg');
-            if (msgEl) {
-                msgEl.value = sched.message || '';
-            }
-
-            // Update status badge
-            if (statusBadge) {
-                if (sched.status === 'sent') {
-                    statusBadge.style.background = 'rgba(34,197,94,0.18)';
-                    statusBadge.style.color = '#4ADE80';
-                    statusBadge.innerHTML = '<i class="fa-solid fa-check"></i> বার্তা পাঠানো সম্পন্ন';
-                } else if (sched.enabled && sched.scheduledDate) {
-                    statusBadge.style.background = 'rgba(59,130,246,0.2)';
-                    statusBadge.style.color = '#60A5FA';
-                    statusBadge.innerHTML = `<i class="fa-solid fa-clock"></i> পেন্ডিং (${sched.scheduledDate} ${sched.scheduledTime || ''})`;
-                } else {
-                    statusBadge.style.background = 'rgba(148,163,184,0.15)';
-                    statusBadge.style.color = '#94A3B8';
-                    statusBadge.innerHTML = '<i class="fa-solid fa-circle-pause"></i> নিষ্ক্রিয়';
-                }
             }
 
             const salary = parseSalary(item.salary || item.offer?.salary);
@@ -3829,15 +3920,6 @@ ${detailsUrl}`;
                     placeholder: "তারিখ নির্বাচন করুন 📅",
                     disableMobile: true
                 });
-
-                window.tutorScheduleDatePicker = flatpickr("#editTutorWaScheduleDate", {
-                    altInput: true,
-                    altFormat: "d M, Y",
-                    dateFormat: "Y-m-d",
-                    altInputClass: "flatpickr-input-custom",
-                    placeholder: "তারিখ নির্বাচন করুন 📅",
-                    disableMobile: true
-                });
             }
         }
         setTimeout(initDatePickers, 100);
@@ -3849,82 +3931,6 @@ ${detailsUrl}`;
             currentEditingTuition = null;
         }
 
-        window.insertTutorScheduleTemplate = function(type) {
-            const msgEl = document.getElementById('editTutorWaCustomMsg');
-            if (!msgEl) return;
-
-            if (type === 1 || type === '1') {
-                msgEl.value = "আসসালামু আলাইকুম ভাই\nকেমন আছেন?\nভাই, টিউশনে গিয়েছিলেন।?";
-            } else if (type === 2 || type === '2') {
-                msgEl.value = "আসসালামু আলাইকুম ভাই\nকেমন আছেন?\nভাই, অবিভাবক কি টিউশন কনফর্ম করেছেন?";
-            } else if (type === 3 || type === '3') {
-                msgEl.value = "আসসালামু আলাইকুম ভাই\nকেমন আছেন?\nভাই, অবিভাবক কি বেতন দিয়েছেন?";
-            }
-        };
-
-        window.sendTutorWaMessageNow = async function() {
-            if (!currentEditingTuition) return;
-            const item = currentEditingTuition;
-            const phone = item.assignedTutorPhone || '';
-            const tutorName = item.assignedTutorName || 'টিউটর';
-            const msg = document.getElementById('editTutorWaCustomMsg')?.value.trim();
-
-            if (!phone) {
-                showAdminToast("⚠️ এই টিউশনে কোনো নিয়োগপ্রাপ্ত টিউটরের ফোন নম্বর নেই। প্রথমে আবেদনকারীদের থেকে টিউটর নিয়োগ দিন।", "warning");
-                return;
-            }
-            if (!msg) {
-                showAdminToast("⚠️ পাঠানোর জন্য মেসেজ লিখুন।", "warning");
-                return;
-            }
-
-            const sendBtn = document.getElementById('btnSendTutorWaNow');
-            const origHtml = sendBtn ? sendBtn.innerHTML : '';
-            if (sendBtn) {
-                sendBtn.disabled = true;
-                sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> পাঠানো হচ্ছে...';
-            }
-
-            try {
-                const res = await sendSingleWhatsAppMessage(phone, msg);
-                if (res.success) {
-                    showAdminToast(`✅ টিউটর ${tutorName} (${phone})-কে হোয়াটসঅ্যাপ বার্তা সফলভাবে পাঠানো হয়েছে!`, "success");
-                    
-                    // Update Firestore record
-                    await updateDoc(doc(db, "tuitions", item.id), {
-                        "scheduledTutorWa.status": "sent",
-                        "scheduledTutorWa.sentAt": new Date().toISOString(),
-                        "scheduledTutorWa.message": msg,
-                        "scheduledTutorWa.targetPhone": phone,
-                        "scheduledTutorWa.targetName": tutorName
-                    });
-
-                    // Update UI status badge
-                    const statusBadge = document.getElementById('editTutorScheduleStatusBadge');
-                    if (statusBadge) {
-                        statusBadge.style.background = 'rgba(34,197,94,0.18)';
-                        statusBadge.style.color = '#4ADE80';
-                        statusBadge.innerHTML = '<i class="fa-solid fa-check"></i> বার্তা পাঠানো সম্পন্ন';
-                    }
-
-                    // Update local object
-                    if (!item.scheduledTutorWa) item.scheduledTutorWa = {};
-                    item.scheduledTutorWa.status = 'sent';
-                    item.scheduledTutorWa.sentAt = new Date().toISOString();
-                    item.scheduledTutorWa.message = msg;
-                } else {
-                    showAdminToast(`❌ বার্তা পাঠানো যায়নি: ${res.error || 'অজানা ত্রুটি'}`, "error");
-                }
-            } catch (err) {
-                showAdminToast(`❌ ত্রুটি: ${err.message}`, "error");
-            } finally {
-                if (sendBtn) {
-                    sendBtn.disabled = false;
-                    sendBtn.innerHTML = origHtml;
-                }
-            }
-        };
-
         window.handleModalUpdate = async function (event) {
             event.preventDefault();
             const tuitionId = document.getElementById('editDocId').value;
@@ -3932,24 +3938,7 @@ ${detailsUrl}`;
 
             const isFullChecked = document.getElementById('chkFullPaid')?.checked ?? false;
             const paidAmountVal = Number(document.getElementById('editPaidAmount').value || 0);
-
-            const isAutoSend = document.getElementById('editTutorWaAutoSend')?.checked ?? false;
-            const schedDateVal = document.getElementById('editTutorWaScheduleDate')?.value || '';
-            const schedTimeVal = document.getElementById('editTutorWaScheduleTime')?.value || '';
-            const customMsgVal = document.getElementById('editTutorWaCustomMsg')?.value || '';
-
-            const currentSched = currentEditingTuition?.scheduledTutorWa || {};
-            let newSchedStatus = currentSched.status || 'disabled';
-            if (isAutoSend) {
-                // If message or date changed, reset status to pending
-                if (customMsgVal !== currentSched.message || schedDateVal !== currentSched.scheduledDate || schedTimeVal !== currentSched.scheduledTime) {
-                    newSchedStatus = 'pending';
-                } else if (newSchedStatus !== 'sent') {
-                    newSchedStatus = 'pending';
-                }
-            } else {
-                newSchedStatus = 'disabled';
-            }
+            const actDateVal = document.getElementById('editActionDate')?.value || '';
 
             const updatedData = {
                 className: document.getElementById('editClass').value,
@@ -3963,117 +3952,472 @@ ${detailsUrl}`;
                 guardianPhone: document.getElementById('editPhone').value,
                 status: document.getElementById('editStatus').value,
                 specialNotes: document.getElementById('editNotes').value,
+                followUpDate: actDateVal,
+                actionDate: actDateVal,
                 tracking: {
                     queueAction: document.getElementById('editQueueAction').value,
-                    actionDate: document.getElementById('editActionDate').value,
+                    actionDate: actDateVal,
                     paidAmount: paidAmountVal,
                     isPaidFull: isFullChecked
-                },
-                scheduledTutorWa: {
-                    enabled: isAutoSend,
-                    scheduledDate: schedDateVal,
-                    scheduledTime: schedTimeVal,
-                    scheduledDateTime: (schedDateVal && schedTimeVal) ? `${schedDateVal}T${schedTimeVal}` : schedDateVal,
-                    message: customMsgVal,
-                    status: newSchedStatus,
-                    targetPhone: currentEditingTuition?.assignedTutorPhone || '',
-                    targetName: currentEditingTuition?.assignedTutorName || '',
-                    updatedAt: new Date().toISOString()
                 }
             };
 
             try {
                 await updateDoc(doc(db, "tuitions", tuitionId), updatedData);
-                showAdminToast("✅ টিউশনের তথ্য ও হোয়াটসঅ্যাপ শিডিউল আপডেট সফল হয়েছে!", "success");
+                showAdminToast("✅ টিউশনের তথ্য সফলভাবে আপডেট হয়েছে!", "success");
                 closeEditModal();
+                updateFollowUpCounts();
+                renderFollowUpList();
             } catch (err) {
                 alert("আপডেট করতে সমস্যা হয়েছে: " + err.message);
                 console.error(err);
             }
+        };
+
+        // ==========================================
+        // Tutor Follow-up & Manual WhatsApp Management Engine
+        // ==========================================
+        let currentFollowUpSubTab = 'today';
+        let followUpSearchTerm = '';
+
+        function getTuitionFollowUpDate(item) {
+            return item.followUpDate || 
+                   item.tracking?.followUpDate || 
+                   item.nextFollowUpDate || 
+                   item.tracking?.actionDate || 
+                   item.actionDate || 
+                   item.scheduledTutorWa?.scheduledDate || 
+                   item.tracking?.nextDayPlan?.date || 
+                   item.nextPlanDate || 
+                   '';
         }
 
-        function getDhakaTimeIsoString() {
-            try {
-                const formatter = new Intl.DateTimeFormat('en-US', {
-                    timeZone: 'Asia/Dhaka',
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
-                const parts = formatter.formatToParts(new Date());
-                let year = '', month = '', day = '', hour = '', minute = '';
-                for (const p of parts) {
-                    if (p.type === 'year') year = p.value;
-                    if (p.type === 'month') month = p.value;
-                    if (p.type === 'day') day = p.value;
-                    if (p.type === 'hour') hour = p.value === '24' ? '00' : p.value;
-                    if (p.type === 'minute') minute = p.value;
-                }
-                return `${year}-${month}-${day}T${hour}:${minute}`;
-            } catch (e) {
-                const now = new Date();
-                return now.toISOString().slice(0, 16);
+        function isFollowUpItem(item) {
+            if (!item || item.deleted || item.isDeleted || item.status === 'deleted') return false;
+            const hasAssignedTutor = Boolean(item.assignedTutor || item.assignedTutorName || item.assignedTutorPhone);
+            const hasFollowUpDate = Boolean(getTuitionFollowUpDate(item));
+            return hasAssignedTutor || hasFollowUpDate;
+        }
+
+        function isFollowUpToday(item) {
+            if (!isFollowUpItem(item)) return false;
+            const d = getTuitionFollowUpDate(item);
+            if (!d) return false;
+            const today = getTodayString();
+            return d <= today; // Today or overdue
+        }
+
+        function isFollowUpTomorrow(item) {
+            if (!isFollowUpItem(item)) return false;
+            const d = getTuitionFollowUpDate(item);
+            if (!d) return false;
+            const tomorrow = getTomorrowString();
+            return d === tomorrow;
+        }
+
+        window.setFollowUpSubTab = function (subTab) {
+            currentFollowUpSubTab = subTab;
+            document.querySelectorAll('#section-followup .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`followup-subtab-${subTab}`)?.classList.add('active');
+            renderFollowUpList();
+        };
+
+        window.filterFollowUpList = function (query) {
+            followUpSearchTerm = (query || '').toLowerCase().trim();
+            renderFollowUpList();
+        };
+
+        window.applyFollowUpTemplate = function (tuitionId, type) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            const msgEl = document.getElementById(`followup-msg-${tuitionId}`);
+            if (!msgEl) return;
+
+            const assignedName = item?.assignedTutorName?.trim() || '';
+            const isFemale = item?.assignedTutorGender === 'Female' || String(item?.assignedTutorGender).includes('মহিলা');
+            const honorific = isFemale ? 'আপু' : 'ভাই';
+            const salutation = assignedName ? `${assignedName} ${honorific}` : honorific;
+
+            if (type === 1 || type === '1') {
+                msgEl.value = `আসসালামু আলাইকুম ${salutation}\nকেমন আছেন?\n${honorific}, টিউশনে গিয়েছিলেন?`;
+            } else if (type === 2 || type === '2') {
+                msgEl.value = `আসসালামু আলাইকুম ${salutation}\nকেমন আছেন?\n${honorific}, অভিভাবক কি টিউশন কনফর্ম করেছেন?`;
+            } else if (type === 3 || type === '3') {
+                msgEl.value = `আসসালামু আলাইকুম ${salutation}\nকেমন আছেন?\n${honorific}, অভিভাবক কি বেতন দিয়েছেন?`;
             }
-        }
+            msgEl.focus();
+        };
 
-        // ==========================================
-        // Scheduled WhatsApp to Assigned Tutor Background Engine
-        // ==========================================
-        let isCheckingScheduledWa = false;
-        async function checkAndDispatchScheduledTutorWa() {
-            if (isCheckingScheduledWa || !allTuitions || allTuitions.length === 0) return;
-            isCheckingScheduledWa = true;
+        window.quickSetFollowUpDate = function (tuitionId, shortcut) {
+            let targetDate = '';
+            if (shortcut === 'today') {
+                targetDate = getTodayString();
+            } else if (shortcut === 'tomorrow') {
+                targetDate = getTomorrowString();
+            } else if (typeof shortcut === 'number') {
+                const d = new Date();
+                d.setDate(d.getDate() + shortcut);
+                targetDate = getLocalYYYYMMDD(d);
+            }
+
+            const input = document.getElementById(`fupdate-${tuitionId}`);
+            if (input) input.value = targetDate;
+            window.saveNextFollowUpDate(tuitionId, targetDate);
+        };
+
+        window.saveNextFollowUpDate = async function (tuitionId, newDate) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
 
             try {
-                // Exact Asia/Dhaka (GMT+6) current time
-                const currentDateTimeStr = getDhakaTimeIsoString();
+                await updateDoc(doc(db, "tuitions", tuitionId), {
+                    followUpDate: newDate,
+                    "tracking.actionDate": newDate,
+                    actionDate: newDate,
+                    "tracking.nextDayPlan.date": newDate,
+                    nextPlanDate: newDate
+                });
 
-                for (const t of allTuitions) {
-                    const sched = t.scheduledTutorWa;
-                    if (!sched || !sched.enabled || sched.status !== 'pending') continue;
+                item.followUpDate = newDate;
+                item.actionDate = newDate;
+                if (!item.tracking) item.tracking = {};
+                item.tracking.actionDate = newDate;
+                if (!item.tracking.nextDayPlan) item.tracking.nextDayPlan = {};
+                item.tracking.nextDayPlan.date = newDate;
+                item.nextPlanDate = newDate;
 
-                    const schedDate = sched.scheduledDate || '';
-                    const schedTime = sched.scheduledTime || '00:00';
-                    if (!schedDate) continue;
+                showAdminToast(`📅 পরবর্তী ফলো-আপ তারিখ আপডেট হয়েছে: ${newDate || 'মুছে ফেলা হয়েছে'}`, "success");
+                updateFollowUpCounts();
+                updateTabCounts();
+                if (currentFollowUpSubTab !== 'all') {
+                    renderFollowUpList();
+                }
+            } catch (err) {
+                alert("তারিখ সেভ করতে সমস্যা হয়েছে: " + err.message);
+                console.error(err);
+            }
+        };
 
-                    const schedDateTimeStr = `${schedDate}T${schedTime}`;
-                    // Trigger if scheduled time in Dhaka time has arrived or passed
-                    if (currentDateTimeStr >= schedDateTimeStr) {
-                        const phone = sched.targetPhone || t.assignedTutorPhone;
-                        const name = sched.targetName || t.assignedTutorName || 'শিক্ষক';
-                        const msg = sched.message;
+        window.sendFollowUpManualWa = async function (tuitionId) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
 
-                        if (!phone || !msg) continue;
+            const phone = item.assignedTutorPhone || '';
+            const tutorName = item.assignedTutorName || 'টিউটর';
+            const msgBox = document.getElementById(`followup-msg-${tuitionId}`);
+            const msg = msgBox?.value.trim();
 
-                        console.log(`⏰ [Auto WhatsApp Triggered] Tuition #${t.jobId} -> ${name} (${phone})`);
-                        const res = await sendSingleWhatsAppMessage(phone, msg);
-                        if (res.success) {
-                            sched.status = 'sent';
-                            sched.sentAt = new Date().toISOString();
-                            await updateDoc(doc(db, "tuitions", t.id), {
-                                "scheduledTutorWa.status": "sent",
-                                "scheduledTutorWa.sentAt": new Date().toISOString()
-                            });
-                            showAdminToast(`📲 [অটো-হোয়াটসঅ্যাপ] টিউটর ${name} (${phone})-কে নির্ধারিত বার্তা সফলভাবে পাঠানো হয়েছে!`, "success");
-                            renderTuitionCards();
-                        } else {
-                            console.warn("Scheduled WA Send Notice:", res.error);
-                        }
+            if (!phone) {
+                showAdminToast("⚠️ এই টিউশনে কোনো নিয়োজিত টিউটরের ফোন নম্বর নেই।", "warning");
+                return;
+            }
+            if (!msg) {
+                showAdminToast("⚠️ পাঠানোর জন্য মেসেজ লিখুন বা টেমপ্লেট নির্বাচন করুন।", "warning");
+                msgBox?.focus();
+                return;
+            }
+
+            let cleanPhone = String(phone).replace(/[^0-9]/g, '');
+            if (cleanPhone.startsWith('01')) cleanPhone = '88' + cleanPhone;
+            else if (cleanPhone.startsWith('+8801')) cleanPhone = cleanPhone.substring(1);
+
+            const waDirectUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+            window.open(waDirectUrl, '_blank');
+
+            // Record sent history in Firestore
+            const sentTime = new Date().toISOString();
+            const sentTimeFormatted = new Date().toLocaleString('bn-BD', { dateStyle: 'short', timeStyle: 'short' });
+
+            try {
+                await updateDoc(doc(db, "tuitions", tuitionId), {
+                    lastFollowUpSentAt: sentTime,
+                    lastFollowUpMessage: msg,
+                    lastFollowUpStatus: 'sent',
+                    "tracking.lastFollowUpSentAt": sentTime
+                });
+
+                item.lastFollowUpSentAt = sentTime;
+                item.lastFollowUpMessage = msg;
+                item.lastFollowUpStatus = 'sent';
+
+                const statusEl = document.getElementById(`followup-status-${tuitionId}`);
+                if (statusEl) {
+                    statusEl.innerHTML = `<span style="color:#34D399;font-weight:600;"><i class="fa-solid fa-circle-check"></i> শেষ পাঠানো: ${sentTimeFormatted}</span>`;
+                }
+
+                showAdminToast(`✅ ${tutorName}-এর WhatsApp চ্যাট ওপেন হয়েছে এবং হিস্টোরি সংরক্ষিত হয়েছে!`, "success");
+            } catch (err) {
+                console.error("Firestore update follow-up history error:", err);
+            }
+        };
+
+        window.sendFollowUpViaApi = async function (tuitionId) {
+            const item = allTuitions.find(t => t.id === tuitionId);
+            if (!item) return;
+
+            const phone = item.assignedTutorPhone || '';
+            const tutorName = item.assignedTutorName || 'টিউটর';
+            const msgBox = document.getElementById(`followup-msg-${tuitionId}`);
+            const msg = msgBox?.value.trim();
+
+            if (!phone) {
+                showAdminToast("⚠️ এই টিউশনে কোনো নিয়োজিত টিউটরের ফোন নম্বর নেই।", "warning");
+                return;
+            }
+            if (!msg) {
+                showAdminToast("⚠️ পাঠানোর জন্য মেসেজ লিখুন বা টেমপ্লেট নির্বাচন করুন।", "warning");
+                msgBox?.focus();
+                return;
+            }
+
+            showAdminToast(`⏳ ${tutorName}-কে API দিয়ে বার্তা পাঠানো হচ্ছে...`, "info");
+
+            try {
+                const res = await sendSingleWhatsAppMessage(phone, msg);
+                if (res.success) {
+                    const sentTime = new Date().toISOString();
+                    const sentTimeFormatted = new Date().toLocaleString('bn-BD', { dateStyle: 'short', timeStyle: 'short' });
+
+                    await updateDoc(doc(db, "tuitions", tuitionId), {
+                        lastFollowUpSentAt: sentTime,
+                        lastFollowUpMessage: msg,
+                        lastFollowUpStatus: 'sent',
+                        "tracking.lastFollowUpSentAt": sentTime
+                    });
+
+                    item.lastFollowUpSentAt = sentTime;
+                    item.lastFollowUpMessage = msg;
+                    item.lastFollowUpStatus = 'sent';
+
+                    const statusEl = document.getElementById(`followup-status-${tuitionId}`);
+                    if (statusEl) {
+                        statusEl.innerHTML = `<span style="color:#34D399;font-weight:600;"><i class="fa-solid fa-circle-check"></i> শেষ পাঠানো: ${sentTimeFormatted}</span>`;
+                    }
+
+                    showAdminToast(`✅ টিউটর ${tutorName} (${phone})-কে API দিয়ে বার্তা সফলভাবে পাঠানো হয়েছে!`, "success");
+                } else {
+                    if (confirm(`স্বয়ংক্রিয় API বার্তা পাঠানো যায়নি (${res.error || 'Gateway offline'})।\n\nআপনি কি সরাসরি WhatsApp-এ পাঠাতে চান?`)) {
+                        window.sendFollowUpManualWa(tuitionId);
                     }
                 }
             } catch (err) {
-                console.error("Auto WA Scheduler Dispatch Error:", err);
-            } finally {
-                isCheckingScheduledWa = false;
+                if (confirm(`ত্রুটি: ${err.message}\n\nআপনি কি সরাসরি WhatsApp-এ পাঠাতে চান?`)) {
+                    window.sendFollowUpManualWa(tuitionId);
+                }
             }
+        };
+
+        function updateFollowUpCounts() {
+            const items = allTuitions.filter(isFollowUpItem);
+            const todayCount = items.filter(isFollowUpToday).length;
+            const tomorrowCount = items.filter(isFollowUpTomorrow).length;
+            const allCount = items.length;
+
+            const countTab = document.getElementById('count-followup');
+            if (countTab) {
+                countTab.innerText = todayCount;
+                countTab.style.background = todayCount > 0 ? '#EF4444' : '#2563EB';
+            }
+
+            const totalSpan = document.getElementById('followup-total-count');
+            if (totalSpan) totalSpan.innerText = allCount;
+
+            const countTodayEl = document.getElementById('followup-count-today');
+            if (countTodayEl) countTodayEl.innerText = todayCount;
+
+            const countTomorrowEl = document.getElementById('followup-count-tomorrow');
+            if (countTomorrowEl) countTomorrowEl.innerText = tomorrowCount;
+
+            const countAllEl = document.getElementById('followup-count-all');
+            if (countAllEl) countAllEl.innerText = allCount;
         }
 
-        // Periodic check every 35 seconds
-        setInterval(checkAndDispatchScheduledTutorWa, 35000);
-        setTimeout(checkAndDispatchScheduledTutorWa, 4000);
+        window.renderFollowUpList = function () {
+            const container = document.getElementById('followup-list-container');
+            if (!container) return;
+
+            updateFollowUpCounts();
+
+            const today = getTodayString();
+            const tomorrow = getTomorrowString();
+
+            let list = allTuitions.filter(isFollowUpItem);
+
+            if (currentFollowUpSubTab === 'today') {
+                list = list.filter(isFollowUpToday);
+            } else if (currentFollowUpSubTab === 'tomorrow') {
+                list = list.filter(isFollowUpTomorrow);
+            }
+
+            if (followUpSearchTerm) {
+                list = list.filter(t => {
+                    const loc = (t.location || '').toLowerCase();
+                    const tutor = (t.assignedTutorName || '').toLowerCase();
+                    const phone = (t.assignedTutorPhone || '').toLowerCase();
+                    const jobId = String(t.jobId || '').toLowerCase();
+                    const cls = (t.className || '').toLowerCase();
+                    const subj = (t.subject || '').toLowerCase();
+                    return loc.includes(followUpSearchTerm) ||
+                           tutor.includes(followUpSearchTerm) ||
+                           phone.includes(followUpSearchTerm) ||
+                           jobId.includes(followUpSearchTerm) ||
+                           cls.includes(followUpSearchTerm) ||
+                           subj.includes(followUpSearchTerm);
+                });
+            }
+
+            if (list.length === 0) {
+                let msg = 'এই সাব-ট্যাবে কোনো ফলো-আপ পাওয়া যায়নি।';
+                if (currentFollowUpSubTab === 'today') {
+                    msg = 'আজকের জন্য কোনো টিউটর ফলো-আপ নির্ধারিত নেই।';
+                } else if (currentFollowUpSubTab === 'tomorrow') {
+                    msg = 'আগামীকালের জন্য কোনো টিউটর ফলো-আপ নির্ধারিত নেই।';
+                } else if (followUpSearchTerm) {
+                    msg = 'অনুসন্ধানের সাথে মেলে এমন কোনো ফলো-আপ পাওয়া যায়নি।';
+                }
+                container.innerHTML = `
+                    <div style="background:#0F172A;border:1px dashed var(--border-color);border-radius:12px;text-align:center;padding:48px 20px;color:var(--text-muted);">
+                        <i class="fa-solid fa-clipboard-check" style="font-size:36px;color:#3B82F6;margin-bottom:12px;display:block;"></i>
+                        <h4 style="color:#F1F5F9;margin-bottom:6px;font-size:16px;">${msg}</h4>
+                        <p style="font-size:13px;max-width:480px;margin:0 auto;">সব ফলো-আপ দেখতে "সব ফলো-আপ" ট্যাবে যান অথবা যেকোনো টিউশনে টিউটর নিয়োগ দিয়ে পরবর্তী ফলো-আপ তারিখ নির্ধারণ করুন।</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            list.forEach(item => {
+                const id = item.id;
+                const assignedName = item.assignedTutorName || 'অ্যাসাইন করা হয়নি';
+                const assignedPhone = item.assignedTutorPhone || '';
+                const cleanPhone = String(assignedPhone).replace(/[^0-9]/g, '');
+                const fDate = getTuitionFollowUpDate(item);
+
+                let dateTagHtml = '';
+                if (fDate) {
+                    if (fDate === today) {
+                        dateTagHtml = `<span style="background:rgba(239,68,68,0.2);color:#F87171;border:1px solid rgba(239,68,68,0.4);padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;"><i class="fa-solid fa-bell"></i> আজ (${fDate})</span>`;
+                    } else if (fDate < today) {
+                        dateTagHtml = `<span style="background:rgba(239,68,68,0.3);color:#FCA5A5;border:1px solid rgba(239,68,68,0.6);padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> ওভারডিউ (${fDate})</span>`;
+                    } else if (fDate === tomorrow) {
+                        dateTagHtml = `<span style="background:rgba(245,158,11,0.2);color:#FBBF24;border:1px solid rgba(245,158,11,0.4);padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;"><i class="fa-solid fa-calendar-day"></i> আগামীকাল (${fDate})</span>`;
+                    } else {
+                        dateTagHtml = `<span style="background:rgba(59,130,246,0.18);color:#60A5FA;border:1px solid rgba(59,130,246,0.35);padding:3px 9px;border-radius:6px;font-size:12px;font-weight:600;"><i class="fa-solid fa-calendar"></i> ${fDate}</span>`;
+                    }
+                } else {
+                    dateTagHtml = `<span style="background:rgba(148,163,184,0.15);color:#94A3B8;padding:3px 9px;border-radius:6px;font-size:12px;"><i class="fa-solid fa-clock"></i> তারিখ সেট নেই</span>`;
+                }
+
+                let lastSentHtml = '<span style="color:#64748B;"><i class="fa-solid fa-clock"></i> কোনো বার্তা পাঠানো হয়নি</span>';
+                if (item.lastFollowUpSentAt) {
+                    const d = new Date(item.lastFollowUpSentAt);
+                    const dateStr = !isNaN(d) ? d.toLocaleDateString('bn-BD', { day:'numeric', month:'short' }) + ' ' + d.toLocaleTimeString('bn-BD', { hour:'2-digit', minute:'2-digit' }) : item.lastFollowUpSentAt;
+                    lastSentHtml = `<span style="color:#34D399;font-weight:600;"><i class="fa-solid fa-circle-check"></i> শেষ বার্তা: ${dateStr}</span>`;
+                }
+
+                const waInternational = cleanPhone.startsWith('01') ? '88' + cleanPhone : cleanPhone;
+                const phoneLinkHtml = assignedPhone ? `
+                    <a href="https://wa.me/${waInternational}" target="_blank" rel="noopener" 
+                       style="color:#25D366;font-family:monospace;font-weight:700;font-size:13.5px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;"
+                       title="হোয়াটসঅ্যাপে সরাসরি চ্যাট ওপেন করুন">
+                        <i class="fa-brands fa-whatsapp" style="font-size:16px;color:#25D366;"></i> ${safe(assignedPhone)}
+                    </a>
+                ` : '<span style="color:#F59E0B;font-size:12px;">নম্বর নেই</span>';
+
+                const card = document.createElement('div');
+                card.className = 'followup-card';
+                card.id = `followup-card-${id}`;
+                card.innerHTML = `
+                    <div class="followup-info-side">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+                            <div>
+                                <span class="tuition-job-id" style="font-size:12px;">#${safe(item.jobId || id.slice(0, 5))}</span>
+                                <h4 style="font-size:15px;color:#F8FAFC;margin:4px 0 0 0;font-weight:700;">
+                                    📚 ${safe(item.className || 'ক্লাস উল্লেখ নেই')} - ${safe(item.subject || 'সকল বিষয়')}
+                                </h4>
+                            </div>
+                            <div>${dateTagHtml}</div>
+                        </div>
+
+                        <div class="followup-meta-grid">
+                            <div class="followup-meta-item">
+                                <i class="fa-solid fa-location-dot" style="color:#38BDF8;font-size:15px;"></i>
+                                <div><span style="font-size:11px;display:block;color:#94A3B8;">টিউশন লোকেশন</span><strong style="color:#E2E8F0;">${safe(item.location || 'লোকেশন উল্লেখ নেই')}</strong></div>
+                            </div>
+                            <div class="followup-meta-item">
+                                <i class="fa-solid fa-user-check" style="color:#34D399;font-size:15px;"></i>
+                                <div><span style="font-size:11px;display:block;color:#94A3B8;">টিউটর নাম</span><strong style="color:#60A5FA;">${safe(assignedName)}</strong></div>
+                            </div>
+                            <div class="followup-meta-item">
+                                <i class="fa-solid fa-bangladeshi-taka-sign" style="color:#FBBF24;font-size:15px;"></i>
+                                <div><span style="font-size:11px;display:block;color:#94A3B8;">বেতন</span><strong style="color:#34D399;">${formatSalaryDisplay(item.salary || item.offer?.salary)}</strong></div>
+                            </div>
+                            <div class="followup-meta-item">
+                                <i class="fa-brands fa-whatsapp" style="color:#25D366;font-size:16px;"></i>
+                                <div><span style="font-size:11px;display:block;color:#94A3B8;">হোয়াটসঅ্যাপ নম্বর</span>${phoneLinkHtml}</div>
+                            </div>
+                        </div>
+
+                        <!-- Next Follow-up Date Editor Row -->
+                        <div style="background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px 12px;margin-top:2px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+                                <label style="font-size:12px;color:#94A3B8;font-weight:700;display:inline-flex;align-items:center;gap:6px;margin:0;">
+                                    <i class="fa-solid fa-calendar-plus" style="color:#3B82F6;"></i> পরবর্তী ফলো-আপ তারিখ (Next Follow-up Date):
+                                </label>
+                                <div style="display:inline-flex;gap:5px;flex-wrap:wrap;">
+                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 'today')">আজকে</button>
+                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 'tomorrow')">আগামীকাল</button>
+                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 3)">+৩ দিন</button>
+                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 7)">+৭ দিন</button>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input type="date" id="fupdate-${id}" value="${fDate}" 
+                                       onchange="saveNextFollowUpDate('${id}', this.value)"
+                                       style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:7px 10px;border-radius:6px;font-size:13px;flex:1;outline:none;">
+                                <button type="button" onclick="openEditModal('${id}')" 
+                                        style="background:rgba(255,255,255,0.07);color:#CBD5E1;border:1px solid rgba(255,255,255,0.15);padding:7px 11px;border-radius:6px;font-size:12px;cursor:pointer;white-space:nowrap;"
+                                        title="টিউশনের বিস্তারিত এডিট করুন">
+                                    <i class="fa-solid fa-pen-to-square"></i> বিস্তারিত এডিট
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="followup-msg-side">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                            <label style="font-size:12px;color:#93C5FD;font-weight:700;display:inline-flex;align-items:center;gap:6px;margin:0;">
+                                <i class="fa-solid fa-message"></i> হোয়াটসঅ্যাপ বার্তা টেমপ্লেট:
+                            </label>
+                            <div style="display:inline-flex;gap:5px;flex-wrap:wrap;">
+                                <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 1)" title="১. টিউশনে গিয়েছিলেন?">১. টিউশনে গেছেন?</button>
+                                <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 2)" title="২. টিউশন কনফর্ম করেছেন?">২. কনফর্ম করেছেন?</button>
+                                <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 3)" title="৩. বেতন দিয়েছেন?">৩. বেতন দিয়েছেন?</button>
+                            </div>
+                        </div>
+
+                        <textarea id="followup-msg-${id}" rows="3" 
+                                  placeholder="মেসেজ লিখুন অথবা উপরের যেকোনো টেমপ্লেটে ক্লিক করুন..." 
+                                  style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:10px 12px;border-radius:8px;width:100%;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;line-height:1.5;"></textarea>
+
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-top:4px;">
+                            <div id="followup-status-${id}" style="font-size:12px;">
+                                ${lastSentHtml}
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <button type="button" class="btn-send-wa" onclick="sendFollowUpManualWa('${id}')">
+                                    <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> WhatsApp-এ পাঠান
+                                </button>
+                                <button type="button" class="btn-send-api" onclick="sendFollowUpViaApi('${id}')" title="বট/API গেটওয়ে দিয়ে পাঠান">
+                                    <i class="fa-solid fa-paper-plane"></i> API
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
 
         window.handleDeleteFromModal = async function () {
             const tuitionId = document.getElementById('editDocId').value;
