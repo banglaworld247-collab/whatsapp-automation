@@ -1657,18 +1657,17 @@
             .btn-view-apps {
                 grid-column: span 1;
             }
-        /* Clean & Professional Follow-up Tab Styling (Desktop & Mobile Optimized) */
+        /* Clean & Professional Follow-up Tab Styling */
         .followup-cards-container {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            max-width: 1400px;
         }
 
         .followup-card {
             background: #0B132B;
             border: 1px solid #1E293B;
-            border-left: 5px solid #3B82F6;
+            border-left: 4px solid #3B82F6;
             border-radius: 12px;
             padding: 16px 20px;
             display: flex;
@@ -1680,7 +1679,7 @@
 
         .followup-card:hover {
             border-color: #3B82F6;
-            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.12);
             transform: translateY(-1px);
         }
 
@@ -1703,8 +1702,6 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
-            padding-bottom: 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .fu-title-group {
@@ -1807,24 +1804,17 @@
             border: 1px solid rgba(148, 163, 184, 0.25);
         }
 
-        /* 2-Column Laptop Body Grid */
-        .fu-body-grid {
-            display: grid;
-            grid-template-columns: 1.05fr 1fr;
-            gap: 16px;
-            align-items: stretch;
-        }
-
-        /* Left Side: CRM Details & Tracking */
-        .fu-crm-side {
+        /* Row 2: Middle Strip (Tutor + Date Action) */
+        .fu-middle-strip {
             background: rgba(15, 23, 42, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 12px 14px;
+            border-radius: 8px;
+            padding: 10px 14px;
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
-            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .fu-tutor-profile {
@@ -1832,13 +1822,11 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .fu-tutor-avatar {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: rgba(59, 130, 246, 0.2);
             color: #60A5FA;
@@ -1847,7 +1835,6 @@
             justify-content: center;
             font-size: 15px;
             border: 1px solid rgba(59, 130, 246, 0.35);
-            flex-shrink: 0;
         }
 
         .fu-tutor-details {
@@ -1884,10 +1871,6 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
-            background: rgba(30, 41, 59, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 6px;
-            padding: 8px 10px;
         }
 
         .btn-quick-date {
@@ -1924,98 +1907,33 @@
             border-color: #3B82F6;
         }
 
-        /* Queue Status Box */
-        .fu-queue-box {
-            background: rgba(30, 41, 59, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 6px;
-            padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .fu-queue-label {
-            font-size: 11.5px;
-            font-weight: 700;
-            color: #FBBF24;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin: 0;
-        }
-
-        .fu-queue-input-group {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .fu-queue-input {
-            background: #080D1A;
-            border: 1px solid #334155;
-            color: #F8FAFC;
-            padding: 6px 10px;
+        .btn-fu-edit-detail {
+            background: rgba(255, 255, 255, 0.06);
+            color: #94A3B8;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 8px;
             border-radius: 6px;
             font-size: 12px;
-            flex: 1;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-
-        .fu-queue-input:focus {
-            border-color: #F59E0B;
-            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
-        }
-
-        .btn-save-queue {
-            background: rgba(245, 158, 11, 0.18);
-            color: #FBBF24;
-            border: 1px solid rgba(245, 158, 11, 0.4);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11.5px;
-            font-weight: 700;
             cursor: pointer;
             transition: all 0.15s ease;
-            white-space: nowrap;
             display: inline-flex;
             align-items: center;
             gap: 4px;
         }
 
-        .btn-save-queue:hover {
-            background: #D97706;
-            color: #fff;
-            border-color: #D97706;
+        .btn-fu-edit-detail:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #F1F5F9;
         }
 
-        .btn-fu-modal-edit {
-            background: rgba(255, 255, 255, 0.06);
-            color: #94A3B8;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 6px 9px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            white-space: nowrap;
-        }
-
-        .btn-fu-modal-edit:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #F8FAFC;
-        }
-
-        /* Right Side: Message Composer */
+        /* Row 3: Bottom Message Composer */
         .fu-composer-card {
-            background: rgba(15, 23, 42, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 12px 14px;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px 14px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             gap: 8px;
         }
 
@@ -2074,8 +1992,6 @@
             resize: vertical;
             box-sizing: border-box;
             line-height: 1.45;
-            flex: 1;
-            min-height: 65px;
             transition: border-color 0.2s ease;
         }
 
@@ -2166,13 +2082,6 @@
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
         }
 
-        @media (max-width: 991px) {
-            .fu-body-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-        }
-
         @media (max-width: 768px) {
             .fu-header-row {
                 flex-direction: column;
@@ -2181,6 +2090,10 @@
             .fu-badges-group {
                 width: 100%;
                 justify-content: space-between;
+            }
+            .fu-middle-strip {
+                flex-direction: column;
+                align-items: flex-start;
             }
             .fu-date-scheduler {
                 width: 100%;
@@ -4512,30 +4425,6 @@ ${detailsUrl}`;
             }
         };
 
-        window.saveQueueActionDirect = async function (tuitionId, actionText) {
-            const item = allTuitions.find(t => t.id === tuitionId);
-            if (!item) return;
-
-            const trimmedAction = (actionText || '').trim();
-
-            try {
-                await updateDoc(doc(db, "tuitions", tuitionId), {
-                    "tracking.queueAction": trimmedAction,
-                    queueAction: trimmedAction
-                });
-
-                if (!item.tracking) item.tracking = {};
-                item.tracking.queueAction = trimmedAction;
-                item.queueAction = trimmedAction;
-
-                showAdminToast(`✅ অ্যাকশন / Queue Status সংরক্ষিত: "${trimmedAction || 'খালি'}"`, "success");
-                updateTabCounts();
-            } catch (err) {
-                alert("Queue Status সেভ করতে সমস্যা হয়েছে: " + err.message);
-                console.error(err);
-            }
-        };
-
         window.sendFollowUpManualWa = async function (tuitionId) {
             const item = allTuitions.find(t => t.id === tuitionId);
             if (!item) return;
@@ -4791,81 +4680,60 @@ ${detailsUrl}`;
                         </div>
                     </div>
 
-                    <div class="fu-body-grid">
-                        <!-- Left Column: Tutor info + Follow-up date + Queue Status -->
-                        <div class="fu-crm-side">
-                            <div class="fu-tutor-profile">
-                                <div class="fu-tutor-avatar">
-                                    <i class="fa-solid fa-user-tie"></i>
-                                </div>
-                                <div class="fu-tutor-details">
-                                    <span class="fu-tutor-name">${safe(assignedName)}</span>
-                                    ${phoneLinkHtml}
-                                </div>
+                    <div class="fu-middle-strip">
+                        <div class="fu-tutor-profile">
+                            <div class="fu-tutor-avatar">
+                                <i class="fa-solid fa-user-tie"></i>
                             </div>
-
-                            <div class="fu-date-scheduler">
-                                <span style="font-size:11.5px;color:#94A3B8;font-weight:600;"><i class="fa-regular fa-calendar-check" style="color:#3B82F6;"></i> ফলো-আপ তারিখ:</span>
-                                <div style="display:inline-flex;gap:4px;flex-wrap:wrap;">
-                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 'today')">আজ</button>
-                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 'tomorrow')">কাল</button>
-                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 3)">+৩ দিন</button>
-                                    <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 7)">+৭ দিন</button>
-                                </div>
-                                <input type="date" id="fupdate-${id}" value="${fDate}" 
-                                       onchange="saveNextFollowUpDate('${id}', this.value)"
-                                       class="fu-date-input" title="নির্দিষ্ট তারিখ বাছাই করুন">
-                            </div>
-
-                            <div class="fu-queue-box">
-                                <label class="fu-queue-label">
-                                    <i class="fa-solid fa-list-check" style="color:#F59E0B;"></i> অ্যাকশন / Queue Status (কাস্টম টেক্সট লিখুন):
-                                </label>
-                                <div class="fu-queue-input-group">
-                                    <input type="text" id="queue-action-${id}" list="queueActionList" 
-                                           value="${safe(item.tracking?.queueAction || item.queueAction || '')}"
-                                           placeholder="যেমন: নাম্বার দেওয়া হয়েছে, কথা বলেছে, ডেমো চলছে..." 
-                                           onchange="saveQueueActionDirect('${id}', this.value)"
-                                           class="fu-queue-input">
-                                    <button type="button" onclick="saveQueueActionDirect('${id}', document.getElementById('queue-action-${id}').value)" 
-                                            class="btn-save-queue" title="স্ট্যাটাস সেভ করুন">
-                                        <i class="fa-solid fa-check"></i> সেভ
-                                    </button>
-                                    <button type="button" onclick="openEditModal('${id}')" class="btn-fu-modal-edit" title="টিউশনের সম্পূর্ণ বিস্তারিত এডিট">
-                                        <i class="fa-solid fa-up-right-from-square"></i>
-                                    </button>
-                                </div>
+                            <div class="fu-tutor-details">
+                                <span class="fu-tutor-name">${safe(assignedName)}</span>
+                                ${phoneLinkHtml}
                             </div>
                         </div>
 
-                        <!-- Right Column: WhatsApp Composer & Dispatch -->
-                        <div class="fu-composer-card">
-                            <div class="fu-template-bar">
-                                <span class="fu-template-label">
-                                    <i class="fa-regular fa-comment-dots" style="color:#3B82F6;"></i> বার্তা নির্বাচন করুন:
-                                </span>
-                                <div class="fu-template-pills">
-                                    <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 1)" title="১. টিউশনে গিয়েছিলেন?">১. টিউশনে গেছেন?</button>
-                                    <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 2)" title="২. টিউশন কনফর্ম করেছেন?">২. কনফর্ম করেছেন?</button>
-                                    <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 3)" title="৩. বেতন দিয়েছেন?">৩. বেতন দিয়েছেন?</button>
-                                </div>
+                        <div class="fu-date-scheduler">
+                            <span style="font-size:11.5px;color:#94A3B8;font-weight:600;"><i class="fa-regular fa-calendar-check" style="color:#3B82F6;"></i> ফলো-আপ:</span>
+                            <div style="display:inline-flex;gap:4px;">
+                                <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 'today')">আজ</button>
+                                <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 'tomorrow')">কাল</button>
+                                <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 3)">+৩ দিন</button>
+                                <button type="button" class="btn-quick-date" onclick="quickSetFollowUpDate('${id}', 7)">+৭ দিন</button>
                             </div>
+                            <input type="date" id="fupdate-${id}" value="${fDate}" 
+                                   onchange="saveNextFollowUpDate('${id}', this.value)"
+                                   class="fu-date-input" title="নির্দিষ্ট তারিখ বাছাই করুন">
+                            <button type="button" onclick="openEditModal('${id}')" class="btn-fu-edit-detail" title="টিউশনের বিস্তারিত এডিট করুন">
+                                <i class="fa-solid fa-pen-to-square"></i> এডিট
+                            </button>
+                        </div>
+                    </div>
 
-                            <textarea id="followup-msg-${id}" rows="3" class="fu-textarea"
-                                      placeholder="মেসেজ লিখুন অথবা উপরের যেকোনো টেমপ্লেটে ক্লিক করুন..."></textarea>
+                    <div class="fu-composer-card">
+                        <div class="fu-template-bar">
+                            <span class="fu-template-label">
+                                <i class="fa-regular fa-comment-dots" style="color:#3B82F6;"></i> বার্তা নির্বাচন করুন:
+                            </span>
+                            <div class="fu-template-pills">
+                                <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 1)" title="১. টিউশনে গিয়েছিলেন?">১. টিউশনে গেছেন?</button>
+                                <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 2)" title="২. টিউশন কনফর্ম করেছেন?">২. কনফর্ম করেছেন?</button>
+                                <button type="button" class="btn-tmpl" onclick="applyFollowUpTemplate('${id}', 3)" title="৩. বেতন দিয়েছেন?">৩. বেতন দিয়েছেন?</button>
+                            </div>
+                        </div>
 
-                            <div class="fu-action-row">
-                                <div id="followup-status-${id}" class="fu-last-sent">
-                                    ${lastSentHtml}
-                                </div>
-                                <div style="display:inline-flex;gap:8px;align-items:center;">
-                                    <button type="button" class="btn-send-wa" onclick="sendFollowUpManualWa('${id}')">
-                                        <i class="fa-brands fa-whatsapp" style="font-size:15px;"></i> WhatsApp-এ পাঠান
-                                    </button>
-                                    <button type="button" class="btn-send-api" onclick="sendFollowUpViaApi('${id}')" title="বট/API গেটওয়ে দিয়ে পাঠান">
-                                        <i class="fa-solid fa-paper-plane"></i> API
-                                    </button>
-                                </div>
+                        <textarea id="followup-msg-${id}" rows="2" class="fu-textarea"
+                                  placeholder="মেসেজ লিখুন অথবা উপরের যেকোনো টেমপ্লেটে ক্লিক করুন..."></textarea>
+
+                        <div class="fu-action-row">
+                            <div id="followup-status-${id}" class="fu-last-sent">
+                                ${lastSentHtml}
+                            </div>
+                            <div style="display:inline-flex;gap:8px;align-items:center;">
+                                <button type="button" class="btn-send-wa" onclick="sendFollowUpManualWa('${id}')">
+                                    <i class="fa-brands fa-whatsapp" style="font-size:15px;"></i> WhatsApp-এ পাঠান
+                                </button>
+                                <button type="button" class="btn-send-api" onclick="sendFollowUpViaApi('${id}')" title="বট/API গেটওয়ে দিয়ে পাঠান">
+                                    <i class="fa-solid fa-paper-plane"></i> API
+                                </button>
                             </div>
                         </div>
                     </div>
