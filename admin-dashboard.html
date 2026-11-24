@@ -2639,11 +2639,19 @@
                         <input type="text" id="editDays" placeholder="যেমন: 3 Days / Week">
                     </div>
                     <div class="form-group">
-                        <label>শিক্ষার্থী (Gender):</label>
+                        <label>শিক্ষার্থী (Student Gender):</label>
                         <select id="editGender">
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Any">Any</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>পছন্দের টিউটর (Preferred Tutor Gender):</label>
+                        <select id="editPreferredTutor">
+                            <option value="Any">Any (যে কেউ)</option>
+                            <option value="Male">Male (পুরুষ শিক্ষক)</option>
+                            <option value="Female">Female (মহিলা শিক্ষিকা)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -4371,6 +4379,15 @@ ${detailsUrl}`;
             } else {
                 document.getElementById('editGender').value = 'Any';
             }
+
+            const pT = item.preferredTutor || 'Any';
+            if (String(pT).toLowerCase().includes('female') || String(pT).includes('মহিলা')) {
+                document.getElementById('editPreferredTutor').value = 'Female';
+            } else if (String(pT).toLowerCase().includes('male') || String(pT).includes('পুরুষ')) {
+                document.getElementById('editPreferredTutor').value = 'Male';
+            } else {
+                document.getElementById('editPreferredTutor').value = 'Any';
+            }
             document.getElementById('editSalary').value = item.salary || '';
             document.getElementById('editCommission').value = item.commission || item.offer?.commission || '50%';
             document.getElementById('editPhone').value = item.guardianPhone || '';
@@ -4460,6 +4477,7 @@ ${detailsUrl}`;
                 time: document.getElementById('editTime').value,
                 days: document.getElementById('editDays').value,
                 studentGender: document.getElementById('editGender').value,
+                preferredTutor: document.getElementById('editPreferredTutor').value,
                 salary: document.getElementById('editSalary').value,
                 commission: document.getElementById('editCommission').value,
                 guardianPhone: document.getElementById('editPhone').value,
@@ -4478,10 +4496,14 @@ ${detailsUrl}`;
 
             try {
                 await updateDoc(doc(db, "tuitions", tuitionId), updatedData);
+                if (currentEditingTuition) Object.assign(currentEditingTuition, updatedData);
+                const memIdx = allTuitions.findIndex(t => t.id === tuitionId);
+                if (memIdx > -1) allTuitions[memIdx] = { ...allTuitions[memIdx], ...updatedData };
                 showAdminToast("✅ টিউশনের তথ্য সফলভাবে আপডেট হয়েছে!", "success");
                 closeEditModal();
                 updateFollowUpCounts();
                 renderFollowUpList();
+                renderTuitionCards();
             } catch (err) {
                 alert("আপডেট করতে সমস্যা হয়েছে: " + err.message);
                 console.error(err);
