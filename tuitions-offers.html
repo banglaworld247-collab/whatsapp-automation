@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>এভেইলেবল টিউশন সমূহ</title>
+    <!-- Preconnect CDNs for instant loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome CDN for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -52,6 +58,8 @@
 
         /* Card Styling */
         .tuition-card {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 400px;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;

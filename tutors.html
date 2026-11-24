@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অভিজ্ঞ টিউটর খুঁজুন - TSBD (Tuition Service BD)</title>
     <meta name="description" content="বাংলাদেশের সেরা বিশ্ববিদ্যালয় ও কলেজগুলোর অভিজ্ঞ গৃহশিক্ষক ও শিক্ষিকা খুঁজুন এবং বুকিং করুন।">
+    <!-- Preconnect CDNs for instant loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -421,6 +427,8 @@
 
         /* Tutor Card - Zero Overflow Architecture */
         .tutor-card {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 380px;
             background: #FFFFFF;
             border: 1px solid var(--border-color);
             border-radius: 16px;

@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অ্যাডমিন ড্যাশবোর্ড | টিউশন ম্যানেজমেন্ট</title>
+    <!-- Preconnect CDNs for instant loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap"
         rel="stylesheet">
     <!-- Font Awesome CDN -->
@@ -533,26 +540,44 @@
             background-color: var(--danger);
         }
 
-        /* Navigation Tabs */
+        /* Navigation Tabs / Links */
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             width: auto;
             border-radius: 8px;
             padding: 10px 18px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-light);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(30, 58, 95, 0.6);
         }
 
         .tab-btn.active {
             background-color: var(--accent);
             color: white;
             border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
         }
 
         /* Sections */
@@ -696,6 +721,8 @@
         }
 
         .tuition-card {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 300px;
             background-color: var(--bg-dark);
             border: 1px solid var(--border-color);
             border-left: 5px solid var(--accent);
@@ -1665,6 +1692,8 @@
         }
 
         .followup-card {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 240px;
             background: #0B132B;
             border: 1px solid #1E293B;
             border-left: 4px solid #3B82F6;
@@ -2268,13 +2297,13 @@
             </div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn" id="tab-btn-post" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</button>
-            <button class="tab-btn active" id="tab-btn-list" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</button>
-            <button class="tab-btn" id="tab-btn-followup" onclick="switchTab('followup')"><i class="fa-solid fa-clock-rotate-left"></i> ফলো-আপ <span class="badge-count" id="count-followup" style="background:#2563EB;color:#fff;">0</span></button>
-            <button class="tab-btn" id="tab-btn-requests" onclick="switchTab('requests')"><i class="fa-solid fa-user-graduate"></i> অভিভাবক রিকোয়েস্ট <span class="badge-count" id="count-requests" style="background:#10B981;color:#fff;">0</span></button>
-            <button class="tab-btn" id="tab-btn-tutors" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></button>
-            <button class="tab-btn" id="tab-btn-recycle" onclick="switchTab('recycle-bin')"><i class="fa-solid fa-trash-can"></i> রিসাইকেল বিন <span class="badge-count" id="count-recycle-bin" style="background:#EF4444;color:#fff;">0</span></button>
+        <div class="tabs" role="tablist">
+            <a href="#list" class="tab-btn active" id="tab-btn-list" role="tab" onclick="switchTab('list')"><i class="fa-solid fa-list-check"></i> সব টিউশন ও আবেদনকারী</a>
+            <a href="#followup" class="tab-btn" id="tab-btn-followup" role="tab" onclick="switchTab('followup')"><i class="fa-solid fa-clock-rotate-left"></i> ফলো-আপ <span class="badge-count" id="count-followup" style="background:#2563EB;color:#fff;">0</span></a>
+            <a href="#requests" class="tab-btn" id="tab-btn-requests" role="tab" onclick="switchTab('requests')"><i class="fa-solid fa-user-graduate"></i> অভিভাবক রিকোয়েস্ট <span class="badge-count" id="count-requests" style="background:#10B981;color:#fff;">0</span></a>
+            <a href="#tutors" class="tab-btn" id="tab-btn-tutors" role="tab" onclick="switchTab('tutors')"><i class="fa-solid fa-chalkboard-user"></i> Tutors <span class="badge-count" id="count-tutors">0</span></a>
+            <a href="#post" class="tab-btn" id="tab-btn-post" role="tab" onclick="switchTab('post')"><i class="fa-solid fa-plus-circle"></i> নতুন টিউশন পোস্ট করুন</a>
+            <a href="#recycle-bin" class="tab-btn" id="tab-btn-recycle" role="tab" onclick="switchTab('recycle-bin')"><i class="fa-solid fa-trash-can"></i> রিসাইকেল বিন <span class="badge-count" id="count-recycle-bin" style="background:#EF4444;color:#fff;">0</span></a>
         </div>
 
         <!-- Section 1: Post Tuition -->
@@ -2538,6 +2567,12 @@
                         <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> টিউটর লোড হচ্ছে...</td></tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="tutorsPaginationContainer" style="text-align:center;margin:18px 0;display:none;">
+                <button type="button" id="btnLoadMoreTutors" class="btn-primary" onclick="loadMoreTutors()" 
+                    style="padding:10px 24px;font-size:13px;font-weight:700;border-radius:24px;background:linear-gradient(135deg, #3B82F6, #2563EB);border:none;cursor:pointer;color:#fff;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(37,99,235,0.35);">
+                    <i class="fa-solid fa-angles-down"></i> আরও ৩০ জন টিউটর লোড করুন
+                </button>
             </div>
         </div>
 
@@ -3557,34 +3592,62 @@ ${detailsUrl}`;
         document.getElementById("tsbdDesktopLogout")?.addEventListener("click", tsbdLogout);
         document.getElementById("tsbdMobileLogout")?.addEventListener("click", tsbdLogout);
 
-        // === Tab Switching Logic (Global) ===
-        window.switchTab = function (tabName) {
+        // === Tab / Link Navigation Logic (Global) ===
+        window.switchTab = function (tabName, updateHash = true) {
+            const cleanTab = (tabName || 'list').replace('#', '').trim();
+            const validTabs = ['post', 'list', 'followup', 'requests', 'tutors', 'recycle-bin'];
+            const targetTab = validTabs.includes(cleanTab) ? cleanTab : 'list';
+
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            if (tabName === 'post') {
-                document.getElementById('section-post')?.classList.add('active');
-                document.getElementById('tab-btn-post')?.classList.add('active');
-            } else if (tabName === 'followup') {
-                document.getElementById('section-followup')?.classList.add('active');
-                document.getElementById('tab-btn-followup')?.classList.add('active');
+            const targetSection = document.getElementById(`section-${targetTab}`);
+            const targetBtn = document.getElementById(`tab-btn-${targetTab}`);
+
+            if (targetSection) targetSection.classList.add('active');
+            if (targetBtn) targetBtn.classList.add('active');
+
+            if (updateHash && window.location.hash !== `#${targetTab}`) {
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', `#${targetTab}`);
+                } else {
+                    window.location.hash = `#${targetTab}`;
+                }
+            }
+
+            // On-Demand Lazy Data Loading & Rendering
+            if (targetTab === 'followup') {
                 renderFollowUpList();
-            } else if (tabName === 'tutors') {
-                document.getElementById('section-tutors')?.classList.add('active');
-                document.getElementById('tab-btn-tutors')?.classList.add('active');
+            } else if (targetTab === 'tutors') {
                 loadRegisteredTutors();
-            } else if (tabName === 'recycle-bin') {
-                document.getElementById('section-recycle-bin')?.classList.add('active');
-                document.getElementById('tab-btn-recycle')?.classList.add('active');
+            } else if (targetTab === 'recycle-bin') {
                 renderRecycleBin();
-            } else if (tabName === 'requests') {
-                document.getElementById('section-requests')?.classList.add('active');
-                document.getElementById('tab-btn-requests')?.classList.add('active');
-                renderGuardianRequests();
-            } else {
-                document.getElementById('section-list')?.classList.add('active');
-                document.getElementById('tab-btn-list')?.classList.add('active');
+            } else if (targetTab === 'requests') {
+                if (!unsubscribeRequests) {
+                    listenGuardianRequests();
+                } else {
+                    renderGuardianRequests();
+                }
+            } else if (targetTab === 'list') {
                 renderTuitionCards();
+            }
+        };
+
+        window.addEventListener('hashchange', () => {
+            const h = window.location.hash.replace('#', '').trim();
+            if (h) window.switchTab(h, false);
+        });
+
+        async function updateRequestsBadgeCount() {
+            try {
+                const snap = await getCountFromServer(collection(db, 'tuitionRequests'));
+                const total = snap.data().count;
+                const totalElem = document.getElementById('requests-total-count');
+                if (totalElem) totalElem.textContent = total;
+                const badge = document.getElementById('count-requests');
+                if (badge) badge.textContent = total;
+            } catch (e) {
+                console.warn("Could not get requests count from server:", e);
             }
         }
 
@@ -3594,10 +3657,15 @@ ${detailsUrl}`;
                 tsbdSetUser(user);
                 loginContainer.style.display = 'none';
                 dashboardContainer.style.display = 'block';
+
+                // Activate requested view from URL link or default to 'list'
+                const initialTab = window.location.hash.replace('#', '').trim() || 'list';
+                switchTab(initialTab, false);
+
                 initWhatsAppConfig(); // Load WhatsApp remote config on verified admin auth
-                loadTuitions(); // Load data on verified admin login
-                updateTutorsBadgeCount(); // Lightweight server count only - full tutors data loads when Tutors tab is opened
-                listenGuardianRequests(); // Real-time listener for guardian tuition requests
+                loadTuitions(); // Load tuitions data
+                updateTutorsBadgeCount(); // Lightweight server count only
+                updateRequestsBadgeCount(); // Lightweight server count for badge
             } else {
                 if (unsubscribeTuitions) { unsubscribeTuitions(); unsubscribeTuitions = null; }
                 if (unsubscribeRequests) { unsubscribeRequests(); unsubscribeRequests = null; }
@@ -3770,6 +3838,7 @@ ${detailsUrl}`;
         // Registered Tutors Data & Table Logic
         // ==========================================
         let allRegisteredTutors = [];
+        const tutorProfileCache = new Map();
 
         window.updateTutorsBadgeCount = async function() {
             try {
@@ -3815,17 +3884,27 @@ ${detailsUrl}`;
             });
         };
 
-        function renderTutorsTable(tutorsList) {
+        let tutorsDisplayLimit = 30;
+        let currentFilteredTutors = [];
+
+        function renderTutorsTable(tutorsList, resetLimit = false) {
             const tbody = document.getElementById('tutorsTableBody');
+            const loadMoreWrap = document.getElementById('tutorsPaginationContainer');
+            const loadMoreBtn = document.getElementById('btnLoadMoreTutors');
             if (!tbody) return;
 
-            if (tutorsList.length === 0) {
+            currentFilteredTutors = tutorsList || [];
+            if (resetLimit) tutorsDisplayLimit = 30;
+
+            if (currentFilteredTutors.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);">কোনো রেজিস্টার্ড টিউটর পাওয়া যায়নি।</td></tr>';
+                if (loadMoreWrap) loadMoreWrap.style.display = 'none';
                 return;
             }
 
+            const visibleTutors = currentFilteredTutors.slice(0, tutorsDisplayLimit);
             let html = '';
-            tutorsList.forEach((tutor, idx) => {
+            visibleTutors.forEach((tutor, idx) => {
                 const name = tutor.name || 'শিক্ষক';
                 const institute = tutor.institution || tutor.institute || 'N/A';
                 const department = tutor.department || 'N/A';
@@ -3856,12 +3935,28 @@ ${detailsUrl}`;
             });
 
             tbody.innerHTML = html;
+
+            if (loadMoreWrap && loadMoreBtn) {
+                if (currentFilteredTutors.length > tutorsDisplayLimit) {
+                    loadMoreWrap.style.display = 'block';
+                    const remaining = currentFilteredTutors.length - tutorsDisplayLimit;
+                    const nextBatch = Math.min(30, remaining);
+                    loadMoreBtn.innerHTML = `<i class="fa-solid fa-angles-down"></i> আরও ${nextBatch} জন টিউটর দেখুন (মোট ${currentFilteredTutors.length}-এর মধ্যে ${visibleTutors.length} জন প্রদর্শিত)`;
+                } else {
+                    loadMoreWrap.style.display = 'none';
+                }
+            }
         }
+
+        window.loadMoreTutors = function () {
+            tutorsDisplayLimit += 30;
+            renderTutorsTable(currentFilteredTutors, false);
+        };
 
         window.filterTutorsTable = function () {
             const query = (document.getElementById('tutorSearchInput')?.value || '').toLowerCase().trim();
             if (!query) {
-                renderTutorsTable(allRegisteredTutors);
+                renderTutorsTable(allRegisteredTutors, true);
                 return;
             }
 
@@ -3874,7 +3969,7 @@ ${detailsUrl}`;
                 return name.includes(query) || institute.includes(query) || department.includes(query) || phone.includes(query) || address.includes(query);
             });
 
-            renderTutorsTable(filtered);
+            renderTutorsTable(filtered, true);
         };
 
         function updateTutorsCount(count) {
@@ -3887,6 +3982,128 @@ ${detailsUrl}`;
         // Realtime Listeners
         let unsubscribeTuitions = null;
 
+        function processAndCalculateAll(rawDocs, isRaw = true) {
+            if (isRaw) {
+                allTuitions = [];
+                deletedTuitions = [];
+                for (let i = 0; i < rawDocs.length; i++) {
+                    const item = rawDocs[i];
+                    if (item.deleted === true || item.isDeleted === true || item.status === 'deleted') {
+                        deletedTuitions.push(item);
+                    } else {
+                        allTuitions.push(item);
+                    }
+                }
+            }
+
+            const today = getTodayString();
+            const tomorrow = getTomorrowString();
+
+            let earnedProfit = 0;
+            let pendingProfit = 0;
+            let totalSalaryVolume = 0;
+
+            let countToday = 0;
+            let countTomorrow = 0;
+            let countPending = 0;
+            let countAssigned = 0;
+
+            let followupTodayCount = 0;
+            let followupTomorrowCount = 0;
+            let followupAllCount = 0;
+
+            for (let i = 0; i < allTuitions.length; i++) {
+                const item = allTuitions[i];
+
+                const salary = parseSalary(item.salary || item.offer?.salary);
+                const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
+                const estCommission = Math.round((salary * commPercent) / 100);
+                const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
+                const queueAction = normStatus(item.tracking?.queueAction || item.queueAction);
+                const status = normStatus(item.status);
+                const isFullPaidChecked = Boolean(item.tracking?.isPaidFull || (estCommission > 0 && paidAmount >= estCommission));
+
+                totalSalaryVolume += salary;
+
+                const isCancelled = (queueAction === normStatus('বাতিল হয়ে গেছে') || status === normStatus('closed'));
+                if (isCancelled) {
+                    earnedProfit += paidAmount;
+                } else if (isFullPaidChecked) {
+                    const actualEarned = Math.max(paidAmount, estCommission);
+                    earnedProfit += actualEarned;
+                } else {
+                    earnedProfit += paidAmount;
+                    pendingProfit += Math.max(estCommission - paidAmount, 0);
+                }
+
+                if (!isCancelled) {
+                    if (isFullPaidChecked) {
+                        countAssigned++;
+                    } else {
+                        countPending++;
+                    }
+                }
+
+                const fDate = getTuitionFollowUpDate(item);
+                const planDate = item.tracking?.nextDayPlan?.date || item.nextPlanDate;
+                if (fDate === today || (fDate && fDate < today) || planDate === today) {
+                    countToday++;
+                }
+                if (fDate === tomorrow || planDate === tomorrow) {
+                    countTomorrow++;
+                }
+
+                // Followup count check
+                if (typeof isFollowUpItem === 'function' && isFollowUpItem(item)) {
+                    followupAllCount++;
+                    if (fDate && fDate <= today) {
+                        followupTodayCount++;
+                    } else if (fDate === tomorrow) {
+                        followupTomorrowCount++;
+                    }
+                }
+            }
+
+            // Batched DOM updates
+            const countRecycle = deletedTuitions.length;
+            const countAll = allTuitions.length;
+
+            const earnedEl = document.getElementById('earnedProfitVal');
+            if (earnedEl) earnedEl.innerText = `৳ ${earnedProfit.toLocaleString('bn-BD')}`;
+            const pendingEl = document.getElementById('pendingProfitVal');
+            if (pendingEl) pendingEl.innerText = `৳ ${pendingProfit.toLocaleString('bn-BD')}`;
+            const totalSalEl = document.getElementById('totalSalaryVal');
+            if (totalSalEl) totalSalEl.innerText = `৳ ${totalSalaryVolume.toLocaleString('bn-BD')}`;
+
+            if (document.getElementById('count-all')) document.getElementById('count-all').innerText = countAll;
+            if (document.getElementById('count-today')) document.getElementById('count-today').innerText = countToday;
+            if (document.getElementById('count-tomorrow')) document.getElementById('count-tomorrow').innerText = countTomorrow;
+            if (document.getElementById('count-pending')) document.getElementById('count-pending').innerText = countPending;
+            if (document.getElementById('count-assigned')) document.getElementById('count-assigned').innerText = countAssigned;
+            if (document.getElementById('count-recycle-bin')) document.getElementById('count-recycle-bin').innerText = countRecycle;
+            if (document.getElementById('recycle-total-count')) document.getElementById('recycle-total-count').innerText = countRecycle;
+            const emptyBtn = document.getElementById('btn-empty-recycle');
+            if (emptyBtn) emptyBtn.style.display = countRecycle > 0 ? 'inline-flex' : 'none';
+
+            const countFollowupTab = document.getElementById('count-followup');
+            if (countFollowupTab) {
+                countFollowupTab.innerText = followupTodayCount;
+                countFollowupTab.style.background = followupTodayCount > 0 ? '#EF4444' : '#2563EB';
+            }
+            if (document.getElementById('followup-total-count')) document.getElementById('followup-total-count').innerText = followupAllCount;
+            if (document.getElementById('followup-count-today')) document.getElementById('followup-count-today').innerText = followupTodayCount;
+            if (document.getElementById('followup-count-tomorrow')) document.getElementById('followup-count-tomorrow').innerText = followupTomorrowCount;
+            if (document.getElementById('followup-count-all')) document.getElementById('followup-count-all').innerText = followupAllCount;
+        }
+
+        function calculateProfitAnalytics() {
+            processAndCalculateAll(allTuitions, false);
+        }
+
+        function updateTabCounts() {
+            processAndCalculateAll(allTuitions, false);
+        }
+
         function loadTuitions() {
             if (unsubscribeTuitions) unsubscribeTuitions();
 
@@ -3898,13 +4115,10 @@ ${detailsUrl}`;
                     rawDocs.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                allTuitions = rawDocs.filter(item => !item.deleted && !item.isDeleted && item.status !== 'deleted');
-                deletedTuitions = rawDocs.filter(item => item.deleted === true || item.isDeleted === true || item.status === 'deleted');
+                // Unified high-speed single pass calculation
+                processAndCalculateAll(rawDocs, true);
 
-                calculateProfitAnalytics();
-                updateTabCounts();
-                updateFollowUpCounts();
-                // Fast Lazy Rendering: Only render the currently active tab to keep page fast
+                // Fast Lazy Rendering: Only render the currently active section
                 const activeSec = document.querySelector('.section.active');
                 if (activeSec?.id === 'section-followup') {
                     renderFollowUpList();
@@ -3918,41 +4132,6 @@ ${detailsUrl}`;
             }, (error) => {
                 listContainer.innerHTML = `<p class="loading" style="color:red;">ডাটা লোড করতে সমস্যা হয়েছে: ${error.message}</p>`;
             });
-        }
-
-        function calculateProfitAnalytics() {
-            let earnedProfit = 0;
-            let pendingProfit = 0;
-            let totalSalaryVolume = 0;
-
-            allTuitions.forEach(item => {
-                const salary = parseSalary(item.salary || item.offer?.salary);
-                const commPercent = parseCommissionPercent(item.commission || item.offer?.commission || "50%");
-                const estCommission = Math.round((salary * commPercent) / 100);
-                const paidAmount = Number(item.tracking?.paidAmount || item.paidAmount || 0);
-                const queueAction = normStatus(item.tracking?.queueAction || item.queueAction);
-                const status = normStatus(item.status);
-                const isFullPaidChecked = Boolean(item.tracking?.isPaidFull || (estCommission > 0 && paidAmount >= estCommission));
-
-                totalSalaryVolume += salary;
-
-                if (queueAction === normStatus('বাতিল হয়ে গেছে') || status === normStatus('closed')) {
-                    // Cancelled/Closed: only actually collected amount is earned, no pending profit
-                    earnedProfit += paidAmount;
-                } else if (isFullPaidChecked || (estCommission > 0 && paidAmount >= estCommission)) {
-                    // Full commission confirmed/paid
-                    const actualEarned = Math.max(paidAmount, estCommission);
-                    earnedProfit += actualEarned;
-                } else {
-                    // Tutor appointed or open, but commission NOT fully paid yet -> stays in Pending
-                    earnedProfit += paidAmount;
-                    pendingProfit += Math.max(estCommission - paidAmount, 0);
-                }
-            });
-
-            document.getElementById('earnedProfitVal').innerText = `৳ ${earnedProfit.toLocaleString('bn-BD')}`;
-            document.getElementById('pendingProfitVal').innerText = `৳ ${pendingProfit.toLocaleString('bn-BD')}`;
-            document.getElementById('totalSalaryVal').innerText = `৳ ${totalSalaryVolume.toLocaleString('bn-BD')}`;
         }
 
         function isTuitionPaymentPending(item) {
@@ -3981,39 +4160,6 @@ ${detailsUrl}`;
             const isFullPaidChecked = Boolean(item.tracking?.isPaidFull || (estCommissionAmount > 0 && paidAmount >= estCommissionAmount));
 
             return isFullPaidChecked;
-        }
-
-        function updateTabCounts() {
-            const today = getTodayString();
-            const tomorrow = getTomorrowString();
-
-            const isMatchToday = (item) => {
-                const fDate = getTuitionFollowUpDate(item);
-                return fDate === today || (fDate && fDate < today) || (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === today;
-            };
-            const isMatchTomorrow = (item) => {
-                const fDate = getTuitionFollowUpDate(item);
-                return fDate === tomorrow || (item.tracking?.nextDayPlan?.date || item.nextPlanDate) === tomorrow;
-            };
-
-            const countAll = allTuitions.length;
-            const countToday = allTuitions.filter(isMatchToday).length;
-            const countTomorrow = allTuitions.filter(isMatchTomorrow).length;
-            const countPending = allTuitions.filter(isTuitionPaymentPending).length;
-            const countAssigned = allTuitions.filter(isTuitionPaidOrCompleted).length;
-            const countRecycle = deletedTuitions.length;
-
-            if (document.getElementById('count-all')) document.getElementById('count-all').innerText = countAll;
-            if (document.getElementById('count-today')) document.getElementById('count-today').innerText = countToday;
-            if (document.getElementById('count-tomorrow')) document.getElementById('count-tomorrow').innerText = countTomorrow;
-            if (document.getElementById('count-pending')) document.getElementById('count-pending').innerText = countPending;
-            if (document.getElementById('count-assigned')) document.getElementById('count-assigned').innerText = countAssigned;
-            if (document.getElementById('count-recycle-bin')) document.getElementById('count-recycle-bin').innerText = countRecycle;
-            if (document.getElementById('recycle-total-count')) document.getElementById('recycle-total-count').innerText = countRecycle;
-            const emptyBtn = document.getElementById('btn-empty-recycle');
-            if (emptyBtn) emptyBtn.style.display = countRecycle > 0 ? 'inline-flex' : 'none';
-
-            updateFollowUpCounts();
         }
 
         window.setTuitionFilter = function (filterKey, btnElement) {
@@ -4653,28 +4799,7 @@ ${detailsUrl}`;
         };
 
         function updateFollowUpCounts() {
-            const items = allTuitions.filter(isFollowUpItem);
-            const todayCount = items.filter(isFollowUpToday).length;
-            const tomorrowCount = items.filter(isFollowUpTomorrow).length;
-            const allCount = items.length;
-
-            const countTab = document.getElementById('count-followup');
-            if (countTab) {
-                countTab.innerText = todayCount;
-                countTab.style.background = todayCount > 0 ? '#EF4444' : '#2563EB';
-            }
-
-            const totalSpan = document.getElementById('followup-total-count');
-            if (totalSpan) totalSpan.innerText = allCount;
-
-            const countTodayEl = document.getElementById('followup-count-today');
-            if (countTodayEl) countTodayEl.innerText = todayCount;
-
-            const countTomorrowEl = document.getElementById('followup-count-tomorrow');
-            if (countTomorrowEl) countTomorrowEl.innerText = tomorrowCount;
-
-            const countAllEl = document.getElementById('followup-count-all');
-            if (countAllEl) countAllEl.innerText = allCount;
+            processAndCalculateAll(allTuitions, false);
         }
 
         window.renderFollowUpList = function () {
@@ -5484,12 +5609,27 @@ ${detailsUrl}`;
                             }
                         }
 
+                        // Check tutorProfileCache first
+                        if ((!department || !experience || !nidDocUrl || !marksheetDocUrl) && typeof tutorProfileCache !== 'undefined') {
+                            const cached = tutorProfileCache.get(tutorUid) || tutorProfileCache.get(tutorPhone);
+                            if (cached) {
+                                if (!department) department = cached.department || '';
+                                if (!experience) experience = cached.experience || '';
+                                if (!nidDocUrl) nidDocUrl = cached.nidFileUrl || cached.nidUrl || '';
+                                if (!marksheetDocUrl) marksheetDocUrl = cached.marksheetFileUrl || cached.msUrl || '';
+                            }
+                        }
+
                         // Fallback Firestore fetch if still missing
                         if ((!department || !experience || !nidDocUrl || !marksheetDocUrl) && tutorUid) {
                             try {
                                 const tSnap = await getDoc(doc(db, "tutors", tutorUid));
                                 if (tSnap.exists()) {
                                     const td = tSnap.data();
+                                    if (typeof tutorProfileCache !== 'undefined') {
+                                        tutorProfileCache.set(tutorUid, td);
+                                        if (td.phone) tutorProfileCache.set(td.phone, td);
+                                    }
                                     if (!department) department = td.department || '';
                                     if (!experience) experience = td.experience || '';
                                     if (!nidDocUrl) nidDocUrl = td.nidFileUrl || td.nidUrl || '';
@@ -5503,6 +5643,10 @@ ${detailsUrl}`;
                                 const tRes = await getDocs(tQuery);
                                 if (!tRes.empty) {
                                     const td = tRes.docs[0].data();
+                                    if (typeof tutorProfileCache !== 'undefined') {
+                                        tutorProfileCache.set(tutorPhone, td);
+                                        if (tRes.docs[0].id) tutorProfileCache.set(tRes.docs[0].id, td);
+                                    }
                                     if (!department) department = td.department || '';
                                     if (!experience) experience = td.experience || '';
                                     if (!nidDocUrl) nidDocUrl = td.nidFileUrl || td.nidUrl || '';
@@ -5885,7 +6029,10 @@ ${detailsUrl}`;
                         return tB - tA;
                     });
                     updateRequestsBadges();
-                    renderGuardianRequests();
+                    const activeSec = document.querySelector('.section.active');
+                    if (activeSec && activeSec.id === 'section-requests') {
+                        renderGuardianRequests();
+                    }
                 }, (err) => {
                     console.error("Guardian requests listener error:", err);
                     const container = document.getElementById('guardian-requests-container');
@@ -5966,9 +6113,16 @@ ${detailsUrl}`;
             return p;
         }
 
-        window.renderGuardianRequests = function() {
+        let reqDisplayLimit = 20;
+
+        window.renderGuardianRequests = function(resetLimit = false) {
+            const activeSec = document.querySelector('.section.active');
+            if (activeSec && activeSec.id !== 'section-requests') return;
+
             const container = document.getElementById('guardian-requests-container');
             if (!container) return;
+
+            if (resetLimit) reqDisplayLimit = 20;
 
             let filtered = guardianRequestsList.filter(req => {
                 const st = (req.status || 'new').toLowerCase();
@@ -5993,7 +6147,8 @@ ${detailsUrl}`;
             }
 
             container.innerHTML = '';
-            filtered.forEach(req => {
+            const visibleRequests = filtered.slice(0, reqDisplayLimit);
+            visibleRequests.forEach(req => {
                 const id = req.id;
                 const status = (req.status || 'new').toLowerCase();
                 const phone = req.phone || req.guardianPhone || '';
@@ -6118,6 +6273,27 @@ ${detailsUrl}`;
                 `;
                 container.appendChild(card);
             });
+
+            if (filtered.length > reqDisplayLimit) {
+                const loadMoreWrap = document.createElement('div');
+                loadMoreWrap.style.gridColumn = '1 / -1';
+                loadMoreWrap.style.textAlign = 'center';
+                loadMoreWrap.style.margin = '20px 0 10px';
+                const remaining = filtered.length - reqDisplayLimit;
+                const nextBatch = Math.min(20, remaining);
+
+                loadMoreWrap.innerHTML = `
+                    <button type="button" onclick="loadMoreRequests()" class="btn-primary" style="padding:12px 28px;font-size:14px;font-weight:700;border-radius:30px;background:linear-gradient(135deg, #10B981, #059669);border:none;cursor:pointer;color:#fff;box-shadow:0 4px 14px rgba(16,185,129,0.4);display:inline-flex;align-items:center;gap:8px;">
+                        <i class="fa-solid fa-angles-down"></i> আরও ${nextBatch}টি রিকোয়েস্ট দেখুন (মোট ${filtered.length}-টির মধ্যে ${visibleRequests.length}টি প্রদর্শিত)
+                    </button>
+                `;
+                container.appendChild(loadMoreWrap);
+            }
+        };
+
+        window.loadMoreRequests = function() {
+            reqDisplayLimit += 20;
+            renderGuardianRequests(false);
         };
 
         window.updateGuardianRequestStatus = async function(reqId, newStatus) {
